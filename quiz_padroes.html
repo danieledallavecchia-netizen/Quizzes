@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Padrões Parentais — Daniele Dallavecchia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1a2744;--deep:#0f1a35;--gold:#c9a84c;--gold-lt:#e8c97a;--cream:#f8f5ef;--cream2:#f0ead8;--text:#2c3550;--text-lt:#6b7594;--border:#dcd6c8;--rose:#b85c6e;--sage:#5a7a6e;--amber:#c9702c}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh}
+.screen{display:none}.screen.active{display:block}
+.cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center}
+.logo-text{font-family:'Playfair Display',serif;font-size:21px;color:var(--navy);font-weight:600;margin-top:10px}
+.logo-sub{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text-lt);margin-top:3px}
+.ornament{width:44px;height:2px;background:var(--amber);margin:18px auto}
+.cover h1{font-family:'Playfair Display',serif;font-size:clamp(26px,6vw,40px);font-weight:400;color:var(--navy);line-height:1.3;margin-bottom:14px}
+.cover h1 em{font-style:italic;color:var(--amber)}
+.cover p{font-size:15px;font-weight:300;line-height:1.8;color:var(--text-lt);max-width:440px;margin:0 auto 32px}
+.id-box{background:white;border:1px solid var(--border);border-radius:10px;padding:26px;max-width:400px;width:100%;margin:0 auto 28px;text-align:left}
+.id-box label{font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--text-lt);display:block;margin-bottom:7px}
+.id-box input{width:100%;padding:11px 13px;border:1px solid var(--border);border-radius:6px;font-size:15px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--cream);margin-bottom:16px;transition:.15s}
+.id-box input:focus{outline:none;border-color:var(--amber);background:white}
+.id-box .note{font-size:12px;color:var(--text-lt);line-height:1.6}
+.btn-start{background:var(--amber);color:white;border:none;padding:15px 44px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;letter-spacing:1px;cursor:pointer;transition:.2s}
+.btn-start:hover{background:#b5621f;transform:translateY(-1px);box-shadow:0 6px 20px rgba(201,112,44,.3)}
+.err-box{background:#fff0f3;border:1px solid #ffd0d8;border-radius:8px;padding:12px 16px;font-size:13px;color:#c0392b;margin-top:10px;max-width:400px;display:none}
+.quiz-wrap{max-width:660px;margin:0 auto;padding:36px 20px 80px}
+.quiz-header{text-align:center;margin-bottom:28px}
+.phase-pill{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;letter-spacing:1px;margin-bottom:10px;color:white}
+.phase-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.6)}
+.quiz-title{font-family:'Playfair Display',serif;font-size:19px;color:var(--navy);margin-bottom:4px}
+.quiz-subtitle{font-size:13px;color:var(--text-lt);font-style:italic}
+.prog-wrap{margin-bottom:28px}
+.prog-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--text-lt);margin-bottom:7px}
+.prog-bar{height:3px;background:var(--border);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px;transition:width .5s ease}
+.instr-chip{display:flex;align-items:center;gap:10px;border-radius:8px;padding:10px 14px;font-size:13px;color:var(--navy);margin-bottom:20px;line-height:1.5}
+.instr-chip .badges{display:flex;gap:4px;flex-shrink:0}
+.badge-n{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white}
+.q-card{background:white;border:1px solid var(--border);border-radius:12px;padding:26px;margin-bottom:18px;box-shadow:0 2px 12px rgba(26,39,68,.06);animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.q-num{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:9px}
+.q-text{font-family:'Playfair Display',serif;font-size:18px;font-weight:400;color:var(--navy);line-height:1.5;margin-bottom:22px}
+.options{display:flex;flex-direction:column;gap:10px}
+.option{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;font-weight:300;color:var(--text);background:var(--cream);transition:.2s;text-align:left;line-height:1.5;width:100%}
+.option:hover{border-color:var(--amber);background:white}
+.opt-badge{width:28px;height:28px;min-width:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid var(--border);color:var(--border);transition:.2s;background:white;margin-top:2px}
+.option.first{border-color:var(--navy);background:rgba(26,39,68,.04)}
+.option.first .opt-badge{background:var(--navy);border-color:var(--navy);color:white}
+.option.second{border-color:var(--amber);background:rgba(201,112,44,.06)}
+.option.second .opt-badge{background:var(--amber);border-color:var(--amber);color:white}
+.opt-text{flex:1}
+.sel-info{font-size:12px;color:var(--text-lt);text-align:right;margin-top:10px;min-height:18px}
+.sel-info.ok{color:var(--sage)}.sel-info.warn{color:var(--rose)}
+.quiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:20px}
+.btn-nav{padding:11px 26px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:.2s;border:none}
+.btn-prev{background:transparent;border:1px solid var(--border);color:var(--text-lt)}
+.btn-prev:hover{border-color:var(--navy);color:var(--navy)}
+.btn-next{background:var(--amber);color:white}
+.btn-next:hover{background:#b5621f;transform:translateY(-1px)}
+.btn-nav:disabled{opacity:.3;cursor:not-allowed;transform:none!important}
+.trans-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;max-width:500px;margin:0 auto}
+.trans-icon{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-size:28px}
+.trans-screen h2{font-family:'Playfair Display',serif;font-size:28px;color:var(--navy);margin-bottom:12px}
+.trans-screen p{font-size:15px;color:var(--text-lt);line-height:1.8;margin-bottom:28px}
+.load-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-screen p{font-size:14px;color:var(--text-lt)}
+.res-wrap{max-width:660px;margin:0 auto;padding:48px 20px 80px}
+.res-header{text-align:center;margin-bottom:40px}
+.res-header .ico{font-size:32px;margin-bottom:14px}
+.res-header h2{font-family:'Playfair Display',serif;font-size:30px;color:var(--navy);margin-bottom:8px}
+.res-header p{font-size:14px;color:var(--text-lt);font-style:italic}
+.res-divider{width:44px;height:2px;background:var(--amber);margin:16px auto}
+.res-card{background:white;border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-bottom:18px;box-shadow:0 2px 16px rgba(26,39,68,.07)}
+.rc-head{padding:16px 22px;color:white}
+.rc-head .rct{font-size:10px;letter-spacing:1px;text-transform:uppercase;opacity:.75;margin-bottom:4px}
+.rc-head h3{font-family:'Playfair Display',serif;font-size:17px;font-weight:400}
+.rc-body{padding:22px}
+.rc-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--navy);margin-bottom:12px}
+.rc-desc{font-size:14px;line-height:1.8;color:var(--text-lt);font-weight:300}
+.bar-item{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.bar-label{font-size:12px;color:var(--text-lt);width:180px;flex-shrink:0}
+.bar-track{flex:1;height:7px;background:var(--cream2);border-radius:7px;overflow:hidden}
+.bar-fill{height:100%;border-radius:7px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.bar-pct{font-size:12px;font-weight:600;color:var(--navy);width:38px;text-align:right}
+.match-box{background:linear-gradient(135deg,var(--navy),#2a3d6e);border-radius:12px;padding:26px;margin:24px 0;color:white}
+.match-box .mlabel{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.match-box h3{font-family:'Playfair Display',serif;font-size:19px;margin-bottom:10px}
+.match-box p{font-size:14px;line-height:1.8;color:rgba(255,255,255,.75)}
+.insight-final{background:rgba(201,112,44,.07);border:1px solid rgba(201,112,44,.2);border-radius:12px;padding:22px;margin-top:20px;font-family:'Playfair Display',serif;font-size:17px;font-style:italic;line-height:1.8;color:var(--navy);text-align:center}
+.foot-note{text-align:center;font-size:12px;color:var(--border);margin-top:44px;letter-spacing:.5px}
+</style>
+</head>
+<body>
+
+<div class="screen active" id="s-cover">
+<div class="cover">
+  <div style="margin-bottom:28px">
+    <div style="width:90px;height:90px;background:rgba(8,4,18,0.35);border-radius:50%;border:1.5px solid rgba(201,168,76,.4);overflow:hidden;margin:0 auto">
+      <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" width="90" height="90">
+        <defs><linearGradient id="gd" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#b8922c"/><stop offset="40%" stop-color="#f5e090"/><stop offset="100%" stop-color="#c9a84c"/></linearGradient><linearGradient id="sv" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#c8c0f0"/><stop offset="100%" stop-color="#f0ecff"/></linearGradient><filter id="g2"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+        <circle cx="200" cy="190" r="155" fill="none" stroke="url(#gd)" stroke-width="1" opacity=".7"/>
+        <path d="M196 260 C185 240,192 220,197 205 C202 190,188 175,196 160 C204 145,190 130,197 80" fill="none" stroke="url(#sv)" stroke-width="1.4" stroke-linecap="round" opacity=".65"/>
+        <path d="M204 260 C215 240,208 220,203 205 C198 190,212 175,204 160 C196 145,210 130,203 80" fill="none" stroke="url(#gd)" stroke-width="1.4" stroke-linecap="round" opacity=".65"/>
+        <path d="M200 235 Q162 215 132 206" stroke="url(#sv)" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M200 235 Q238 215 268 206" stroke="url(#sv)" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <circle cx="200" cy="268" r="7" fill="url(#gd)" opacity=".9" filter="url(#g2)"/>
+        <text x="200" y="195" text-anchor="middle" font-size="11" fill="#f0d080" opacity=".8">☉</text>
+      </svg>
+    </div>
+    <div class="logo-text">Daniele Dallavecchia</div>
+    <div class="logo-sub">Psicanálise e Psicoterapia</div>
+  </div>
+  <div class="ornament"></div>
+  <h1>Os meus<br><em>Padrões Parentais</em></h1>
+  <p>Como as figuras que me criaram moldaram a forma como me relaciono hoje.<br>Não há respostas certas ou erradas — só a tua experiência.</p>
+  <div class="id-box">
+    <label>O teu nome</label>
+    <input type="text" id="inp-name" placeholder="Como te chamas?" autocomplete="off"/>
+    <input type="hidden" id="inp-id" value=""/>
+    <div class="note">O teu código é fornecido pela terapeuta.</div>
+  </div>
+  <div class="err-box" id="err-cover">Por favor preenche o teu nome e código.</div>
+  <button class="btn-start" onclick="startQuiz()">Começar →</button>
+</div>
+</div>
+
+<!-- FASE 1: PAI -->
+<div class="screen" id="s-fase1">
+<div class="quiz-wrap">
+  <div class="quiz-header">
+    <div class="phase-pill" style="background:#1a2744"><div class="phase-dot"></div>Parte 1 de 3 — Figura paterna</div>
+    <div class="quiz-title">A relação com o teu pai</div>
+    <div class="quiz-subtitle">Como era a presença e influência do teu pai (ou figura paterna)</div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-meta"><span>Parte 1 — Pai</span><span id="f1-cnt">1 / 8</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="f1-fill" style="width:12%;background:linear-gradient(90deg,#1a2744,#4a6fa5)"></div></div>
+  </div>
+  <div class="instr-chip" style="background:rgba(26,39,68,.06);border:1px solid rgba(26,39,68,.15)">
+    <div class="badges"><div class="badge-n" style="background:#1a2744">1</div><div class="badge-n" style="background:#c9702c">2</div></div>
+    <span>Clica primeiro na opção que <strong>mais corresponde</strong> à tua experiência, depois na segunda. Clica de novo para deseleccionar.</span>
+  </div>
+  <div id="f1-q"></div>
+  <div class="sel-info" id="f1-info"></div>
+  <div class="quiz-nav">
+    <button class="btn-nav btn-prev" id="f1-prev" onclick="f1Prev()">← Anterior</button>
+    <button class="btn-nav btn-next" id="f1-next" onclick="f1Next()">Seguinte →</button>
+  </div>
+</div>
+</div>
+
+<!-- TRANSIÇÃO 1→2 -->
+<div class="screen" id="s-trans1">
+<div class="trans-screen">
+  <div class="trans-icon" style="background:#b85c6e">👩</div>
+  <h2>Agora a figura materna.</h2>
+  <p>Respondeste sobre a tua relação com o pai — ou com quem desempenhou esse papel na tua vida.<br><br>
+  A segunda parte explora a relação com a tua <strong>mãe ou figura materna</strong> — que muitas vezes tem uma dinâmica muito diferente.</p>
+  <button class="btn-start" style="background:#b85c6e" onclick="goFase2()">Continuar →</button>
+</div>
+</div>
+
+<!-- FASE 2: MÃE -->
+<div class="screen" id="s-fase2">
+<div class="quiz-wrap">
+  <div class="quiz-header">
+    <div class="phase-pill" style="background:#b85c6e"><div class="phase-dot"></div>Parte 2 de 3 — Figura materna</div>
+    <div class="quiz-title">A relação com a tua mãe</div>
+    <div class="quiz-subtitle">Como era a presença e influência da tua mãe (ou figura materna)</div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-meta"><span>Parte 2 — Mãe</span><span id="f2-cnt">1 / 8</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="f2-fill" style="width:12%;background:linear-gradient(90deg,#b85c6e,#d4879b)"></div></div>
+  </div>
+  <div class="instr-chip" style="background:rgba(184,92,110,.07);border:1px solid rgba(184,92,110,.2)">
+    <div class="badges"><div class="badge-n" style="background:#b85c6e">1</div><div class="badge-n" style="background:#c9702c">2</div></div>
+    <span>Mesmo sistema — escolhe <strong>1.ª e 2.ª</strong> opção por ordem de preferência.</span>
+  </div>
+  <div id="f2-q"></div>
+  <div class="sel-info" id="f2-info"></div>
+  <div class="quiz-nav">
+    <button class="btn-nav btn-prev" id="f2-prev" onclick="f2Prev()">← Anterior</button>
+    <button class="btn-nav btn-next" id="f2-next" onclick="f2Next()">Seguinte →</button>
+  </div>
+</div>
+</div>
+
+<!-- TRANSIÇÃO 2→3 -->
+<div class="screen" id="s-trans2">
+<div class="trans-screen">
+  <div class="trans-icon" style="background:#c9702c">🔄</div>
+  <h2>A última parte.</h2>
+  <p>Explorámos as duas figuras principais.<br><br>
+  A terceira parte é sobre <strong>como esses padrões se repetem hoje</strong> — nas relações que escolhes, na forma como te relacionas, no que procuras e no que receias.</p>
+  <button class="btn-start" style="background:#c9702c" onclick="goFase3()">Continuar →</button>
+</div>
+</div>
+
+<!-- FASE 3: REPETIÇÃO -->
+<div class="screen" id="s-fase3">
+<div class="quiz-wrap">
+  <div class="quiz-header">
+    <div class="phase-pill" style="background:#c9702c"><div class="phase-dot"></div>Parte 3 de 3 — Repetição relacional</div>
+    <div class="quiz-title">O que se repete hoje</div>
+    <div class="quiz-subtitle">Como os padrões aprendidos em criança aparecem nas tuas relações actuais</div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-meta"><span>Parte 3 — Repetição</span><span id="f3-cnt">1 / 8</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="f3-fill" style="width:12%;background:linear-gradient(90deg,#c9702c,#e8a050)"></div></div>
+  </div>
+  <div class="instr-chip" style="background:rgba(201,112,44,.07);border:1px solid rgba(201,112,44,.2)">
+    <div class="badges"><div class="badge-n" style="background:#c9702c">1</div><div class="badge-n" style="background:#1a2744">2</div></div>
+    <span>Mesmo sistema — escolhe <strong>1.ª e 2.ª</strong> opção por ordem de preferência.</span>
+  </div>
+  <div id="f3-q"></div>
+  <div class="sel-info" id="f3-info"></div>
+  <div class="quiz-nav">
+    <button class="btn-nav btn-prev" id="f3-prev" onclick="f3Prev()">← Anterior</button>
+    <button class="btn-nav btn-next" id="f3-next" onclick="f3Next()">Ver Resultado →</button>
+  </div>
+</div>
+</div>
+
+<div class="screen" id="s-load">
+<div class="load-screen"><div class="spinner"></div><p>A preparar o teu perfil parental...</p></div>
+</div>
+
+<div class="screen" id="s-result">
+<div class="res-wrap">
+  <div class="res-header">
+    <div class="ico">👨‍👩‍👧</div>
+    <h2>Os teus padrões parentais</h2>
+    <div class="res-divider"></div>
+    <p id="res-greeting"></p>
+  </div>
+  <div id="res-content"></div>
+  <div class="foot-note">Daniele Dallavecchia · Psicanálise e Psicoterapia<br>Este perfil é confidencial e partilhado com a sua terapeuta.</div>
+</div>
+</div>
+
+<script>
+const APPS_URL='https://script.google.com/macros/s/AKfycbxwc-e1KD9X8Jk8gAyKNGg5vaQjIr75qYybzUtcOdbfiKjkIO91Op7vfkkEwtOVj4Q9/exec';
+
+// Dimensões parentais — 4 padrões principais
+const PAI_DIMS={
+  presente:{name:'Presente e amoroso',color:'#5a7a6e',desc:'Figura paterna emocionalmente disponível, consistente e segura. Base sólida de vinculação.'},
+  ausente:{name:'Ausente ou distante',color:'#6b7594',desc:'Figura paterna fisicamente ou emocionalmente ausente. A ausência gerou um vazio que influencia as relações actuais.'},
+  controlador:{name:'Controlador ou exigente',color:'#1a2744',desc:'Figura paterna muito exigente, crítica ou controladora. Aprendizagem de que o amor é condicional ao desempenho.'},
+  imprevisivel:{name:'Imprevisível ou assustador',color:'#b85c6e',desc:'Figura paterna inconsistente, explosiva ou ameaçadora. Vinculação desorganizada — fonte de segurança e de medo ao mesmo tempo.'}
+};
+const MAE_DIMS={
+  presente:{name:'Presente e amorosa',color:'#5a7a6e',desc:'Figura materna emocionalmente disponível, consistente e nutrida. Base de segurança emocional.'},
+  ausente:{name:'Ausente ou fria',color:'#6b7594',desc:'Figura materna emocionalmente distante ou fisicamente ausente. A frieza ou ausência instalou a crença de que não merece cuidado.'},
+  ansiosa:{name:'Ansiosa ou sufocante',color:'#7b5ea7',desc:'Figura materna excessivamente ansiosa, superprotectora ou fusional. A hipervigilância da mãe tornou-se a da filha.'},
+  imprevisivel:{name:'Imprevisível ou crítica',color:'#b85c6e',desc:'Figura materna inconsistente — ora próxima, ora explosiva ou crítica. A criança não sabe quando vai receber amor ou punição.'}
+};
+const REP_DIMS={
+  repetir:{name:'Repito os padrões',color:'#b85c6e',desc:'Tendo a replicar nas relações actuais o que vivi com as figuras parentais — escolho parceiros ou comporto-me de forma semelhante ao que aprendi em criança.'},
+  compensar:{name:'Compenso o oposto',color:'#1a2744',desc:'Faço exactamente o oposto do que vivi — escolho ou comporto-me de forma radicalmente diferente das figuras parentais como forma de não repetir.'},
+  mistura:{name:'Mistura — ora repito, ora compenso',color:'#c9702c',desc:'Às vezes replico, outras vezes compenso — dependendo do contexto e do nível de stress da relação.'},
+  consciente:{name:'Estou a aprender a escolher',color:'#5a7a6e',desc:'Tenho consciência dos padrões e estou a trabalhar para fazer escolhas mais conscientes, distintas do que aprendi.'}
+};
+
+// PERGUNTAS PAI
+const QS1=[
+  {text:'A presença emocional do meu pai (ou figura paterna) era...',opts:[{s:'presente',t:'Consistente — estava lá quando precisava, ouvia-me, fazia-me sentir segura'},{s:'ausente',t:'Ausente ou distante — fisicamente ou emocionalmente, raramente estava verdadeiramente presente'},{s:'controlador',t:'Condicional — estava presente mas com exigência, crítica ou expectativas elevadas'},{s:'imprevisivel',t:'Imprevisível — havia momentos bons mas também momentos que me assustavam ou magoavam'}]},
+  {text:'Quando falha ou cometia um erro em criança, o meu pai reagia...',opts:[{s:'presente',t:'Com compreensão — ajudava-me a aprender sem punição excessiva'},{s:'ausente',t:'Não reagia — era indiferente, como se os meus erros não lhe interessassem'},{s:'controlador',t:'Com crítica ou exigência — o erro era um problema, havia consequências ou desapontamento visível'},{s:'imprevisivel',t:'De forma imprevisível — nunca sabia se ia reagir bem ou mal, dependia do dia'}]},
+  {text:'O amor do meu pai era algo que eu sentia como...',opts:[{s:'presente',t:'Seguro e dado — não precisava de o merecer, estava lá'},{s:'ausente',t:'Ausente ou difícil de sentir — não me lembro de me sentir amada por ele de forma clara'},{s:'controlador',t:'Condicional — sentia que tinha de ser boa, obediente ou bem-sucedida para o receber'},{s:'imprevisivel',t:'Confuso — havia momentos de afecto mas também momentos de frieza ou dureza que não conseguia prever'}]},
+  {text:'A relação com a minha autoridade (trabalho, chefias, regras) hoje tem a ver com...',opts:[{s:'presente',t:'Consigo relacionar-me com autoridade de forma equilibrada, sem medo nem rebeldia excessivos'},{s:'ausente',t:'Tenho dificuldade — ou ignoro a autoridade ou não sei como lidar com ela de forma assertiva'},{s:'controlador',t:'Tenho muito respeito pelas regras ou pelo contrário rebelo-me — aprendi que autoridade é poder sobre mim'},{s:'imprevisivel',t:'Fico ansiosa — a autoridade activa uma vigilância que não consigo explicar bem'}]},
+  {text:'Quando penso no meu pai hoje, o sentimento dominante é...',opts:[{s:'presente',t:'Gratidão e carinho — mesmo com imperfeições, sinto que me deu uma base sólida'},{s:'ausente',t:'Tristeza ou saudade de algo que nunca existiu — um pai que gostaria que tivesse sido diferente'},{s:'controlador',t:'Uma mistura de respeito e ressentimento — aprendi muito com ele mas a um custo'},{s:'imprevisivel',t:'Ambivalência ou medo — há memórias boas mas também algo que me magoa ou assusta quando penso nele'}]},
+  {text:'A forma como vejo os homens (ou figuras masculinas) nas relações foi moldada...',opts:[{s:'presente',t:'Por um modelo positivo — vi ou experienciei homens que cuidam, que estão presentes e que são seguros'},{s:'ausente',t:'Pela ausência — não tive modelo de masculinidade presente, o que criou um vazio ou idealização'},{s:'controlador',t:'Por um modelo de autoridade e exigência — os homens são ou dominantes ou difíceis de agradar'},{s:'imprevisivel',t:'Pela imprevisibilidade — os homens podem magoar sem aviso, é difícil confiar completamente'}]},
+  {text:'A minha capacidade de receber cuidado e proteção nas relações actuais é...',opts:[{s:'presente',t:'Relativamente natural — consigo receber sem me sentir em dívida ou desconfortável'},{s:'ausente',t:'Difícil — não estou habituada a ser cuidada, não sei muito bem o que fazer quando acontece'},{s:'controlador',t:'Condicionada — recebo mas sinto que tenho de corresponder ou de ser suficientemente boa'},{s:'imprevisivel',t:'Ansiosa — fico em alerta quando alguém cuida de mim, à espera de que algo mude ou corra mal'}]},
+  {text:'A forma como o meu pai se relacionava com as emoções era...',opts:[{s:'presente',t:'Aberta — conseguia mostrar afecto, falar sobre sentimentos, estar presente emocionalmente'},{s:'ausente',t:'Ausente emocionalmente — raramente mostrava sentimentos, era racional ou distante'},{s:'controlador',t:'Controlada — as emoções eram vistas como fraqueza ou como algo a gerir, não a sentir'},{s:'imprevisivel',t:'Explosiva ou instável — as suas emoções eram imprevisíveis e por vezes assustadoras'}]}
+];
+
+// PERGUNTAS MÃE
+const QS2=[
+  {text:'A presença emocional da minha mãe (ou figura materna) era...',opts:[{s:'presente',t:'Consistente — estava emocionalmente disponível, validava o que eu sentia, fazia-me sentir segura'},{s:'ausente',t:'Distante ou fria — raramente me sentia verdadeiramente vista ou cuidada por ela'},{s:'ansiosa',t:'Excessiva — estava sempre presente mas de forma que me sufocava ou que me transmitia a sua própria ansiedade'},{s:'imprevisivel',t:'Imprevisível — ora próxima e amorosa, ora fria, crítica ou explosiva sem razão clara'}]},
+  {text:'Quando eu expressava emoções em criança (chorar, ter medo, estar triste), a minha mãe...',opts:[{s:'presente',t:'Acolhia — ficava comigo, ajudava-me a nomear e a sentir o que estava a sentir'},{s:'ausente',t:'Ignorava ou minimizava — "não é nada", "para de chorar", a emoção não era bem-vinda'},{s:'ansiosa',t:'Ficava também ansiosa — a minha emoção activava a dela, o que me obrigava a gerir as duas'},{s:'imprevisivel',t:'Reagia de forma imprevisível — às vezes acolhia, outras vezes ficava irritada ou me criticava'}]},
+  {text:'A mensagem que aprendi com a minha mãe sobre o que é ser mulher foi...',opts:[{s:'presente',t:'Positiva — vi uma mulher que se cuidava, que tinha espaço para as suas necessidades e que modelou autonomia'},{s:'ausente',t:'Vazia ou pouco clara — não tive modelo de feminilidade saudável que me inspirasse'},{s:'ansiosa',t:'Ansiosa — aprendi que ser mulher é estar sempre disponível para os outros, sacrificar-se, preocupar-se'},{s:'imprevisivel',t:'Contraditória — havia mensagens diferentes consoante o dia ou o humor dela, o que me confundiu'}]},
+  {text:'O amor da minha mãe era algo que eu sentia como...',opts:[{s:'presente',t:'Dado e seguro — não precisava de o merecer, estava lá de forma consistente'},{s:'ausente',t:'Difícil de sentir — não me lembro de me sentir amada de forma clara e nutritiva'},{s:'ansiosa',t:'Intenso mas sufocante — havia amor mas vinha com ansiedade, controlo ou excesso de proximidade'},{s:'imprevisivel',t:'Condicional e variável — ora recebia afecto, ora frieza ou crítica, sem perceber porquê'}]},
+  {text:'A minha relação com o autocuidado e as minhas próprias necessidades hoje é...',opts:[{s:'presente',t:'Relativamente saudável — consigo cuidar de mim sem culpa excessiva'},{s:'ausente',t:'Difícil — ou negligencie-me ou não sei muito bem o que são as minhas necessidades'},{s:'ansiosa',t:'Marcada por culpa — cuidar de mim parece egoísta, sinto que deveria estar a cuidar dos outros'},{s:'imprevisivel',t:'Inconsistente — às vezes cuido de mim muito bem, outras vezes abandono-me completamente'}]},
+  {text:'Quando penso na minha mãe hoje, o sentimento dominante é...',opts:[{s:'presente',t:'Gratidão e carinho — mesmo com imperfeições, sinto que me deu raízes e asas'},{s:'ausente',t:'Tristeza — sinto saudade de uma mãe que gostaria que tivesse sido diferente'},{s:'ansiosa',t:'Exaustão ou ambivalência — amo-a mas a relação é desgastante ou muito intensa'},{s:'imprevisivel',t:'Confusão ou dor — as memórias são contraditórias e algumas ainda me magoam'}]},
+  {text:'A minha capacidade de pedir ajuda e de depender de outros nas relações actuais é...',opts:[{s:'presente',t:'Relativamente natural — aprendi que pedir ajuda é normal e que os outros podem estar disponíveis'},{s:'ausente',t:'Difícil — não estou habituada a receber, aprendi que tenho de me virar sozinha'},{s:'ansiosa',t:'Excessiva — às vezes peço demasiado, precisando de reassurance constante'},{s:'imprevisivel',t:'Inconsistente — dependendo do estado, tanto me isolo como me torno dependente em excesso'}]},
+  {text:'A forma como a minha mãe falava de si própria e das suas necessidades era...',opts:[{s:'presente',t:'Equilibrada — tinha espaço para si e modelou que as necessidades próprias são legítimas'},{s:'ausente',t:'Ausente — nunca falava de si, as suas necessidades eram invisíveis ou negligenciadas'},{s:'ansiosa',t:'Excessiva — as suas preocupações, medos e necessidades dominavam o espaço familiar'},{s:'imprevisivel',t:'Variável — às vezes era excessiva, outras vezes desaparecia — nunca sabia o que esperar'}]}
+];
+
+// PERGUNTAS REPETIÇÃO
+const QS3=[
+  {text:'Nas relações amorosas que escolho, os parceiros tendem a...',opts:[{s:'repetir',t:'Ter características semelhantes às das minhas figuras parentais — reconheço os padrões mas continuo a ser atraída por eles'},{s:'compensar',t:'Ser completamente diferentes das minhas figuras parentais — escolho o oposto deliberada ou inconscientemente'},{s:'mistura',t:'Variar — às vezes escolho alguém semelhante, outras vezes alguém completamente diferente'},{s:'consciente',t:'Ser pessoas que estou a aprender a escolher de forma mais consciente, atentas ao padrão'}]},
+  {text:'Quando estou em conflito numa relação, o meu comportamento lembra-me...',opts:[{s:'repetir',t:'O que via em casa — reajo de formas semelhantes às que aprendi com as figuras parentais'},{s:'compensar',t:'O oposto do que via em casa — faço tudo diferente, às vezes de forma extrema'},{s:'mistura',t:'Ora um, ora outro — às vezes repito, às vezes compenso, sem grande controlo'},{s:'consciente',t:'Algo que estou a trabalhar — reconheço o padrão e tento fazer diferente do que aprendi'}]},
+  {text:'A minha posição habitual nas relações (quem cuida, quem é cuidado, quem tem poder) é...',opts:[{s:'repetir',t:'Semelhante à que tinha em casa — reproduzo os papéis que conheci em criança'},{s:'compensar',t:'O oposto — se em casa era subjugada, agora tenho controlo; se havia caos, agora procuro ordem'},{s:'mistura',t:'Variável — mudo de papel dependendo da relação ou do momento'},{s:'consciente',t:'Algo que estou a reequilibrar — trabalho para ter relações mais simétricas e saudáveis'}]},
+  {text:'A forma como me relaciono com a ausência ou com o silêncio do parceiro foi moldada...',opts:[{s:'repetir',t:'Pela mesma sensação que tinha com as figuras parentais — o silêncio activa o mesmo medo ou vazio'},{s:'compensar',t:'Por uma reacção oposta — se o silêncio era perigoso, agora ou o procuro ou o enfrento excessivamente'},{s:'mistura',t:'De forma inconsistente — às vezes fico bem com o silêncio, outras vezes aterra-me sem razão clara'},{s:'consciente',t:'Por um trabalho consciente — reconheço o gatilho e tento responder de forma diferente do que era automático'}]},
+  {text:'A minha capacidade de estabelecer limites nas relações está ligada...',opts:[{s:'repetir',t:'À ausência de modelos de limite em casa — dificuldade em dizer não ou em impor o que preciso'},{s:'compensar',t:'A uma reacção ao excesso de controlo que vivi — tenho limites muito rígidos ou muito permeáveis'},{s:'mistura',t:'A uma inconsistência — às vezes tenho limites claros, outras vezes cedo completamente'},{s:'consciente',t:'A um trabalho activo de aprendizagem — estou a construir limites que não aprendi em criança'}]},
+  {text:'O tipo de amor que me parece "familiar" e por isso reconfortante é...',opts:[{s:'repetir',t:'O que se parece com o que recebi em casa — mesmo que não seja saudável, é o que me parece real'},{s:'compensar',t:'O oposto do que recebi — procuro o que nunca tive, às vezes de forma idealizada'},{s:'mistura',t:'Ambos — ora me atrai o familiar, ora o completamente diferente'},{s:'consciente',t:'Algo que estou a redefinir — aprendo o que é amor saudável e começo a reconhecê-lo e a aceitá-lo'}]},
+  {text:'A forma como me comporto com figuras de autoridade ou com pessoas que admiro está ligada...',opts:[{s:'repetir',t:'À relação que tive com as figuras parentais — reproduzo os mesmos padrões de submissão, desafio ou admiração'},{s:'compensar',t:'A uma reacção oposta — se fui submissa, agora desafio; se me rebelei, agora sou excessivamente deferente'},{s:'mistura',t:'A uma mistura — depende da pessoa e do contexto'},{s:'consciente',t:'A um processo de crescimento — estou a aprender a relacionar-me com autoridade de forma equilibrada'}]},
+  {text:'Quando alguém me diz que me ama de forma consistente e estável, sinto...',opts:[{s:'repetir',t:'Estranheza ou dificuldade em acreditar — o amor estável não é o que me parece real ou merecido'},{s:'compensar',t:'Alívio mas também alguma desconfiança — é o que sempre quis mas não sei bem como receber'},{s:'mistura',t:'Variável — às vezes recebo bem, outras vezes saboto ou não acredito'},{s:'consciente',t:'Um processo de aprendizagem — estou a aprender a receber amor estável sem o sabotar'}]}
+];
+
+let clientName='',clientId='';
+let f1Idx=0,f2Idx=0,f3Idx=0;
+let f1Ans=QS1.map(()=>({first:null,second:null}));
+let f2Ans=QS2.map(()=>({first:null,second:null}));
+let f3Ans=QS3.map(()=>({first:null,second:null}));
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+function startQuiz(){clientName=document.getElementById('inp-name').value.trim();clientId=document.getElementById('inp-id').value.trim();if(!clientName){document.getElementById('err-cover').style.display='block';return}document.getElementById('err-cover').style.display='none';f1Idx=0;show('s-fase1');renderF(1)}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const p = new URLSearchParams(window.location.search);
+  const nome = p.get('nome'), id = p.get('id');
+  if (nome && id) {
+    clientName = nome; clientId = id;
+  }
+});
+function goFase2(){f2Idx=0;show('s-fase2');renderF(2)}
+function goFase3(){f3Idx=0;show('s-fase3');renderF(3)}
+
+function getState(ph){return ph===1?{idx:f1Idx,ans:f1Ans,qs:QS1,pct:f1Idx}:ph===2?{idx:f2Idx,ans:f2Ans,qs:QS2,pct:f2Idx}:{idx:f3Idx,ans:f3Ans,qs:QS3,pct:f3Idx}}
+
+function renderF(ph){
+  const {idx,ans,qs}=getState(ph);
+  const p=Math.round(((idx+1)/qs.length)*100);
+  document.getElementById('f'+ph+'-fill').style.width=p+'%';
+  document.getElementById('f'+ph+'-cnt').textContent=(idx+1)+' / '+qs.length;
+  const colorMap={1:'#1a2744',2:'#b85c6e',3:'#c9702c'};
+  const labelMap={1:'Parte 1 — Pai',2:'Parte 2 — Mãe',3:'Parte 3 — Repetição'};
+  document.getElementById('f'+ph+'-q').innerHTML=buildQ(qs[idx],ans[idx],ph,colorMap[ph],labelMap[ph],idx);
+  document.getElementById('f'+ph+'-prev').disabled=idx===0;
+  const isLast=idx===qs.length-1;
+  document.getElementById('f'+ph+'-next').textContent=isLast?(ph<3?'Continuar →':'Ver Resultado →'):'Seguinte →';
+  updateInfo(ph)
+}
+
+function buildQ(q,ans,ph,color,label,idx){
+  const dimsByPh={1:PAI_DIMS,2:MAE_DIMS,3:REP_DIMS};
+  const dims=dimsByPh[ph];
+  return`<div class="q-card"><div class="q-num" style="color:${color}">${label} · Questão ${idx+1}</div><div class="q-text">${q.text}</div><div class="options">${q.opts.map(o=>`<button class="option ${ans.first===o.s?'first':ans.second===o.s?'second':''}" onclick="selectOpt('${o.s}',${ph})"><div class="opt-badge">${ans.first===o.s?'1':ans.second===o.s?'2':'&nbsp;'}</div><div class="opt-text">${o.t}</div></button>`).join('')}</div></div>`
+}
+
+function selectOpt(s,ph){
+  const {idx,ans,qs}=getState(ph);
+  const a=ans[idx];
+  if(a.first===s){a.first=null;a.second=null}else if(a.second===s){a.second=null}else if(!a.first){a.first=s}else if(!a.second){a.second=s}else{a.second=s}
+  const dimsByPh={1:PAI_DIMS,2:MAE_DIMS,3:REP_DIMS};
+  const colorMap={1:'#1a2744',2:'#b85c6e',3:'#c9702c'};
+  const labelMap={1:'Parte 1 — Pai',2:'Parte 2 — Mãe',3:'Parte 3 — Repetição'};
+  document.getElementById('f'+ph+'-q').innerHTML=buildQ(qs[idx],a,ph,colorMap[ph],labelMap[ph],idx);
+  updateInfo(ph)
+}
+
+function updateInfo(ph){const{idx,ans}=getState(ph);const a=ans[idx];const el=document.getElementById('f'+ph+'-info');if(!a.first&&!a.second){el.textContent='';el.className='sel-info'}else if(a.first&&!a.second){el.textContent='1.ª escolha · Clica numa segunda (opcional)';el.className='sel-info'}else{el.textContent='✓ Duas escolhas seleccionadas';el.className='sel-info ok'}}
+
+function navNext(ph){
+  const{idx,ans,qs}=getState(ph);
+  if(!ans[idx].first){const el=document.getElementById('f'+ph+'-info');el.textContent='Por favor selecciona pelo menos uma opção.';el.className='sel-info warn';return}
+  const isLast=idx===qs.length-1;
+  if(!isLast){if(ph===1)f1Idx++;else if(ph===2)f2Idx++;else f3Idx++;renderF(ph)}
+  else{if(ph===1)show('s-trans1');else if(ph===2)show('s-trans2');else calcAndShow()}
+  window.scrollTo({top:0,behavior:'smooth'})
+}
+function navPrev(ph){
+  const{idx}=getState(ph);
+  if(idx>0){if(ph===1)f1Idx--;else if(ph===2)f2Idx--;else f3Idx--;renderF(ph);window.scrollTo({top:0,behavior:'smooth'})}
+}
+function f1Next(){navNext(1)}function f1Prev(){navPrev(1)}
+function f2Next(){navNext(2)}function f2Prev(){navPrev(2)}
+function f3Next(){navNext(3)}function f3Prev(){navPrev(3)}
+
+function calcScores(ans,dims){const s={};Object.keys(dims).forEach(k=>s[k]=0);ans.forEach(a=>{if(a.first)s[a.first]=(s[a.first]||0)+2;if(a.second)s[a.second]=(s[a.second]||0)+1});return s}
+
+function calcAndShow(){
+  show('s-load');
+  const s1=calcScores(f1Ans,PAI_DIMS);
+  const s2=calcScores(f2Ans,MAE_DIMS);
+  const s3=calcScores(f3Ans,REP_DIMS);
+  const top=o=>Object.entries(o).sort((a,b)=>b[1]-a[1])[0][0];
+  const pai1=top(s1),mae1=top(s2),rep1=top(s3);
+  submitData(s1,s2,s3,pai1,mae1,rep1);
+  setTimeout(()=>{buildResult(s1,s2,s3,pai1,mae1,rep1);show('s-result')},1800)
+}
+
+function buildResult(s1,s2,s3,pai1,mae1,rep1){
+  document.getElementById('res-greeting').textContent=clientName+' — como os teus padrões parentais moldam quem és nas relações.';
+  const maxPts=QS1.length*2;
+  const totalSum1=Object.values(s1).reduce((a,b)=>a+b,0)||1;
+  const totalSum2=Object.values(s2).reduce((a,b)=>a+b,0)||1;
+  const totalSum3=Object.values(s3).reduce((a,b)=>a+b,0)||1;
+
+  function bars(scores,dims,sum){return Object.entries(scores).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="bar-item"><div class="bar-label">${dims[k].name}</div><div class="bar-track"><div class="bar-fill" data-w="${Math.round(v/maxPts*100)}" style="background:${dims[k].color}"></div></div><div class="bar-pct">${Math.round(v/sum*100)}%</div></div>`).join('')}
+
+  const paiDesc=PAI_DIMS[pai1];const maeDesc=MAE_DIMS[mae1];const repDesc=REP_DIMS[rep1];
+
+  const note=`O teu padrão paterno dominante foi <strong>${paiDesc.name}</strong> e o materno <strong>${maeDesc.name}</strong>. Nas relações actuais, tende a <strong>${repDesc.name.toLowerCase()}</strong>. Estes padrões não são um destino — são um ponto de partida para compreender o que aprendeste sobre o amor antes de poder escolher.`;
+
+  document.getElementById('res-content').innerHTML=`
+    <div class="res-card"><div class="rc-head" style="background:#1a2744"><div class="rct">FIGURA PATERNA</div><h3>${paiDesc.name}</h3></div><div class="rc-body"><div class="rc-title">${paiDesc.name}</div>${bars(s1,PAI_DIMS,totalSum1)}<div class="rc-desc">${paiDesc.desc}</div></div></div>
+    <div class="res-card"><div class="rc-head" style="background:#b85c6e"><div class="rct">FIGURA MATERNA</div><h3>${maeDesc.name}</h3></div><div class="rc-body"><div class="rc-title">${maeDesc.name}</div>${bars(s2,MAE_DIMS,totalSum2)}<div class="rc-desc">${maeDesc.desc}</div></div></div>
+    <div class="res-card"><div class="rc-head" style="background:#c9702c"><div class="rct">COMO SE REPETE HOJE</div><h3>${repDesc.name}</h3></div><div class="rc-body"><div class="rc-title">${repDesc.name}</div>${bars(s3,REP_DIMS,totalSum3)}<div class="rc-desc">${repDesc.desc}</div></div></div>
+    <div class="match-box"><div class="mlabel">SÍNTESE</div><h3>O que aprendeste sobre o amor</h3><p>${note}</p></div>
+    <div class="insight-final">"Compreender de onde vêm os padrões não é para os justificar — é para os poder finalmente escolher."</div>`;
+  setTimeout(()=>{document.querySelectorAll('.bar-fill').forEach(b=>{b.style.width=(b.dataset.w||0)+'%'})},300)
+}
+
+function submitData(s1,s2,s3,pai1,mae1,rep1){
+  const r1=f1Ans.map(a=>(a.first||'-')+'>'+(a.second||'-')).join('|');
+  const r2=f2Ans.map(a=>(a.first||'-')+'>'+(a.second||'-')).join('|');
+  const r3=f3Ans.map(a=>(a.first||'-')+'>'+(a.second||'-')).join('|');
+  const payload={timestamp:new Date().toISOString(),nome:clientName,id_cliente:clientId,quiz:'padroes-parentais',pai_presente:s1.presente||0,pai_ausente:s1.ausente||0,pai_controlador:s1.controlador||0,pai_imprevisivel:s1.imprevisivel||0,mae_presente:s2.presente||0,mae_ausente:s2.ausente||0,mae_ansiosa:s2.ansiosa||0,mae_imprevisivel:s2.imprevisivel||0,rep_repetir:s3.repetir||0,rep_compensar:s3.compensar||0,rep_mistura:s3.mistura||0,rep_consciente:s3.consciente||0,pai_principal:PAI_DIMS[pai1].name,mae_principal:MAE_DIMS[mae1].name,repeticao_principal:REP_DIMS[rep1].name,f1_bruto:r1,f2_bruto:r2,f3_bruto:r3};
+  fetch(APPS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(e=>console.error(e))
+}
+</script>
+</body>
+</html>
