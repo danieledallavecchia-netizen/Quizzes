@@ -4,8 +4,6 @@
 
 **Daniele Dallavecchia**  
 Psicanalista e Psicoterapeuta  
-Método HLE | Academia Pedro Frias (APF)  
-Guimarães, Portugal  
 📧 danieledallavecchia@gmail.com
 
 ---
