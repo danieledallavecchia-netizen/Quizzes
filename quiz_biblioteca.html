@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biblioteca Clínica de Quizzes — Daniele Dallavecchia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:    #1a2744;
+  --deep:    #0f1a35;
+  --gold:    #c9a84c;
+  --gold-lt: #e8c97a;
+  --cream:   #f8f5ef;
+  --cream2:  #f0ead8;
+  --white:   #ffffff;
+  --text:    #2c3550;
+  --text-lt: #6b7594;
+  --border:  #dcd6c8;
+  --rose:    #b85c6e;
+  --sage:    #5a7a6e;
+  --lavender:#7b5ea7;
+  --amber:   #c9702c;
+  --r:       8px;
+  --shadow:  0 4px 20px rgba(26,39,68,.1);
+  --sidebar-w: 280px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); min-height: 100vh; font-size: 14px; }
+
+/* ── LAYOUT ── */
+.app { display: flex; height: 100vh; overflow: hidden; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w); min-width: var(--sidebar-w);
+  background: var(--deep); display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.sb-header {
+  padding: 20px 18px 16px; border-bottom: 1px solid rgba(255,255,255,.07);
+  flex-shrink: 0;
+}
+.sb-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.sb-logo svg { width: 32px; height: 32px; flex-shrink: 0; }
+.sb-logo-text h1 { font-family: 'Playfair Display', serif; font-size: 12px; color: var(--gold); line-height: 1.3; }
+.sb-logo-text p  { font-size: 9px; color: rgba(255,255,255,.3); letter-spacing: .8px; text-transform: uppercase; margin-top: 1px; }
+
+.sb-client-select { width: 100%; }
+.sb-client-select label { font-size: 9px; text-transform: uppercase; letter-spacing: 1.2px; color: rgba(255,255,255,.25); display: block; margin-bottom: 5px; }
+.sb-client-select select {
+  width: 100%; padding: 7px 10px; background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1); border-radius: 6px;
+  color: rgba(255,255,255,.75); font-size: 12px; font-family: 'DM Sans', sans-serif; cursor: pointer;
+}
+.sb-client-select select option { background: var(--deep); }
+
+.sb-nav { flex: 1; overflow-y: auto; padding: 12px 0; }
+.sb-nav::-webkit-scrollbar { width: 3px; }
+.sb-nav::-webkit-scrollbar-track { background: transparent; }
+.sb-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 3px; }
+
+.sb-cat-label {
+  padding: 12px 18px 4px; font-size: 9px; text-transform: uppercase;
+  letter-spacing: 1.5px; color: rgba(255,255,255,.2); font-weight: 600;
+}
+.sb-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 18px; cursor: pointer; font-size: 12px;
+  color: rgba(255,255,255,.55); border: none; background: none;
+  width: 100%; text-align: left; transition: .15s;
+  border-left: 2px solid transparent; position: relative;
+}
+.sb-item:hover { background: rgba(255,255,255,.05); color: rgba(255,255,255,.85); }
+.sb-item.active { background: rgba(201,168,76,.1); color: var(--gold-lt); border-left-color: var(--gold); }
+.sb-item .ic { font-size: 15px; flex-shrink: 0; }
+.sb-item .nm { flex: 1; line-height: 1.3; }
+.sb-item .badge-avail { font-size: 9px; padding: 2px 6px; border-radius: 99px; background: rgba(90,122,110,.3); color: #8bc4b0; font-weight: 600; }
+.sb-item .badge-wip   { font-size: 9px; padding: 2px 6px; border-radius: 99px; background: rgba(201,168,76,.15); color: var(--gold); }
+
+/* ── MAIN ── */
+.main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+.main::-webkit-scrollbar { width: 5px; }
+.main::-webkit-scrollbar-track { background: var(--cream2); }
+.main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── WELCOME ── */
+#welcomeView {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  flex: 1; padding: 48px 32px; text-align: center;
+}
+.wv-icon { font-size: 52px; margin-bottom: 20px; opacity: .7; }
+.wv-title { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--navy); margin-bottom: 10px; }
+.wv-sub { font-size: 14px; color: var(--text-lt); max-width: 380px; line-height: 1.7; }
+.wv-stats { display: flex; gap: 24px; margin-top: 28px; }
+.wv-stat { text-align: center; }
+.wv-stat-n { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--navy); }
+.wv-stat-l { font-size: 11px; color: var(--text-lt); text-transform: uppercase; letter-spacing: .8px; }
+
+/* ── QUIZ VIEW ── */
+#quizView { display: none; flex: 1; flex-direction: column; }
+
+.qv-hero {
+  padding: 28px 36px 24px;
+  border-bottom: 1px solid var(--border);
+  background: white;
+  position: sticky; top: 0; z-index: 10;
+}
+.qv-breadcrumb { font-size: 11px; color: var(--text-lt); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+.qv-breadcrumb span { color: var(--gold); }
+.qv-title-row { display: flex; align-items: flex-start; gap: 14px; }
+.qv-icon-badge {
+  width: 52px; height: 52px; border-radius: 14px; display: flex;
+  align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;
+}
+.qv-title { flex: 1; }
+.qv-title h1 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--navy); margin-bottom: 4px; }
+.qv-meta { display: flex; gap: 10px; flex-wrap: wrap; }
+.qv-tag {
+  font-size: 11px; padding: 3px 10px; border-radius: 99px;
+  background: var(--cream2); color: var(--text-lt); border: 1px solid var(--border);
+}
+.qv-tag.avail { background: rgba(90,122,110,.1); color: var(--sage); border-color: rgba(90,122,110,.25); }
+.qv-tag.wip   { background: rgba(201,168,76,.1); color: #7a5000; border-color: rgba(201,168,76,.25); }
+
+.qv-body { padding: 28px 36px; display: flex; flex-direction: column; gap: 24px; }
+
+/* ── SECTIONS ── */
+.section {
+  background: white; border-radius: 12px; border: 1px solid var(--border);
+  overflow: hidden; box-shadow: 0 2px 8px rgba(26,39,68,.05);
+}
+.section-head {
+  padding: 14px 20px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px; cursor: pointer;
+  background: white; transition: background .15s;
+}
+.section-head:hover { background: var(--cream); }
+.section-head-icon { font-size: 16px; }
+.section-head-text { flex: 1; }
+.section-head-text h3 { font-size: 13px; font-weight: 600; color: var(--navy); }
+.section-head-text p  { font-size: 11px; color: var(--text-lt); margin-top: 1px; }
+.section-toggle { color: var(--text-lt); font-size: 14px; transition: transform .2s; }
+.section-toggle.open { transform: rotate(180deg); }
+.section-body { padding: 18px 20px; }
+.section-body.hidden { display: none; }
+
+/* ── PROSE ── */
+.prose { font-size: 13.5px; color: var(--text); line-height: 1.8; }
+.prose strong { color: var(--navy); }
+.prose em { font-style: italic; color: var(--text-lt); }
+
+/* ── RESULT CARDS ── */
+.result-grid { display: flex; flex-direction: column; gap: 12px; }
+.result-card {
+  border-radius: 10px; border: 1px solid var(--border);
+  overflow: hidden;
+}
+.result-card-head {
+  padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+  cursor: pointer; transition: opacity .15s;
+}
+.result-card-head:hover { opacity: .85; }
+.result-card-label { font-size: 13px; font-weight: 600; flex: 1; }
+.result-card-sub   { font-size: 11px; opacity: .75; }
+.result-card-body  { padding: 14px 16px; border-top: 1px solid rgba(255,255,255,.15); display: none; }
+.result-card-body.open { display: block; }
+.result-card-body p { font-size: 13px; line-height: 1.75; margin-bottom: 8px; color: var(--text); }
+.result-card-body .tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.result-card-body .tag { font-size: 11px; padding: 3px 9px; border-radius: 99px; background: rgba(255,255,255,.25); font-weight: 500; }
+
+/* ── SEND BOX ── */
+.send-box {
+  background: linear-gradient(135deg, var(--navy), var(--deep));
+  border-radius: 12px; padding: 22px 24px; color: white;
+}
+.send-box h3 { font-family: 'Playfair Display', serif; font-size: 17px; color: var(--gold); margin-bottom: 6px; }
+.send-box p  { font-size: 12px; color: rgba(255,255,255,.55); margin-bottom: 18px; line-height: 1.6; }
+
+.send-client-info {
+  background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+  border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.send-client-info .lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,.35); }
+.send-client-info .val { font-size: 13px; color: rgba(255,255,255,.9); font-weight: 500; }
+
+.send-link-box {
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+  border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;
+  font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gold-lt);
+  word-break: break-all; line-height: 1.5; cursor: text; user-select: all;
+  min-height: 38px;
+}
+
+.send-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.btn { padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer; font-size: 12.5px; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: .15s; display: inline-flex; align-items: center; gap: 6px; }
+.btn-gold { background: var(--gold); color: var(--deep); }
+.btn-gold:hover { background: var(--gold-lt); }
+.btn-outline-w { background: transparent; border: 1px solid rgba(255,255,255,.25); color: rgba(255,255,255,.85); }
+.btn-outline-w:hover { background: rgba(255,255,255,.08); }
+.btn-whatsapp { background: rgba(37,211,102,.15); color: #25d366; border: 1px solid rgba(37,211,102,.3); }
+.btn-sm { padding: 6px 12px; font-size: 11.5px; }
+.btn-danger { background: rgba(184,92,110,.15); color: var(--rose); border: 1px solid rgba(184,92,110,.3); }
+
+.email-row { display: flex; gap: 8px; align-items: center; }
+.email-row input {
+  flex: 1; padding: 8px 12px; background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15); border-radius: 6px;
+  color: white; font-size: 12px; font-family: 'DM Sans', sans-serif;
+}
+.email-row input::placeholder { color: rgba(255,255,255,.3); }
+.email-row input:focus { outline: none; border-color: var(--gold); }
+
+/* ── IA BOX ── */
+.ia-box {
+  border-radius: 12px; border: 1px solid var(--border);
+  overflow: hidden;
+}
+.ia-box-head {
+  padding: 14px 20px; background: linear-gradient(135deg, rgba(123,94,167,.08), rgba(74,111,165,.06));
+  border-bottom: 1px solid rgba(123,94,167,.15);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.ia-box-head h3 { font-size: 13px; font-weight: 600; color: var(--lavender); display: flex; align-items: center; gap: 8px; }
+.ia-box-body { padding: 18px 20px; }
+.ia-empty { text-align: center; padding: 24px; color: var(--text-lt); }
+.ia-empty .ie-icon { font-size: 28px; margin-bottom: 10px; }
+.ia-empty p { font-size: 13px; line-height: 1.6; }
+
+.ia-result-list { display: flex; flex-direction: column; gap: 16px; }
+.ia-result-item {
+  border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+.ia-result-item-head {
+  padding: 12px 16px; background: var(--cream);
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.ia-result-item-head .quiz-name { font-size: 13px; font-weight: 600; color: var(--navy); }
+.ia-result-item-head .quiz-date { font-size: 11px; color: var(--text-lt); }
+.ia-result-raw { padding: 10px 16px; background: rgba(90,122,110,.06); font-size: 12px; color: var(--sage); border-bottom: 1px solid var(--border); }
+
+.ia-interpretation {
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(123,94,167,.04), rgba(74,111,165,.04));
+}
+.ia-interpretation-text { font-size: 13px; line-height: 1.8; color: var(--text); white-space: pre-wrap; }
+.ia-notas-area {
+  width: 100%; min-height: 90px; padding: 10px 12px; margin-top: 12px;
+  border: 1px solid var(--border); border-radius: 8px;
+  font-size: 12.5px; font-family: 'DM Sans', sans-serif; line-height: 1.6;
+  resize: vertical; color: var(--text); background: white;
+  transition: border-color .15s;
+}
+.ia-notas-area:focus { outline: none; border-color: var(--lavender); }
+.ia-notas-label { font-size: 10px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-lt); margin-top: 12px; margin-bottom: 5px; }
+
+/* ── DECISION TREE ── */
+.decision-tree { display: flex; flex-direction: column; gap: 10px; }
+.dt-item {
+  border-radius: 8px; overflow: hidden; border: 1px solid var(--border);
+}
+.dt-condition {
+  padding: 10px 14px; font-size: 12px; font-weight: 600;
+  background: var(--cream2); color: var(--navy);
+  display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border);
+}
+.dt-action {
+  padding: 10px 14px; font-size: 12.5px; color: var(--text); line-height: 1.6;
+}
+.dt-action ul { padding-left: 18px; margin-top: 4px; }
+.dt-action li { margin-bottom: 3px; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--navy); color: white; padding: 10px 20px; border-radius: 8px;
+  font-size: 13px; z-index: 9999; transition: transform .3s; pointer-events: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,.2);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.success { background: var(--sage); }
+.toast.error   { background: var(--rose); }
+
+/* ── SCROLLBAR ── */
+.sidebar::-webkit-scrollbar { width: 0; }
+
+/* ── MODO TABS (Individual / Casal) ── */
+.modo-tabs{display:flex;gap:4px;margin-bottom:16px}
+.modo-tab{padding:6px 16px;border-radius:6px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.6);font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:.15s}
+.modo-tab.active{background:var(--gold);color:var(--deep);border-color:var(--gold);font-weight:600}
+.modo-tab:hover:not(.active){background:rgba(255,255,255,.08);color:rgba(255,255,255,.85)}
+/* ── CASAL LINKS ── */
+.casal-links{display:flex;flex-direction:column;gap:12px}
+.casal-partner{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:14px}
+.casal-partner-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.4);margin-bottom:6px}
+.casal-partner-link{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold-lt);word-break:break-all;line-height:1.5;min-height:32px;background:rgba(0,0,0,.2);border-radius:6px;padding:8px 10px;margin-bottom:8px}
+.casal-id-badge{display:inline-block;background:rgba(201,168,76,.2);color:var(--gold);border-radius:99px;padding:3px 10px;font-size:11px;font-weight:700;font-family:'DM Mono',monospace;letter-spacing:1px}
+/* ── CONCORDAR / DISCORDAR ── */
+.concordar-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 0;border-top:1px solid var(--border);margin-top:10px}
+.concordar-label{font-size:11px;color:var(--text-lt);text-transform:uppercase;letter-spacing:.8px;flex:1;min-width:160px}
+.concordar-btn{padding:5px 14px;border-radius:99px;border:1px solid;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;font-weight:600;transition:.15s}
+.concordar-btn.concordo{color:var(--sage);border-color:var(--sage);background:rgba(90,122,110,.08)}
+.concordar-btn.concordo.active{background:var(--sage);color:white}
+.concordar-btn.discordo{color:var(--rose);border-color:var(--rose);background:rgba(184,92,110,.08)}
+.concordar-btn.discordo.active{background:var(--rose);color:white}
+/* ── CASAL COMPARISON ── */
+.casal-compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.casal-profile{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:14px}
+.casal-profile-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-lt);margin-bottom:6px}
+.casal-profile-result{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.casal-profile-sub{font-size:12px;color:var(--text-lt);line-height:1.5}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sb-header">
+    <div class="sb-logo">
+      <!-- Hermetic tree SVG -->
+      <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="22" cy="22" r="20" stroke="rgba(201,168,76,.25)" stroke-width="1"/>
+        <circle cx="22" cy="22" r="13" stroke="rgba(201,168,76,.15)" stroke-width="1"/>
+        <line x1="22" y1="4" x2="22" y2="40" stroke="rgba(201,168,76,.3)" stroke-width="1"/>
+        <line x1="4" y1="22" x2="40" y2="22" stroke="rgba(201,168,76,.3)" stroke-width="1"/>
+        <circle cx="22" cy="10" r="2.5" fill="#c9a84c" opacity=".8"/>
+        <circle cx="22" cy="34" r="2.5" fill="#c9a84c" opacity=".8"/>
+        <circle cx="10" cy="22" r="2.5" fill="#c9a84c" opacity=".8"/>
+        <circle cx="34" cy="22" r="2.5" fill="#c9a84c" opacity=".8"/>
+        <circle cx="22" cy="22" r="3.5" fill="#c9a84c"/>
+        <path d="M22 10 L30 17 L22 22 L14 17 Z" stroke="rgba(201,168,76,.4)" stroke-width=".8" fill="rgba(201,168,76,.05)"/>
+        <path d="M22 34 L30 27 L22 22 L14 27 Z" stroke="rgba(201,168,76,.4)" stroke-width=".8" fill="rgba(201,168,76,.05)"/>
+      </svg>
+      <div class="sb-logo-text">
+        <h1>Biblioteca Clínica<br>de Quizzes</h1>
+        <p>Daniele Dallavecchia · HLE</p>
+      </div>
+    </div>
+    <div class="sb-client-select">
+      <label style="display:flex;justify-content:space-between;align-items:center">
+        Cliente activa
+        <button onclick="reloadClients()" title="Actualizar lista" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);border-radius:4px;padding:2px 7px;font-size:10px;cursor:pointer;font-family:'DM Sans',sans-serif">↻</button>
+      </label>
+      <select id="selCliente" onchange="onClienteChange()">
+        <option value="">— Seleccionar —</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="sb-nav" id="sbNav">
+    <!-- dynamically rendered -->
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="mainArea">
+
+  <!-- WELCOME -->
+  <div id="welcomeView">
+    <div class="wv-icon">📚</div>
+    <h2 class="wv-title">Biblioteca Clínica de Quizzes</h2>
+    <p class="wv-sub">Selecciona um quiz no índice à esquerda para ver a sua ficha clínica completa — propósito, diagnósticos, guia de interpretação e envio ao cliente.</p>
+    <div class="wv-stats" id="wvStats"></div>
+  </div>
+
+  <!-- QUIZ VIEW -->
+  <div id="quizView">
+    <div class="qv-hero" id="qvHero"></div>
+    <div class="qv-body" id="qvBody"></div>
+  </div>
+
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// DADOS — QUIZZES (catálogo clínico completo)
+// ══════════════════════════════════════════════════════════════
+const QUIZZES = [
+// ── VINCULAÇÃO ──────────────────────────────────────────────
+{
+  id: 'linguagem-amor',
+  name: 'Linguagem de Amor',
+  cat: 'Vinculação',
+  icon: '💬', color: '#4a6fa5', bg: 'rgba(74,111,165,.12)',
+  tempo: '15 min', disponivel: true,
+  file: 'quiz_linguagem_amor.html',
+  proposito: 'Identificar como a cliente expressa amor (dar) e como precisa de o receber — dimensões frequentemente divergentes. A discrepância DAR≠RECEBER é clinicamente relevante e aponta para padrões de auto-negação ou esquemas de auto-sacrifício.',
+  dimensoes: [
+    'Linguagem primária e secundária de EXPRESSÃO do amor (como dá)',
+    'Linguagem primária e secundária de RECEPÇÃO do amor (como precisa de receber)',
+    'Discrepância entre dar e receber — índice de auto-negação relacional',
+  ],
+  hipoteses: [
+    { label: 'DAR ≠ RECEBER (discrepância alta)', cor: '#b85c6e', bg: 'rgba(184,92,110,.08)', texto: 'Sugere padrão de auto-sacrifício (Esquema Young). A cliente dá de uma forma mas precisa de outra — possivelmente aprendeu que as suas necessidades não importam ou são "demais". Explorar: quem na família dava desta forma? O que acontecia quando exprimia a sua necessidade real?', tags: ['Esquema Auto-Sacrifício (Young)', 'Ferida de Rejeição (Bourbeau)', 'Vinculação Ansiosa'] },
+    { label: 'RECEBER: Palavras de Afirmação', cor: '#7b5ea7', bg: 'rgba(123,94,167,.08)', texto: 'Necessidade de validação verbal. Pode indicar ferida de humilhação ou rejeição, e busca de confirmação externa do valor próprio. Vigilância: dependência emocional, narcisismo saudável vs. frágil.', tags: ['Ferida de Humilhação', 'Validação Externa', 'Auto-Estima Frágil'] },
+    { label: 'RECEBER: Toque Físico', cor: '#5a7a6e', bg: 'rgba(90,122,110,.08)', texto: 'Necessidade de regulação somática via contacto. Frequente em pessoas com historial de privação afectiva física ou trauma somático. O corpo como sede da necessidade de amor. Abordagem: trabalho corporal (EFT pontos de conforto, Hipnose de regressão somática).', tags: ['Privação Somática', 'Trauma Corporal', 'Regulação Nervosa'] },
+    { label: 'RECEBER: Actos de Serviço', cor: '#c9702c', bg: 'rgba(201,112,44,.08)', texto: 'O amor manifesta-se através do fazer e do cuidar. Pode indicar hipervigilância relacional — só se sente amada quando alguém "prova" com acções. Explorar: amor condicionado a comportamentos na família de origem.', tags: ['Amor Condicional', 'Hipervigilância Relacional', 'Apego Ansioso'] },
+    { label: 'RECEBER: Tempo de Qualidade', cor: '#1a2744', bg: 'rgba(26,39,68,.06)', texto: 'Necessidade de presença e atenção exclusiva. Pode estar ligada a sensação de abandono emocional mesmo com presença física (pais emocionalmente ausentes, distraídos). Ferida de abandono frequente.', tags: ['Ferida de Abandono', 'Negligência Emocional', 'Abandono Emocional'] },
+  ],
+  decisoes: [
+    { cond: 'Discrepância DAR≠RECEBER > 10 pontos', acoes: ['Trabalhar o esquema de auto-sacrifício nas sessões 3-4', 'EFT: "Mesmo que eu mereça receber o que preciso, eu aceito-me profundamente"', 'Hipnose: regressão à primeira memória de "não pedir"', 'Explorar: "O que acreditas que acontece se recebes o que precisas?"'] },
+    { cond: 'RECEBER = Palavras → score alto', acoes: ['Trabalhar auto-estima e validação interna (sessão 5)', 'Questionar: de quem dependes para te sentires boa o suficiente?', 'Introduzir afirmações como prescrição terapêutica (gravação personalizada)'] },
+    { cond: 'RECEBER = Toque → score alto', acoes: ['Integrar toque terapêutico no EFT (pontos de auto-conforto)', 'Hipnose: lugar seguro com sensação somática de segurança', 'Rastrear historial de privação física ou abuso'] },
+    { cond: 'DAR = RECEBER (congruência alta)', acoes: ['Recurso positivo — cliente com auto-conhecimento relacional', 'Usar como âncora de segurança no processo', 'Explorar se há rigidez ou flexibilidade nas relações'] },
+  ],
+  perguntas_sessao: [
+    'Quando recebes desta forma que identificámos, o que sentes no corpo?',
+    'Há alguém na tua vida que te ama desta forma? Como é receber isso?',
+    'O que te impede de pedir o que precisas directamente?',
+    'Quando dás desta forma, o que esperas receber de volta?',
+  ]
+},
+{
+  id: 'estilo-apego',
+  name: 'Estilo de Apego',
+  cat: 'Vinculação',
+  icon: '🔗', color: '#7b5ea7', bg: 'rgba(123,94,167,.12)',
+  tempo: '15 min', disponivel: true,
+  file: 'quiz_estilo_apego.html',
+  proposito: 'Mapear o padrão de vinculação dominante — o "software" que regula como a cliente se liga, se afasta e processa a separação nas relações de proximidade. Informa directamente a estratégia terapêutica e a gestão da aliança.',
+  dimensoes: [
+    'Padrão primário: Seguro / Ansioso / Evitante / Desorganizado',
+    'Padrão secundário (co-dominante)',
+    'Estratégia de regulação emocional em contexto relacional',
+    'Comportamento de base segura vs. sistema de alarme',
+  ],
+  hipoteses: [
+    { label: 'Apego Ansioso (Preocupado)', cor: '#b85c6e', bg: 'rgba(184,92,110,.08)', texto: 'Hiperactivação do sistema de apego: medo de abandono, monitorização constante do outro, dificuldade em tolerar distância. Modelo interno: "Eu não sou suficiente / o outro pode partir." Frequentemente associado a mãe ansiosa, inconsistente ou emocionalmente imprevisível.', tags: ['Medo de Abandono', 'Ferida de Abandono', 'Esquema Abandono/Instabilidade (Young)', 'Apego Preocupado'] },
+    { label: 'Apego Evitante (Dispensioso)', cor: '#4a6fa5', bg: 'rgba(74,111,165,.08)', texto: 'Desactivação do sistema de apego como estratégia de sobrevivência. Independência como defesa, dificuldade em pedir ajuda, alexitimia frequente. Modelo interno: "As relações são perigosas / não posso depender de ninguém." Historial típico: pais emocionalmente frios, punitivos ou que não respondiam ao choro.', tags: ['Ferida de Rejeição', 'Esquema Privação Emocional (Young)', 'Alexitimia', 'Dissociação Emocional'] },
+    { label: 'Apego Desorganizado (Amedrontado)', cor: '#c9702c', bg: 'rgba(201,112,44,.08)', texto: 'Conflito irresolvível: a figura de vinculação é simultaneamente fonte de conforto e de ameaça. Base de trauma relacional precoce. Alta probabilidade de dissociação, flashbacks relacionais, comportamentos contraditórios nas relações. Máxima atenção e ritmo lento na aliança terapêutica.', tags: ['Trauma Relacional', 'Dissociação', 'Ferida de Traição', 'PTSD Complexo'] },
+    { label: 'Apego Seguro', cor: '#5a7a6e', bg: 'rgba(90,122,110,.08)', texto: 'Recurso interno significativo. A cliente tem capacidade de confiar, de pedir ajuda e de tolerar separação. Usar como âncora durante o processo — ampliar em momentos de regressão. Mesmo em padrão seguro, verificar se há áreas específicas onde o padrão desce (ex: relação romântica vs. profissional).', tags: ['Recurso', 'Regulação Emocional', 'Base Segura Interna'] },
+  ],
+  decisoes: [
+    { cond: 'Resultado: Ansioso', acoes: ['Sessões 2-3: trabalhar a ferida de abandono', 'EFT: pontos de segurança + "mesmo que tenha medo de ser abandonada"', 'Hipnose: reparentalização, figura de vinculação segura', 'Cuidado com a aliança: cliente pode testar a terapeuta. Ser consistente.'] },
+    { cond: 'Resultado: Evitante', acoes: ['Ritmo mais lento na criação de intimidade terapêutica', 'Não forçar emoções — entrar pelo corpo (EFT) e depois nomear', 'Rastrear alexitimia (quiz específico indicado)', 'Hipnose: lugar seguro onde é permitido sentir'] },
+    { cond: 'Resultado: Desorganizado', acoes: ['Prioridade absoluta: criar segurança e previsibilidade na relação terapêutica', 'NÃO avançar para técnicas de regressão sem estabilização prévia', 'Rastrear historial de trauma (quiz ACE indicado)', 'Considerar encaminhamento para trauma especializado se sintomas dissociativos'] },
+    { cond: 'Resultado: Seguro', acoes: ['Usar como recurso durante o processo', 'Ampliar capacidades de regulação', 'Verificar áreas de excepção ao padrão seguro'] },
+  ],
+  perguntas_sessao: [
+    'Quando sentes que alguém que amas pode partir, o que acontece em ti?',
+    'O que é mais fácil para ti: pedir ajuda ou dar ajuda? Como é isso?',
+    'Consegues lembrar a primeira vez que te sentiste assim numa relação?',
+    'Que padrão reconheces nas tuas relações de maior intimidade?',
+  ]
+},
+{
+  id: 'padroes-parentais',
+  name: 'Padrões Relacionais Parentais',
+  cat: 'Vinculação',
+  icon: '👪', color: '#c9702c', bg: 'rgba(201,112,44,.12)',
+  tempo: '18 min', disponivel: true,
+  file: 'quiz_padroes_parentais.html',
+  proposito: 'Mapear a relação com as figuras parentais primárias e identificar como esses padrões se repetem ou são compensados nas relações actuais. Especialmente útil para compreender a dinâmica relacional e escolher o foco do trabalho de reparentalização.',
+  dimensoes: [
+    'Padrão dominante na relação com o pai (Presente, Ausente, Controlador, Imprevisível)',
+    'Padrão dominante na relação com a mãe (Presente, Ausente, Ansiosa, Imprevisível)',
+    'Estratégia de repetição relacional: Repetir / Compensar / Mistura / Consciente',
+    'Dimensão de maior impacto na identidade e auto-conceito',
+  ],
+  hipoteses: [
+    { label: 'Pai: Ausente + Mãe: Ansiosa', cor: '#b85c6e', bg: 'rgba(184,92,110,.08)', texto: 'Combinação frequente em mulheres com ferida de abandono + hipervigilância aprendida. O pai ausente cria o vazio de segurança e validação masculina; a mãe ansiosa transmite que o mundo é perigoso. Alta probabilidade de apego ansioso e padrão de sobre-responsabilização.', tags: ['Ferida de Abandono', 'Hipervigilância', 'Sobre-Responsabilização', 'Apego Ansioso'] },
+    { label: 'Pai: Controlador + Mãe: Presente', cor: '#4a6fa5', bg: 'rgba(74,111,165,.08)', texto: 'Dinâmica de autoridade rígida e submissão aprendida. A mãe presente mas possivelmente submissa modela o padrão de silenciar as próprias necessidades. Alta correlação com dificuldade em estabelecer limites e com relações onde a cliente se anula.', tags: ['Limites Frágeis', 'Submissão', 'Ferida de Injustiça', 'Esquema Subjugação (Young)'] },
+    { label: 'Ambos: Imprevisíveis', cor: '#c9702c', bg: 'rgba(201,112,44,.08)', texto: 'Ambiente de caos relacional primário. A cliente não teve modelo de regulação emocional consistente. Alta probabilidade de apego desorganizado, dificuldade em confiar, hipervigilância ao estado emocional do outro. Rastrear sinais de dissociação.', tags: ['Caos Emocional', 'Apego Desorganizado', 'Trauma Crónico', 'Dissociação'] },
+    { label: 'Repetição: Repetir', cor: '#7b5ea7', bg: 'rgba(123,94,167,.08)', texto: 'A cliente escolhe (inconscientemente) relações que replicam o ambiente parental — mesmo que doloroso, é o que lhe parece "real" ou "familiar". O familiar confunde-se com o seguro. Trabalho central: diferenciar o familiar do saudável.', tags: ['Compulsão à Repetição', 'Familiar vs. Saudável', 'Transferência Relacional'] },
+    { label: 'Repetição: Compensar', cor: '#5a7a6e', bg: 'rgba(90,122,110,.08)', texto: 'A cliente busca o oposto do que viveu — mas a idealização cria expectativas irrealistas. Ex: pai ausente → parceiro "sufocante" que não consegue tolerar. A compensação não resolve a ferida, apenas a inverte. Trabalho central: integração, não compensação.', tags: ['Idealização', 'Expectativas Irrealistas', 'Compensação Defensiva'] },
+    { label: 'Repetição: Consciente', cor: '#1a2744', bg: 'rgba(26,39,68,.06)', texto: 'A cliente tem consciência dos padrões e está activamente a tentar mudá-los. Recurso significativo. Usar este insight para aprofundar — ela já sabe o "quê", o trabalho é o "como" ao nível somático e do inconsciente.', tags: ['Recurso', 'Insight', 'Trabalho do Inconsciente'] },
+  ],
+  decisoes: [
+    { cond: 'Pai: Ausente — impacto alto', acoes: ['Sessão de reparentalização focada na figura paterna', 'Hipnose: diálogo com o pai que precisava ter tido', 'EFT: "Mesmo que o meu pai não estivesse presente, eu mereço amor e protecção"', 'Explorar como esta ausência moldou a relação com figuras de autoridade'] },
+    { cond: 'Repetição: Repetir', acoes: ['Trabalho de reconhecimento do padrão: traçar a linha temporal', 'Psicod rama: cena do padrão + cena alternativa', 'EFT: "Mesmo que o familiar me pareça amor, eu escolho o saudável"', 'Questionar: o que de familiar há no teu relacionamento actual?'] },
+    { cond: 'Repetição: Compensar', acoes: ['Trabalhar a ferida original (não a compensação)', 'Questionar: o que estás a tentar provar ao compensar?', 'Hipnose: aceder à criança que nunca recebeu X — dar-lho'] },
+    { cond: 'Padrão misto (ambos problemáticos)', acoes: ['Priorizar o padrão de maior impacto actual', 'Mapa Quântico para identificar a área de vida mais afectada', 'Sequenciar: sessões 1-4 estabilização + sessões 5-7 reparentalização'] },
+  ],
+  perguntas_sessao: [
+    'O que é que o teu pai (ou a tua mãe) nunca soube dar-te e que ainda procuras?',
+    'Quando olhas para as tuas relações actuais, onde reconheces o padrão que acabámos de identificar?',
+    'Que mensagem ficaste a acreditar sobre ti própria a partir desta relação?',
+    'Se pudesses falar hoje com essa versão mais nova de ti, o que lhe dirias?',
+  ]
+},
+// ── ESQUEMAS ────────────────────────────────────────────────
+{
+  id: 'esquemas-young',
+  name: 'Esquemas de Young',
+  cat: 'Esquemas',
+  icon: '🗺️', color: '#7b5ea7', bg: 'rgba(123,94,167,.12)',
+  tempo: '20 min', disponivel: false,
+  file: null,
+  proposito: 'Identificar os esquemas maladaptativos precoces (EMPs) dominantes segundo a Schema Therapy de Jeffrey Young. Os esquemas são padrões cognitivo-emocionais disfuncionais formados na infância que organizam toda a percepção relacional e auto-percepção da cliente.',
+  dimensoes: [
+    'Domínio I: Desconexão e Rejeição (abandono, desconfiança, privação emocional, defeituosidade, isolamento)',
+    'Domínio II: Autonomia e Competência Comprometidas (dependência, vulnerabilidade, emaranhamento, fracasso)',
+    'Domínio III: Limites Comprometidos (grandiosidade, auto-controlo insuficiente)',
+    'Domínio IV: Orientação para o Outro (subjugação, auto-sacrifício, busca de aprovação)',
+    'Domínio V: Supervigilância e Inibição (negativismo, inibição emocional, padrões inflexíveis, punição)',
+  ],
+  hipoteses: [
+    { label: 'Domínio I: Abandono / Instabilidade', cor: '#b85c6e', bg: 'rgba(184,92,110,.08)', texto: 'Crença central de que os outros vão partir, morrer ou ser imprevisíveis. Origem típica: morte, divórcio, doença parental, inconsistência emocional. Alta correlação com apego ansioso e medo de abandono crónico.', tags: ['Medo de Abandono', 'Apego Ansioso', 'Hipersensibilidade à Rejeição'] },
+    { label: 'Domínio IV: Auto-Sacrifício', cor: '#c9702c', bg: 'rgba(201,112,44,.08)', texto: 'A cliente coloca consistentemente as necessidades dos outros acima das suas, frequentemente com ressentimento acumulado. Origine comum: responsabilização precoce pelo bem-estar parental (parentificação). Risco de burnout relacional e somatização.', tags: ['Parentificação', 'Somatização', 'Ressentimento', 'Esgotamento'] },
+    { label: 'Domínio I: Privação Emocional', cor: '#4a6fa5', bg: 'rgba(74,111,165,.08)', texto: 'Expectativa de que as necessidades emocionais fundamentais (cuidado, empatia, protecção) nunca serão satisfeitas. Frequente em filhos de pais emocionalmente frios ou narcísicos. Dificuldade em pedir e receber apoio.', tags: ['Privação Emocional', 'Frieza Parental', 'Dificuldade em Pedir'] },
+  ],
+  decisoes: [
+    { cond: 'Em desenvolvimento', acoes: ['Quiz disponível em breve'] },
+  ],
+  perguntas_sessao: ['Quiz em desenvolvimento'],
+},
+// ── TRAUMA ──────────────────────────────────────────────────
+{
+  id: 'ace',
+  name: 'Experiências Adversas na Infância (ACE)',
+  cat: 'Trauma',
+  icon: '🌱', color: '#5a7a6e', bg: 'rgba(90,122,110,.12)',
+  tempo: '8 min', disponivel: false,
+  file: null,
+  proposito: 'Rastreio das experiências adversas na infância e avaliação do score de impacto acumulado (ACE Score). Essencial para compreender a carga alostática e o risco de somatização, doenças crónicas e disfunções emocionais. Informa a ordem e intensidade das intervenções.',
+  dimensoes: [
+    'Abuso (emocional, físico, sexual)',
+    'Negligência (emocional, física)',
+    'Disfunção familiar (violência doméstica, substâncias, doença mental, encarceramento, divórcio)',
+    'Score total ACE e correlação com risco biopsicossocial',
+  ],
+  hipoteses: [
+    { label: 'ACE Score ≥ 4', cor: '#b85c6e', bg: 'rgba(184,92,110,.08)', texto: 'Score elevado. Risco significativamente aumentado de PTSD complexo, doenças crónicas, somatização e disfunção imunológica. Abordagem: estabilização antes de reprocessamento. Não avançar para regressão sem janela de tolerância estabelecida.', tags: ['PTSD Complexo', 'Somatização', 'Janela de Tolerância', 'Estabilização Prioritária'] },
+    { label: 'ACE Score 1-3', cor: '#c9702c', bg: 'rgba(201,112,44,.08)', texto: 'Score moderado. Trauma pontual ou adversidade crónica de menor intensidade. Abordagem padrão do protocolo HLE com atenção aos gatilhos específicos.', tags: ['Trauma Pontual', 'Protocolo HLE Standard'] },
+  ],
+  decisoes: [
+    { cond: 'Em desenvolvimento', acoes: ['Quiz disponível em breve'] },
+  ],
+  perguntas_sessao: ['Quiz em desenvolvimento'],
+},
+{
+  id: 'feridas-infancia',
+  name: 'Feridas da Infância',
+  cat: 'Trauma',
+  icon: '💔', color: '#b85c6e', bg: 'rgba(184,92,110,.12)',
+  tempo: '14 min', disponivel: false,
+  file: null,
+  proposito: 'Identificar as cinco feridas primordiais segundo Lise Bourbeau: Rejeição, Abandono, Humilhação, Traição e Injustiça. Cada ferida cria uma máscara/personagem de adaptação e um padrão de sofrimento específico.',
+  dimensoes: [
+    'Ferida dominante e ferida secundária',
+    'Máscara de adaptação activa (Fugitivo, Dependente, Masoquista, Controlador, Rígido)',
+    'Gatilhos emocionais específicos',
+    'Padrão somático associado',
+  ],
+  hipoteses: [
+    { label: 'Ferida de Abandono', cor: '#b85c6e', bg: 'rgba(184,92,110,.08)', texto: 'Medo profundo de ser deixada sozinha. Máscara: Dependente. Comportamentos: agarrar-se ao outro, dificuldade em estar só, over-giving para manter o outro perto. Origem: abandono real ou percebido na infância (físico ou emocional).', tags: ['Dependência', 'Apego Ansioso', 'Over-giving', 'Medo de Solidão'] },
+    { label: 'Ferida de Rejeição', cor: '#7b5ea7', bg: 'rgba(123,94,167,.08)', texto: 'Medo de não merecer existir, de não ser suficiente. Máscara: Fugitivo. Comportamentos: isolamento, auto-sabotagem, evitar exposição. Origem: rejeição real ou percebida pelos pais — "não queria que eu existisse."', tags: ['Auto-Sabotagem', 'Isolamento', 'Vergonha Profunda', 'Apego Evitante'] },
+  ],
+  decisoes: [
+    { cond: 'Em desenvolvimento', acoes: ['Quiz disponível em breve'] },
+  ],
+  perguntas_sessao: ['Quiz em desenvolvimento'],
+},
+// ── ESTADO MENTAL ────────────────────────────────────────────
+{
+  id: 'ansiedade-depressao',
+  name: 'Rastreio Ansiedade / Depressão',
+  cat: 'Estado Mental',
+  icon: '🌊', color: '#4a6fa5', bg: 'rgba(74,111,165,.12)',
+  tempo: '7 min', disponivel: false,
+  file: null,
+  proposito: 'Rastreio clínico de sintomas de ansiedade (GAD-7 adaptado) e depressão (PHQ-9 adaptado). Permite monitorizar a evolução ao longo do protocolo e identificar momentos que podem requerer encaminhamento médico ou psiquiátrico.',
+  dimensoes: [
+    'Sintomas de ansiedade generalizada (GAD-7): score e severidade',
+    'Sintomas depressivos (PHQ-9): score e risco',
+    'Evolução temporal — comparação entre sessões',
+    'Indicadores de risco que requerem encaminhamento',
+  ],
+  hipoteses: [
+    { label: 'Score Ansiedade ≥ 15 (severa)', cor: '#b85c6e', bg: 'rgba(184,92,110,.08)', texto: 'Ansiedade severa. Verificar contraindições para hipnose (presente na ficha — atenção a esquizofrenia/psicose). Considerar encaminhamento psiquiátrico. Abordagem: estabilização com EFT antes de qualquer trabalho de profundidade.', tags: ['Contraindição Hipnose', 'Encaminhamento', 'Estabilização EFT'] },
+    { label: 'Score Depressão ≥ 10 + ideação', cor: '#c9702c', bg: 'rgba(201,112,44,.08)', texto: 'Depressão moderada a severa com possível ideação. Encaminhamento médico obrigatório. Protocolo HLE pode ser coadjuvante mas não substituto do tratamento médico.', tags: ['Encaminhamento Obrigatório', 'Coadjuvante', 'Não Substituto'] },
+  ],
+  decisoes: [
+    { cond: 'Em desenvolvimento', acoes: ['Quiz disponível em breve'] },
+  ],
+  perguntas_sessao: ['Quiz em desenvolvimento'],
+},
+{
+  id: 'alexitimia',
+  name: 'Alexitimia — Acesso Emocional',
+  cat: 'Estado Mental',
+  icon: '🔍', color: '#5a7a6e', bg: 'rgba(90,122,110,.12)',
+  tempo: '10 min', disponivel: false,
+  file: null,
+  proposito: 'Avaliar a capacidade da cliente de identificar, nomear e comunicar emoções internas. Clientes com alexitimia alta precisam de abordagens mais concretas, corporais e graduais — a linguagem emocional directa não funciona sem preparação.',
+  dimensoes: [
+    'Dificuldade em identificar emoções (DIF)',
+    'Dificuldade em descrever emoções aos outros (DDF)',
+    'Pensamento orientado para o exterior (EOT)',
+    'Score total TAS-20 e nível de alexitimia',
+  ],
+  hipoteses: [
+    { label: 'Alexitimia Alta (TAS-20 ≥ 61)', cor: '#b85c6e', bg: 'rgba(184,92,110,.08)', texto: 'Cliente com dificuldade significativa em aceder ao mundo emocional. Apego evitante frequente. Estratégia: entrar pelo corpo (onde está a tensão? que cor tem?), pelo comportamento (o que fazes quando sentes isso?) e só depois pela emoção.', tags: ['Apego Evitante', 'Abordagem Somática', 'EFT Corporal', 'Metáforas'] },
+  ],
+  decisoes: [
+    { cond: 'Em desenvolvimento', acoes: ['Quiz disponível em breve'] },
+  ],
+  perguntas_sessao: ['Quiz em desenvolvimento'],
+},
+// ── PERSONALIDADE ────────────────────────────────────────────
+{
+  id: 'mbti',
+  name: 'MBTI — 16 Tipos de Personalidade',
+  cat: 'Personalidade',
+  icon: '🧩', color: '#4a6fa5', bg: 'rgba(74,111,165,.12)',
+  tempo: '12 min', disponivel: true,
+  file: 'quiz_mbti.html',
+  file_casal: 'quiz_mbti_casal.html',
+  modos: ['individual', 'casal'],
+  proposito: 'Identificar o tipo de personalidade MBTI da cliente. Mapeia 4 dimensões cognitivas: direcção de energia (E/I), processamento de informação (S/N), tomada de decisão (T/F) e estilo de vida (J/P). Produz 1 de 16 tipos — cada um com perfil de forças, vulnerabilidades e padrões relacionais. Clinicamente útil para compreender resistências terapêuticas, estilo comunicacional e necessidades específicas dentro do protocolo.',
+  dimensoes: [
+    'Extroversão (E) vs. Introversão (I) — onde vai a energia e como se recarrega',
+    'Sensação (S) vs. Intuição (N) — como processa informação e o que privilegia',
+    'Pensamento (T) vs. Sentimento (F) — como toma decisões e o que prioriza',
+    'Julgamento (J) vs. Percepção (P) — relação com estrutura, planos e espontaneidade',
+  ],
+  hipoteses: [
+    { label:'INFJ — A Conselheira', cor:'#7b5ea7', bg:'rgba(123,94,167,.08)', texto:'O tipo mais raro. Introvertida, intuitiva, empática, com padrões elevados. Alta frequência em terapeutas e "curadoras naturais". Vulnerabilidades: burnout empático, auto-sacrifício crónico, dificuldade em receber cuidado. Em terapia: pode tentar "gerir" o processo em vez de se deixar ser cuidada — nomear este padrão.', tags:['Auto-Sacrifício','Burnout Empático','Cuidadora Compulsiva','Ferida de Rejeição'] },
+    { label:'ENFJ — A Protagonista', cor:'#4a6fa5', bg:'rgba(74,111,165,.08)', texto:'Extrovertida, intuitiva, empática e organizada. Carismática, muito orientada para os outros, assume responsabilidade pelo bem-estar relacional. Vulnerabilidades: dependência de validação externa, dificuldade em dizer não, ansiedade quando perde controlo das relações. Frequentemente parentificada na infância.', tags:['Validação Externa','Parentificação','Apego Ansioso'] },
+    { label:'INTJ — A Arquitecta', cor:'#5a7a6e', bg:'rgba(90,122,110,.08)', texto:'Introvertida, intuitiva, analítica e estratégica. Alta independência, padrões elevados, dificuldade em expressar necessidades emocionais. Vulnerabilidades: alexitimia funcional, isolamento emocional, crítica interna severa. Em terapia: resistência ao trabalho emocional — entrar pela análise antes do afecto.', tags:['Alexitimia','Isolamento Emocional','Perfeccionismo','Apego Evitante'] },
+    { label:'ISFJ — A Defensora', cor:'#c9702c', bg:'rgba(201,112,44,.08)', texto:'Introvertida, sensorial, empática e estruturada. Leal, cuidadora, avessa ao conflito. Padrão frequente em mulheres com ferida de injustiça ou abandono. Vulnerabilidades: limites frágeis, sobre-responsabilização, ressentimento acumulado. Cuida de todos mas tem dificuldade em identificar as próprias necessidades.', tags:['Ferida de Injustiça','Limites Frágeis','Ressentimento','Sobre-responsabilização'] },
+    { label:'ENFP — A Activista', cor:'#b85c6e', bg:'rgba(184,92,110,.08)', texto:'Extrovertida, intuitiva, empática e espontânea. Criativa e entusiasta, com muitas ideias mas dificuldade em concluir. Vulnerabilidades: instabilidade emocional, dificuldade com compromissos, padrão de idealização e desilusão. Relações frequentemente marcadas por apego ansioso.', tags:['Instabilidade Emocional','Apego Ansioso','Idealização','Dificuldade de Compromisso'] },
+    { label:'ISTJ — A Logística', cor:'#1a2744', bg:'rgba(26,39,68,.06)', texto:'Introvertida, sensorial, analítica e estruturada. Responsável, fiável, com forte sentido de dever. Vulnerabilidades: rigidez emocional, dificuldade em expressar necessidades afectivas, sobrecarga de responsabilidade, somatização de stress não expresso.', tags:['Rigidez Emocional','Somatização','Hiperresponsabilidade','Alexitimia Parcial'] },
+  ],
+  decisoes: [
+    { cond:'Tipo I__ (Introvertido)', acoes:['Ritmo mais lento — não forçar partilha emocional precoce','Momentos de silêncio e processamento interno são válidos','EFT pode ser feito em voz baixa ou internamente','Escrita entre sessões como forma de processar'] },
+    { cond:'Tipo __F (Sentimento dominante)', acoes:['Entrar pelas emoções — validar antes de analisar','Hipnose e regressão muito acessíveis neste tipo','EFT com linguagem emocional directa funciona bem','Reparentalização via emoção e presença relacional'] },
+    { cond:'Tipo __T (Pensamento dominante)', acoes:['Entrar pela análise e conceptualização — o emocional vem depois','Usar framework teórico como ponte (Bowlby, Levine)','EFT com foco em sensações físicas antes de nomear emoções','Não forçar expressão emocional directa'] },
+    { cond:'Casal: tipos muito diferentes', acoes:['Explorar como as diferenças se complementam e onde criam atrito','Trabalhar a tradução mútua — cada tipo precisa de linguagem diferente','Usar a diversidade tipológica como recurso relacional'] },
+  ],
+  perguntas_sessao: [
+    'Reconheces este perfil como teu? O que ressoa mais e o que te surpreende?',
+    'Como este tipo de personalidade afecta as tuas relações mais próximas?',
+    'Que parte do perfil tens mais dificuldade em integrar ou aceitar?',
+    'Se o teu parceiro fizesse este quiz, que tipo esperarias que ele tivesse?',
+  ]
+},
+{
+  id: 'bigfive',
+  name: 'Big Five — OCEAN',
+  cat: 'Personalidade',
+  icon: '🌊', color: '#5a7a6e', bg: 'rgba(90,122,110,.12)',
+  tempo: '10 min', disponivel: true,
+  file: 'quiz_bigfive.html',
+  file_casal: 'quiz_bigfive_casal.html',
+  modos: ['individual', 'casal'],
+  proposito: 'Medir as 5 dimensões de personalidade com maior validade científica (Big Five / OCEAN). Ao contrário do MBTI, produz um perfil contínuo em 5 dimensões — mais nuançado para compreender vulnerabilidades específicas. Especialmente relevante para avaliar Neuroticismo (risco de ansiedade/depressão) e Amabilidade (risco de auto-sacrifício) e comparar perfis em contexto de casal.',
+  dimensoes: [
+    'Abertura (O) — curiosidade, criatividade, abertura a novas experiências',
+    'Conscienciosidade (C) — organização, disciplina, orientação para objectivos',
+    'Extroversão (E) — sociabilidade, energia, assertividade',
+    'Amabilidade (A) — cooperação, confiança, empatia relacional',
+    'Neuroticismo (N) — instabilidade emocional, ansiedade, reactividade',
+  ],
+  hipoteses: [
+    { label:'N elevado — Instabilidade Emocional Alta', cor:'#b85c6e', bg:'rgba(184,92,110,.08)', texto:'Vulnerabilidade emocional aumentada: ansiedade crónica, ruminação, reactividade intensa e lenta recuperação de eventos negativos. Alta correlação com apego ansioso e esquemas de abandono/instabilidade (Young). Abordagem prioritária: regulação emocional (EFT, Polyvagal) antes de qualquer trabalho de profundidade.', tags:['Ansiedade Crónica','Ruminação','Apego Ansioso','Regulação Emocional Prioritária'] },
+    { label:'A elevado + N elevado — Altruísmo Ansioso', cor:'#c9702c', bg:'rgba(201,112,44,.08)', texto:'Alta amabilidade com alta reactividade emocional. Padrão frequente no esquema de auto-sacrifício: dão muito, não pedem, ficam emocionalmente esgotadas. A amabilidade funciona como estratégia de vinculação ansiosa — "se cuido de todos, não serei abandonada."', tags:['Auto-Sacrifício','Burnout Relacional','Apego Ansioso','Ferida de Abandono'] },
+    { label:'E baixo + O baixo — Retraimento Adaptativo', cor:'#7b5ea7', bg:'rgba(123,94,167,.08)', texto:'Introversão com baixa abertura à experiência. Pode indicar retraimento defensivo — não apenas temperamento — especialmente se N é elevado. Explorar historial de ambientes imprevisíveis onde o retraimento foi adaptativo. Possível alexitimia e dificuldade em imaginar alternativas ao presente.', tags:['Retraimento Defensivo','Alexitimia','Apego Evitante','Trauma de Desenvolvimento'] },
+    { label:'C elevado + N elevado — Perfeccionismo Ansioso', cor:'#5a7a6e', bg:'rgba(90,122,110,.08)', texto:'Alta conscienciosidade com alta instabilidade emocional produz perfeccionismo ansioso: o auto-controlo e o esforço servem para gerir a ansiedade. Qualquer falha activa auto-crítica severa. Esquemas Young prováveis: padrões inflexíveis, punição, subjugação.', tags:['Perfeccionismo Ansioso','Auto-Crítica','Padrões Inflexíveis (Young)','Burnout'] },
+    { label:'A baixo — Amabilidade Baixa', cor:'#1a2744', bg:'rgba(26,39,68,.06)', texto:'Dificuldade em confiar, tendência para o cepticismo interpessoal, menos orientação para os outros. Pode indicar trauma relacional com mecanismo de protecção activo. Frequente em apego evitante ou desorganizado. Explorar historial de traições ou decepções relacionais.', tags:['Desconfiança','Apego Evitante','Trauma Relacional','Protecção Defensiva'] },
+  ],
+  decisoes: [
+    { cond:'N elevado (score >3.5)', acoes:['Prioridade: estabilização antes de qualquer trabalho de profundidade','EFT para regulação emocional no início de cada sessão','Rastrear padrões de ansiedade e ruminação específicos','Verificar contraindições para hipnose de profundidade'] },
+    { cond:'A elevado + N elevado', acoes:['Trabalhar o esquema de auto-sacrifício (sessões 3-4)','Pergunta-chave: o que acontece se não cuidas de ninguém?','EFT: "Mesmo que as minhas necessidades sejam importantes"','Hipnose: quem cuidou de ti quando eras pequena?'] },
+    { cond:'Casal: N muito diferente entre parceiros', acoes:['O parceiro com N mais baixo pode perceber o outro como dramático','O parceiro com N mais alto pode perceber o outro como insensível','Psicoeducação mútua sobre diferenças de reactividade emocional'] },
+  ],
+  perguntas_sessao: [
+    'Qual das 5 dimensões mais te surpreende no resultado? Porquê?',
+    'A dimensão onde pontuas mais alto — é um recurso ou um fardo para ti?',
+    'Como achas que o teu parceiro/família pontuaria nestas dimensões?',
+    'Que dimensão gostarias de trabalhar ou equilibrar em ti mesma?',
+  ]
+},
+{
+  id: 'disc',
+  name: 'DISC — Estilos Comportamentais',
+  cat: 'Personalidade',
+  icon: '🎯', color: '#c9702c', bg: 'rgba(201,112,44,.12)',
+  tempo: '10 min', disponivel: true,
+  file: 'quiz_disc.html',
+  file_casal: 'quiz_disc_casal.html',
+  modos: ['individual', 'casal'],
+  proposito: 'Identificar o estilo comportamental dominante segundo o modelo DISC: Dominância (D), Influência (I), Estabilidade (S) e Conscienciosidade (C). Focado no como a cliente age e comunica — complementar ao MBTI e ao Big Five. Especialmente útil em contexto de casal para mapear choques de estilo, dinâmicas de poder e pontes de comunicação.',
+  dimensoes: [
+    'D — Dominância: como responde a desafios e exerce influência',
+    'I — Influência: como se relaciona com os outros e os motiva',
+    'S — Estabilidade: como responde ao ritmo e à mudança',
+    'C — Conscienciosidade: como responde a regras, qualidade e precisão',
+  ],
+  hipoteses: [
+    { label:'D alto — Dominância', cor:'#b85c6e', bg:'rgba(184,92,110,.08)', texto:'Assertividade, orientação para resultados e controlo. Vulnerabilidades clínicas: dificuldade em ceder e mostrar vulnerabilidade, conflitos de poder nas relações, controlo como defesa contra medo de fraqueza ou traição. Frequentemente mascara ferida de injustiça. Em terapia: tende a querer "resolver" rapidamente — nomear a resistência ao processo lento.', tags:['Controlo','Ferida de Injustiça','Resistência Emocional','Medo de Vulnerabilidade'] },
+    { label:'I alto — Influência', cor:'#4a6fa5', bg:'rgba(74,111,165,.08)', texto:'Social, entusiasta, orientada para relações e reconhecimento. Vulnerabilidades: dependência de validação externa, dificuldade em tolerar rejeição, fuga para o optimismo como evitamento emocional. O sorriso social pode mascarar ansiedade profunda. Explorar o que está por baixo da energia e do entusiasmo.', tags:['Validação Externa','Fuga Emocional','Máscara Social','Apego Ansioso'] },
+    { label:'S alto — Estabilidade', cor:'#5a7a6e', bg:'rgba(90,122,110,.08)', texto:'Paciente, leal, orientada para a harmonia. Vulnerabilidades: passividade aprendida, supressão das próprias necessidades para manter a paz, dificuldade em sair de situações que já não servem. Frequentemente associado a ferida de abandono e apego ansioso passivo.', tags:['Passividade','Ferida de Abandono','Supressão Emocional','Resistência à Mudança'] },
+    { label:'C alto — Conscienciosidade', cor:'#7b5ea7', bg:'rgba(123,94,167,.08)', texto:'Analítica, precisa, orientada para a qualidade. Vulnerabilidades: perfeccionismo paralisante, auto-crítica severa, dificuldade em decidir sem certeza total, isolamento emocional. Frequentemente acede às emoções pela análise — validar o processo intelectual antes do afectivo.', tags:['Perfeccionismo','Auto-Crítica','Alexitimia','Paralisia de Análise'] },
+  ],
+  decisoes: [
+    { cond:'D alto em contexto de casal', acoes:['Mapear dinâmica de poder no casal','Explorar o medo de vulnerabilidade subjacente ao controlo','Trabalho: controlo = protecção de quê? de quem?','Psicodrama: cena onde cede o controlo — o que acontece?'] },
+    { cond:'S alto + D alto no casal', acoes:['Risco de dinâmica dominant/submissa','O S pode acumular ressentimento sem expressar','Trabalhar a voz do S: o que quer mas não diz?','EFT para o S: "Mesmo que querer seja perigoso..."'] },
+    { cond:'I alto em contexto individual', acoes:['Explorar por baixo do entusiasmo — o que está a ser evitado?','Trabalhar tolerância ao silêncio e à inactividade','Questionar: quando és só tu, sem audiência, quem és?'] },
+  ],
+  perguntas_sessao: [
+    'Reconheces este estilo em situações de pressão ou conflito?',
+    'Como este estilo te serve? Em que situações te limita?',
+    'O estilo do teu parceiro complementa ou conflitua com o teu?',
+    'Que mudança no teu estilo comunicacional mais te beneficiaria agora?',
+  ]
+},
+{
+  id: 'enneagrama',
+  name: 'Enneagrama — 9 Tipos',
+  cat: 'Personalidade',
+  icon: '⭐', color: '#7b5ea7', bg: 'rgba(123,94,167,.12)',
+  tempo: '14 min', disponivel: true,
+  file: 'quiz_enneagrama.html',
+  file_casal: 'quiz_enneagrama_casal.html',
+  modos: ['individual', 'casal'],
+  proposito: 'Identificar o tipo de personalidade segundo o Enneagrama — o sistema que vai mais fundo nas motivações inconscientes, medos centrais e mecanismos de defesa. Cada tipo tem um medo central, um desejo central e uma estratégia de sobrevivência formada desde a infância. Clinicamente mais rico que o MBTI para trabalho de profundidade e para compreender a sombra relacional.',
+  dimensoes: [
+    'Tipo dominante — medo central e estratégia de sobrevivência primária',
+    'Asa — tipo adjacente que modula e enriquece o tipo principal',
+    'Centro de inteligência: Instintivo (8,9,1) / Emocional (2,3,4) / Mental (5,6,7)',
+    'Nível de saúde — saudável / médio / em desintegração (stress)',
+  ],
+  hipoteses: [
+    { label:'Tipo 1 — O Reformador', cor:'#5a7a6e', bg:'rgba(90,122,110,.08)', texto:'Medo central: ser imperfeito ou corrupto. Voz interna crítica ("o crítico interior") constantemente activa. Vulnerabilidades: rigidez, raiva reprimida, burnout por padrões impossíveis, dificuldade em receber sem julgar. Em terapia: trabalhar a compaixão para consigo mesma — a voz crítica tem uma função protectora que precisa de ser integrada, não eliminada.', tags:['Crítica Interna','Perfeccionismo','Raiva Reprimida','Padrões Inflexíveis (Young)'] },
+    { label:'Tipo 2 — O Ajudante', cor:'#b85c6e', bg:'rgba(184,92,110,.08)', texto:'Medo central: não ser amada. Estratégia: antecipar as necessidades dos outros e tornar-se indispensável. Vulnerabilidades: perda de contacto com as próprias necessidades, ressentimento acumulado, manipulação afectiva inconsciente. A pergunta central em terapia: "O que PRECISAS tu?"', tags:['Ferida de Abandono','Auto-Sacrifício','Ressentimento','Dificuldade em Receber'] },
+    { label:'Tipo 3 — O Realizador', cor:'#c9702c', bg:'rgba(201,112,44,.08)', texto:'Medo central: ser inútil ou fracassar. Identidade construída sobre a performance e os resultados visíveis. Vulnerabilidades: desconexão da vida interior, dificuldade em "ser sem fazer", relações superficiais por imagem. Em terapia: aceder ao ser por baixo do fazer — quem é esta pessoa quando ninguém está a olhar?', tags:['Identidade por Performance','Desconexão Emocional','Imagem','Vazio Interno'] },
+    { label:'Tipo 4 — O Individualista', cor:'#7b5ea7', bg:'rgba(123,94,167,.08)', texto:'Medo central: não ter identidade ou significado único. Atracção pela intensidade emocional e pelo sofrimento como prova de profundidade. Vulnerabilidades: inveja, melancolia crónica, dificuldade em tolerar o ordinário. Em terapia: diferenciar emoção genuína de identidade construída sobre o sofrimento.', tags:['Identidade do Sofrimento','Melancolia','Inveja','Intensidade Emocional'] },
+    { label:'Tipo 5 — O Investigador', cor:'#4a6fa5', bg:'rgba(74,111,165,.08)', texto:'Medo central: ser invadido ou incompetente. Retracção como estratégia de segurança — acumula conhecimento como forma de controlo. Vulnerabilidades: isolamento, alexitimia, dificuldade em presença relacional. Em terapia: respeitar a necessidade de espaço antes de avançar para o emocional.', tags:['Isolamento','Alexitimia','Apego Evitante','Retracção Defensiva'] },
+    { label:'Tipo 6 — O Leal', cor:'#c9a84c', bg:'rgba(201,168,76,.08)', texto:'Medo central: ficar sem apoio e segurança. Ansiedade antecipatória como modo base. Dois subtipos: fóbico (recua perante o perigo) e contrafóbico (enfrenta o medo de frente — parece corajoso mas actua pelo medo). Vulnerabilidades: desconfiança, dificuldade em confiar no próprio julgamento.', tags:['Ansiedade Antecipatória','Desconfiança','Apego Ansioso','Ambivalência com Autoridade'] },
+    { label:'Tipo 7 — O Entusiasta', cor:'#e8c97a', bg:'rgba(232,201,122,.08)', texto:'Medo central: sofrer ou ser privada. Fuga para o futuro e para a novidade como evitamento emocional. Vulnerabilidades: dificuldade em comprometer-se, superficialidade como defesa, interrupção de processos difíceis. Em terapia: ajudar a tolerar o desconforto — o que há por baixo da alegria?', tags:['Evitamento Emocional','Fuga para o Futuro','Dificuldade de Compromisso','Impulsividade'] },
+    { label:'Tipo 8 — O Desafiante', cor:'#b85c6e', bg:'rgba(184,92,110,.08)', texto:'Medo central: ser controlada ou traída. Força e domínio como protecção da vulnerabilidade interior. Vulnerabilidades: dificuldade em mostrar fraqueza, raiva intensa, tendência a testar limites. Em terapia: o coração vulnerável por baixo da armadura — aceder com segurança e paciência.', tags:['Armadura Emocional','Medo de Traição','Raiva Protectora','Vulnerabilidade Escondida'] },
+    { label:'Tipo 9 — O Pacificador', cor:'#5a7a6e', bg:'rgba(90,122,110,.08)', texto:'Medo central: conflito e separação. Adormecer a própria vontade para manter a paz. Vulnerabilidades: passividade, perda do self, dificuldade em identificar o que quer, procrastinação. Em terapia: encontrar a voz própria — o que ESTA pessoa quer, separado do que todos os outros querem?', tags:['Perda do Self','Passividade','Ferida de Abandono','Dificuldade em se Afirmar'] },
+  ],
+  decisoes: [
+    { cond:'Centro Emocional (tipos 2, 3, 4)', acoes:['Entrada directa pelo emocional — é o terreno natural','Hipnose e psicodrama muito acessíveis','Trabalhar diferença entre emoção genuína e emoção performance','EFT com linguagem de sentimentos directa'] },
+    { cond:'Centro Mental (tipos 5, 6, 7)', acoes:['Entrar pela análise antes do emocional','Psicoeducação como porta de entrada válida','EFT com foco em sensações corporais antes de nomear emoções','Hipnose: imagética e narrativa antes de regressão emocional'] },
+    { cond:'Centro Instintivo (tipos 8, 9, 1)', acoes:['Trabalho somático prioritário — o corpo guarda o essencial','EFT em pontos corporais, atenção à tensão física','Hipnose: regressão somática — sensações antes de memórias','Psicodrama: acção antes de análise verbal'] },
+    { cond:'Casal: tipos do mesmo centro', acoes:['Dinâmicas de espelho — amplificação dos mesmos padrões','Ex: 2+2 → competição por quem mais cuida / mais precisa','Ex: 8+8 → conflito de poder e dominância','Trabalhar a complementaridade em vez da semelhança'] },
+  ],
+  perguntas_sessao: [
+    'Ao leres a descrição do teu tipo, sentiste reconhecimento, surpresa ou resistência?',
+    'Qual é o teu maior medo central — e onde o reconheces nas tuas relações?',
+    'Como o teu tipo se manifesta nos momentos de stress? Muda para qual padrão?',
+    'Se imaginas o teu tipo num nível de saúde mais alto, o que seria diferente?',
+  ]
+},
+
+];
+
+// ══════════════════════════════════════════════════════════════
+// CLIENTE — ler do localStorage da ficha
+// ══════════════════════════════════════════════════════════════
+function loadClients() {
+  try {
+    const raw = localStorage.getItem('dd_clients_v1');
+    if (!raw) return {};
+    return JSON.parse(raw);
+  } catch(e) { return {}; }
+}
+
+let clients = loadClients();
+let activeClientId = null;
+let activeQuizId   = null;
+
+function onClienteChange() {
+  activeClientId = document.getElementById('selCliente').value || null;
+  if (activeQuizId) renderQuizView(activeQuizId);
+}
+
+function populateClientSelect() {
+  const sel = document.getElementById('selCliente');
+  // Try reload from localStorage every time (in case ficha was opened after)
+  clients = loadClients();
+  const keys = Object.keys(clients).filter(k => clients[k]?.dados?.f_nome);
+  
+  if (keys.length === 0) {
+    sel.innerHTML = '<option value="">⚠️ Sem clientes — abre a ficha no mesmo browser</option>';
+    return;
+  }
+  sel.innerHTML = '<option value="">— Seleccionar cliente —</option>' +
+    keys.map(k => {
+      const nome = clients[k].dados.f_nome;
+      const id   = clients[k].dados.f_id || '';
+      return '<option value="' + k + '">' + nome + (id ? ' · ' + id : '') + '</option>';
+    }).join('');
+}
+
+// Reload clients button click handler
+function reloadClients() {
+  populateClientSelect();
+  const sel = document.getElementById('selCliente');
+  const n = sel.options.length - 1;
+  showToast(n > 0 ? '✓ ' + n + ' cliente(s) carregada(s)' : 'Sem clientes — abre a ficha primeiro', n > 0 ? 'success' : 'error');
+}
+
+// ══════════════════════════════════════════════════════════════
+// SIDEBAR — render nav
+// ══════════════════════════════════════════════════════════════
+function renderNav() {
+  const nav = document.getElementById('sbNav');
+  const cats = [...new Set(QUIZZES.map(q => q.cat))];
+  nav.innerHTML = cats.map(cat => {
+    const qs = QUIZZES.filter(q => q.cat === cat);
+    return `<div class="sb-cat-label">${cat}</div>` +
+      qs.map(q => `
+        <button class="sb-item ${q.id === activeQuizId ? 'active' : ''}" onclick="selectQuiz('${q.id}')">
+          <span class="ic">${q.icon}</span>
+          <span class="nm">${q.name}</span>
+          <span class="${q.disponivel ? 'badge-avail' : 'badge-wip'}">${q.disponivel ? '✓' : 'breve'}</span>
+        </button>
+      `).join('');
+  }).join('');
+}
+
+function renderWelcomeStats() {
+  const total  = QUIZZES.length;
+  const avail  = QUIZZES.filter(q => q.disponivel).length;
+  document.getElementById('wvStats').innerHTML = `
+    <div class="wv-stat"><div class="wv-stat-n">${total}</div><div class="wv-stat-l">Quizzes</div></div>
+    <div class="wv-stat"><div class="wv-stat-n">${avail}</div><div class="wv-stat-l">Disponíveis</div></div>
+    <div class="wv-stat"><div class="wv-stat-n">${total - avail}</div><div class="wv-stat-l">Em desenvolvimento</div></div>
+  `;
+}
+
+// ══════════════════════════════════════════════════════════════
+// QUIZ VIEW — render
+// ══════════════════════════════════════════════════════════════
+function selectQuiz(id) {
+  activeQuizId = id;
+  renderNav();
+  renderQuizView(id);
+}
+
+function renderQuizView(id) {
+  const q = QUIZZES.find(x => x.id === id);
+  if (!q) return;
+  window.activeQuizObj = q; // needed for preview toggle buttons
+  window._previewMode = window._previewMode || 'terapeuta'; // default terapeuta
+
+  document.getElementById('welcomeView').style.display = 'none';
+  const qv = document.getElementById('quizView');
+  qv.style.display = 'flex';
+
+  // Hero
+  document.getElementById('qvHero').innerHTML = `
+    <div class="qv-breadcrumb">
+      <span>${q.cat}</span> › <strong>${q.name}</strong>
+    </div>
+    <div class="qv-title-row">
+      <div class="qv-icon-badge" style="background:${q.bg}">${q.icon}</div>
+      <div class="qv-title">
+        <h1>${q.name}</h1>
+        <div class="qv-meta">
+          <span class="qv-tag">⏱ ${q.tempo}</span>
+          <span class="qv-tag ${q.disponivel ? 'avail' : 'wip'}">${q.disponivel ? '✓ Disponível' : '🔧 Em desenvolvimento'}</span>
+          <span class="qv-tag">${q.cat}</span>
+        </div>
+      </div>
+    </div>`;
+
+  // Body sections
+  document.getElementById('qvBody').innerHTML =
+    renderSection('proposito', '📌', 'Propósito Clínico', 'Quando e porquê usar este quiz',
+      `<p class="prose">${q.proposito}</p>`) +
+
+    renderSection('dimensoes', '🔍', 'O Que Revela', 'Dimensões avaliadas',
+      `<ul style="padding-left:18px;display:flex;flex-direction:column;gap:6px">${
+        q.dimensoes.map(d => `<li class="prose">${d}</li>`).join('')
+      }</ul>`) +
+
+    renderSection('hipoteses', '🏥', 'Hipóteses Diagnósticas', 'Leitura clínica por resultado',
+      renderHipoteses(q.hipoteses)) +
+
+    renderSection('decisoes', '🧭', 'Guia de Decisão Clínica', 'O que fazer com cada resultado',
+      renderDecisoes(q.decisoes)) +
+
+    renderSection('preview', '👁', 'Quiz Completo — Visão Terapeuta', 'Lê todas as perguntas e opções antes de enviar',
+      renderPreviewQuiz(q)) +
+
+    renderSection('perguntas', '💬', 'Perguntas para a Sessão', 'Questões a explorar após o quiz',
+      `<div style="display:flex;flex-direction:column;gap:8px">${
+        q.perguntas_sessao.map(p => `
+          <div style="background:var(--cream);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:10px 14px;font-size:13px;color:var(--text);font-style:italic;line-height:1.6">
+            "${p}"
+          </div>`).join('')
+      }</div>`) +
+
+    renderSendSection(q) +
+    renderIASection(q);
+
+  // Open key sections by default
+  toggleSection('proposito');
+  toggleSection('preview');
+  toggleSection('hipoteses');
+
+  // Scroll top
+  document.getElementById('mainArea').scrollTop = 0;
+}
+
+// ── Dados completos: Linguagem de Amor (20 perguntas) ─────────────────────
+const LA_LANG_NAMES  = {PA:'Palavras de Afirmação',TQ:'Tempo de Qualidade',RP:'Receber Presentes',AS:'Actos de Serviço',TF:'Toque Físico'};
+const LA_LANG_COLORS = {PA:'#4a6fa5',TQ:'#5a7a6e',RP:'#c9702c',AS:'#7b5ea7',TF:'#b85c6e'};
+const LA_PERGUNTAS = [
+  {id:1,tag:'rec',texto:'Quando tive um dia muito difícil, o que mais me faria sentir amada seria…',opcoes:[{lang:'TF',texto:'Um abraço longo de alguém que amo'},{lang:'TQ',texto:'Que alguém ficasse comigo, presente, sem telemóvel nem pressa'},{lang:'PA',texto:'Ouvir que me admiram e que vou conseguir superar'},{lang:'AS',texto:'Que alguém resolvesse algo que estava a pesar-me'},{lang:'RP',texto:'Receber algo pequeno mas pensado — um sinal de que pensaram em mim'}]},
+  {id:2,tag:'rec',texto:'O gesto de quem amo que mais me faz sentir especial é…',opcoes:[{lang:'PA',texto:'Dizer-me em voz alta o que admira em mim'},{lang:'AS',texto:'Tratar de algo meu sem eu ter de pedir'},{lang:'TF',texto:'Chegar perto e tocar-me com carinho, sem motivo especial'},{lang:'RP',texto:'Lembrar-se de algo de que gosto e surpreender-me'},{lang:'TQ',texto:'Propor passarmos tempo a sós, sem distracções nem agenda'}]},
+  {id:3,tag:'rec',texto:'Sinto-me mais desligada de quem amo quando…',opcoes:[{lang:'TQ',texto:'Estamos juntas mas ele/ela está sempre no telemóvel ou distraída'},{lang:'TF',texto:'Passamos muito tempo sem nos tocarmos ou abraçarmos'},{lang:'PA',texto:'Raramente ouço palavras de apreço ou carinho'},{lang:'AS',texto:'Tenho de fazer tudo sozinha, nunca sinto que me apoiam'},{lang:'RP',texto:'Datas importantes passam sem qualquer gesto ou lembrança'}]},
+  {id:4,tag:'rec',texto:'Quando alguém me ama de verdade, eu sinto isso quando…',opcoes:[{lang:'AS',texto:'Faz algo por mim espontaneamente, sem que eu tenha pedido'},{lang:'PA',texto:'Me diz exactamente o que sente por mim, com palavras claras'},{lang:'RP',texto:'Me traz algo pensado, mesmo que seja pequeno e simples'},{lang:'TF',texto:'Me toca, abraça ou fica fisicamente próxima de mim'},{lang:'TQ',texto:'Reserva tempo só para mim, com atenção plena e exclusiva'}]},
+  {id:5,tag:'rec',texto:'O que me magoa mais dentro de uma relação próxima é…',opcoes:[{lang:'TF',texto:'Pouca proximidade física, pouco toque e afecto no dia-a-dia'},{lang:'PA',texto:'Não ouvir palavras de valorização ou amor ditas em voz alta'},{lang:'TQ',texto:'Nunca ter atenção exclusiva — há sempre outras prioridades'},{lang:'RP',texto:'Datas e momentos importantes não serem lembrados ou assinalados'},{lang:'AS',texto:'Nunca receber ajuda concreta quando mais preciso'}]},
+  {id:6,tag:'dar',texto:'Quando quero mostrar a alguém que me importo, o meu instinto é…',opcoes:[{lang:'TQ',texto:'Propor passarmos tempo de qualidade a sós, só para nós'},{lang:'PA',texto:'Dizer exactamente o que admiro e o que sinto por essa pessoa'},{lang:'TF',texto:'Chegar perto, dar colo, abraçar com calma'},{lang:'RP',texto:'Surpreendê-la com algo escolhido a pensar nela'},{lang:'AS',texto:'Tratar de algo que a pese ou que ela tenha adiado'}]},
+  {id:7,tag:'dar',texto:'Quando alguém que amo passa por um momento difícil, o que faço naturalmente é…',opcoes:[{lang:'TF',texto:'Chegar perto e dar um abraço longo, sem precisar dizer nada'},{lang:'AS',texto:'Perguntar como posso ajudar e agir concretamente'},{lang:'PA',texto:'Dizer-lhe que estou lá e o quanto ela significa para mim'},{lang:'RP',texto:'Levar-lhe algo que a reconforte — comida, flores, algo seu'},{lang:'TQ',texto:'Ficar com ela, presente, sem pressa nem agenda'}]},
+  {id:8,tag:'dar',texto:'Para mostrar que uma pessoa é especial para mim, normalmente…',opcoes:[{lang:'AS',texto:'Ajudo com algo concreto, sem que a pessoa tenha de pedir'},{lang:'TF',texto:'Fico fisicamente próxima — toco, abraço, estou presente no corpo'},{lang:'PA',texto:'Digo em voz alta o que a pessoa significa para mim'},{lang:'TQ',texto:'Dou-lhe tempo exclusivo, sem partilhar atenção'},{lang:'RP',texto:'Ofereço algo que escolhi a pensar nela, com cuidado'}]},
+  {id:9,tag:'rec',texto:'Numa relação, o que é absolutamente indispensável para mim é…',opcoes:[{lang:'PA',texto:'Ouvir regularmente palavras de amor e valorização genuínas'},{lang:'TF',texto:'Ter proximidade física e afecto espontâneo no dia-a-dia'},{lang:'TQ',texto:'Ter momentos de atenção exclusiva e presença real'},{lang:'AS',texto:'Saber que posso contar com ajuda concreta nos momentos difíceis'},{lang:'RP',texto:'Receber gestos e pequenas surpresas que mostram que pensam em mim'}]},
+  {id:10,tag:'rec',texto:'Se pudesse pedir uma coisa à pessoa mais próxima de mim, pediria…',opcoes:[{lang:'TQ',texto:'Mais tempo de qualidade — conversas longas, sem distracções'},{lang:'TF',texto:'Mais toque físico e afecto espontâneo, sem motivo especial'},{lang:'PA',texto:'Mais palavras de apreço e amor ditas em voz alta, sem que eu peça'},{lang:'AS',texto:'Mais ajuda concreta nas coisas do dia-a-dia que me pesam'},{lang:'RP',texto:'Mais gestos e surpresas que me mostrem que pensam em mim'}]},
+  {id:11,tag:'rec',texto:'Na relação mais significativa da minha vida, o que me fez sentir mais amada foram…',opcoes:[{lang:'PA',texto:'As palavras, as mensagens, as declarações que recebi'},{lang:'TQ',texto:'Os momentos a sós, sem distracção, só nós duas'},{lang:'TF',texto:'O carinho físico, os abraços, o toque quotidiano'},{lang:'AS',texto:'As vezes que me ajudou sem eu ter de pedir ou explicar'},{lang:'RP',texto:'As surpresas e gestos que me mostraram que pensou em mim'}]},
+  {id:12,tag:'rec',texto:'O que mais sinto falta quando estou longe de alguém que amo é…',opcoes:[{lang:'TF',texto:'O toque, os abraços, a proximidade física do corpo'},{lang:'TQ',texto:'Os momentos de atenção exclusiva — só nós, sem o mundo lá fora'},{lang:'PA',texto:'As palavras de amor e as mensagens que me fazem sentir vista'},{lang:'AS',texto:'A sensação de ter alguém que cuida concretamente de mim'},{lang:'RP',texto:'Os pequenos gestos e surpresas que chegavam de surpresa'}]},
+  {id:13,tag:'rec',texto:'Aquilo que mais me faz sentir desvalorizada ou invisível é…',opcoes:[{lang:'AS',texto:'Pedir ajuda e não receber resposta — ou ter de resolver tudo sozinha'},{lang:'TQ',texto:'Estar com alguém mas sem presença real — corpo aqui, mente algures'},{lang:'PA',texto:'Não ouvir um único elogio, palavra de carinho ou reconhecimento'},{lang:'TF',texto:'Passar dias sem que alguém me toque, abraça ou chegue perto'},{lang:'RP',texto:'Ver que datas e momentos importantes para mim são esquecidos'}]},
+  {id:14,tag:'rec',texto:'Para mim, o gesto de amor mais profundo que alguém pode fazer é…',opcoes:[{lang:'RP',texto:'Algo escolhido especialmente para mim, com tempo e pensamento'},{lang:'TF',texto:'Presença física — toque, abraço, proximidade constante'},{lang:'AS',texto:'Tratar do que me pesa, sem que eu tenha de pedir ou explicar'},{lang:'PA',texto:'Dizer-me exactamente o que sente, sem receio de ser vulnerável'},{lang:'TQ',texto:'Estar completamente presente — sem telemóvel, sem agenda, só eu'}]},
+  {id:15,tag:'rec',texto:'O que me faz sentir mais conectada a alguém de forma profunda é…',opcoes:[{lang:'TQ',texto:'Conversas longas, presença total, tempo que parece parar'},{lang:'TF',texto:'O contacto físico — a proximidade do corpo, o toque fácil e natural'},{lang:'PA',texto:'As palavras ditas e escritas que ficam gravadas em mim'},{lang:'AS',texto:'Saber que posso contar com a pessoa concretamente nos momentos difíceis'},{lang:'RP',texto:'Os gestos pequenos e inesperados que me lembram que pensam em mim'}]},
+  {id:16,tag:'rec',texto:'Quando me sinto insegura numa relação, o que mais me tranquiliza é…',opcoes:[{lang:'TF',texto:'Um abraço longo ou presença física próxima sem palavras necessárias'},{lang:'PA',texto:'Ouvir palavras de confirmação, de amor, de "estou aqui"'},{lang:'TQ',texto:'Tempo dedicado só a mim, sem que a pessoa esteja em mais lado nenhum'},{lang:'AS',texto:'Ver que a pessoa age concretamente para me apoiar'},{lang:'RP',texto:'Receber um gesto ou presente inesperado que me diz "estou a pensar em ti"'}]},
+  {id:17,tag:'dar',texto:'Para mim, cuidar de alguém significa sobretudo…',opcoes:[{lang:'TQ',texto:'Dar-lhe tempo e atenção exclusiva, sem a dividir com mais nada'},{lang:'PA',texto:'Dizer-lhe o que sinto e o que admiro, sem guardar para mim'},{lang:'AS',texto:'Fazer coisas concretas que a aliviem ou facilitem a vida'},{lang:'TF',texto:'Estar fisicamente presente e afetuosa — tocar, abraçar, acompanhar'},{lang:'RP',texto:'Lembrar-me do que gosta e surpreendê-la com gestos pensados'}]},
+  {id:18,tag:'rec',texto:'O que mais valorizo numa amizade ou relação próxima é…',opcoes:[{lang:'PA',texto:'Que me diga, sem que eu peça, o que sente e o que aprecia em mim'},{lang:'TQ',texto:'Que reserve tempo exclusivo para mim com regularidade'},{lang:'TF',texto:'Que seja fisicamente afectuosa e próxima de forma natural'},{lang:'AS',texto:'Que esteja disponível para ajudar concretamente quando preciso'},{lang:'RP',texto:'Que se lembre de mim com pequenos gestos e surpresas'}]},
+  {id:19,tag:'rec',texto:'Se descrevesse uma semana em que me senti muito amada, incluiria…',opcoes:[{lang:'TF',texto:'Muito toque físico espontâneo — abraços, proximidade, afecto'},{lang:'TQ',texto:'Momentos longos de atenção exclusiva, sem o mundo a interromper'},{lang:'PA',texto:'Muitas palavras bonitas ditas ou escritas que me tocaram de verdade'},{lang:'AS',texto:'Muita ajuda concreta e cuidado prático, sem ter de pedir nada'},{lang:'RP',texto:'Pelo menos um gesto ou surpresa especial que não esperava'}]},
+  {id:20,tag:'rec',texto:'O que me faz sentir que uma relação é profunda, segura e real é…',opcoes:[{lang:'AS',texto:'Saber que a pessoa age quando mais preciso, sem hesitar'},{lang:'TQ',texto:'Ter presença real e atenção genuína — não apenas estar no mesmo sítio'},{lang:'TF',texto:'Sentir o corpo do outro próximo, afecto físico contínuo e natural'},{lang:'PA',texto:'Ouvir regularmente palavras que me confirmam que sou amada'},{lang:'RP',texto:'Receber gestos que provam que a pessoa pensa em mim mesmo quando não estamos juntas'}]},
+];
+
+const APEGO_PERGUNTAS = [
+  {id:1,text:"Quando estou numa relação e o outro fica em silêncio ou distante, o meu impulso natural é...",opts:[{s:'ans',l:'Ansioso',t:"Procurar activamente perceber o que se passa — envio mensagem, ligo, preciso de saber"},{s:'evi',l:'Evitante',t:"Dar espaço e ocupar-me com outras coisas — o silêncio não me perturba muito"},{s:'seg',l:'Seguro',t:"Aguardar com calma — sei que o outro vai falar quando estiver pronto"},{s:'des',l:'Desorganizado',t:"Fico agitada mas ao mesmo tempo evito — quero aproximar-me mas algo me trava"}]},
+  {id:2,text:"Quando a relação está a correr bem por um período longo, costumo sentir...",opts:[{s:'ans',l:'Ansioso',t:"Alguma insegurança — penso que não pode durar, que algo vai correr mal"},{s:'evi',l:'Evitante',t:"Uma ligeira necessidade de espaço — a proximidade constante começa a pesar"},{s:'seg',l:'Seguro',t:"Paz e gratidão — consigo simplesmente estar bem e aproveitar"},{s:'des',l:'Desorganizado',t:"Uma estranha mistura — felicidade e ao mesmo tempo medo de que tudo se desfaça"}]},
+  {id:3,text:"Quando preciso de apoio emocional, costumo...",opts:[{s:'ans',l:'Ansioso',t:"Pedir com intensidade — preciso muito que o outro esteja presente e disponível"},{s:'evi',l:'Evitante',t:"Gerir sozinha — é difícil mostrar que preciso de ajuda"},{s:'seg',l:'Seguro',t:"Pedir com naturalidade e conseguir receber o apoio que me é dado"},{s:'des',l:'Desorganizado',t:"Querer pedir mas sentir que não consigo — fico presa entre a necessidade e o medo"}]},
+  {id:4,text:"Em momentos de conflito com o meu parceiro, a minha resposta mais habitual é...",opts:[{s:'ans',l:'Ansioso',t:"Querer resolver imediatamente — não aguento a tensão sem resolução"},{s:'evi',l:'Evitante',t:"Afastar-me — preciso de tempo sozinha para processar"},{s:'seg',l:'Seguro',t:"Conseguir falar sobre o que sinto com alguma calma, mesmo que seja difícil"},{s:'des',l:'Desorganizado',t:"Entro em alarme — oscilo entre querer resolver e querer fugir da situação"}]},
+  {id:5,text:"A forma como penso sobre as relações amorosas é...",opts:[{s:'ans',l:'Ansioso',t:"As relações são muito importantes mas também a principal fonte de ansiedade na minha vida"},{s:'evi',l:'Evitante',t:"As relações são boas mas a minha independência é essencial — preciso do meu espaço"},{s:'seg',l:'Seguro',t:"As relações são importantes e consigo ter equilíbrio entre intimidade e autonomia"},{s:'des',l:'Desorganizado',t:"As relações são algo que desejo muito mas também algo que me assusta — é ambivalente"}]},
+  {id:6,text:"Quando o meu parceiro precisa de espaço ou independência, sinto...",opts:[{s:'ans',l:'Ansioso',t:"Insegurança e medo — interpreto como sinal de que algo está errado na relação"},{s:'evi',l:'Evitante',t:"Alívio — o espaço é bem-vindo para mim também"},{s:'seg',l:'Seguro',t:"Compreensão — sei que o espaço não ameaça a relação"},{s:'des',l:'Desorganizado',t:"Confusão — parte de mim fica aliviada, outra fica com medo de ser abandonada"}]},
+  {id:7,text:"Quando sinto que a relação está a ficar mais séria e comprometida, a minha reacção interna é...",opts:[{s:'ans',l:'Ansioso',t:"Alívio e felicidade — finalmente tenho a segurança que preciso para relaxar"},{s:'evi',l:'Evitante',t:"Algum desconforto — começo a sentir necessidade de travar ou criar distância"},{s:'seg',l:'Seguro',t:"Conforto e entusiasmo — é natural aprofundar o vínculo"},{s:'des',l:'Desorganizado',t:"Ambivalência intensa — quero mas ao mesmo tempo surge um medo que não consigo explicar"}]},
+  {id:8,text:"Em relação à confiança nos meus parceiros, costumo...",opts:[{s:'ans',l:'Ansioso',t:"Ter dificuldade em confiar plenamente — estou sempre à espera de ser desiludida"},{s:'evi',l:'Evitante',t:"Preferir contar comigo mesma — é mais seguro do que depender de outros"},{s:'seg',l:'Seguro',t:"Conseguir confiar sem precisar de provas constantes — tenho base interna segura"},{s:'des',l:'Desorganizado',t:"Oscilar — às vezes confio demasiado, outras vezes fecho-me completamente sem razão clara"}]},
+  {id:9,text:"Quando uma relação termina, costumo...",opts:[{s:'ans',l:'Ansioso',t:"Demorar muito a recuperar — sinto a perda de forma muito intensa e dificilmente largo"},{s:'evi',l:'Evitante',t:"Avançar relativamente depressa — ocupo-me e não gosto de ficar presa na perda"},{s:'seg',l:'Seguro',t:"Sentir a dor mas conseguir processar e seguir em frente num tempo razoável"},{s:'des',l:'Desorganizado',t:"Reagir de forma imprevisível — às vezes fico bem, outras vezes entra em colapso"}]},
+  {id:10,text:"A minha relação com a solidão é...",opts:[{s:'ans',l:'Ansioso',t:"Difícil — a solidão activa ansiedade e um sentido de que algo está errado"},{s:'evi',l:'Evitante',t:"Confortável — o tempo sozinha é necessário e restaurador"},{s:'seg',l:'Seguro',t:"Equilibrada — consigo estar bem sozinha sem que isso signifique isolamento"},{s:'des',l:'Desorganizado',t:"Estranha — às vezes procuro-a, outras vezes aterra-me sem perceber porquê"}]},
+  {id:11,text:"Quando o meu parceiro não responde a uma mensagem por algumas horas, o que passa pela minha mente?",opts:[{s:'ans',l:'Ansioso',t:"Preocupação crescente — imagino cenários negativos, questiono se algo mudou"},{s:'evi',l:'Evitante',t:"Nada de especial — lembro-me quando vejo a resposta, não fico presa no silêncio"},{s:'seg',l:'Seguro',t:"Percebo que está ocupado — aguardo com calma sem criar histórias"},{s:'des',l:'Desorganizado',t:"Uma mistura de irritação e ansiedade que não consigo explicar bem — o corpo reage"}]},
+  {id:12,text:"Quando o meu parceiro me critica ou está descontente comigo, sinto...",opts:[{s:'ans',l:'Ansioso',t:"Muito medo — associo à possibilidade de abandono e faço muito para reparar rapidamente"},{s:'evi',l:'Evitante',t:"Defesa — fecho-me ou afasto-me emocionalmente, prefiro não discutir"},{s:'seg',l:'Seguro',t:"Algum desconforto mas consigo ouvir e distinguir o que é válido do que não é"},{s:'des',l:'Desorganizado',t:"Reacção intensa difícil de gerir — posso explodir ou congelar, dependendo do momento"}]},
+  {id:13,text:"Quando alguém que amo mostra vulnerabilidade e precisa de cuidado, a minha reacção interna é...",opts:[{s:'ans',l:'Ansioso',t:"Absorvo as emoções do outro intensamente — a dor deles torna-se quase a minha"},{s:'evi',l:'Evitante',t:"Quero ajudar mas sinto desconforto com a intensidade emocional — prefiro resolver"},{s:'seg',l:'Seguro',t:"Consigo estar presente com compaixão sem me perder na emoção do outro"},{s:'des',l:'Desorganizado',t:"Fico confusa — quero ajudar mas algo em mim recua quando a emoção é muito intensa"}]},
+  {id:14,text:"Em relação às memórias da minha infância e das figuras parentais, costumo...",opts:[{s:'ans',l:'Ansioso',t:"Ter memórias vívidas e frequentemente emocionais — o passado está muito presente"},{s:'evi',l:'Evitante',t:"Ter memórias vagas ou neutras — não me lembro muito e prefiro não ir lá"},{s:'seg',l:'Seguro',t:"Ter memórias positivas e negativas e conseguir integrá-las sem que dominem o presente"},{s:'des',l:'Desorganizado',t:"Ter memórias fragmentadas ou contraditórias — algumas perturbam-me sem perceber porquê"}]},
+  {id:15,text:"Quando imagino uma relação ideal, o que mais importa para mim é...",opts:[{s:'ans',l:'Ansioso',t:"Sentir segurança e certeza — saber que o outro está aqui e não vai partir"},{s:'evi',l:'Evitante',t:"Ter espaço e respeito pela minha autonomia — sem pressão de demasiada proximidade"},{s:'seg',l:'Seguro',t:"Conexão genuína com liberdade — intimidade que não sufoca"},{s:'des',l:'Desorganizado',t:"Proximidade e segurança — mas quando a imagino com detalhe, algo me diz que não é possível para mim"}]},
+  {id:16,text:"Quando o meu parceiro faz algo que me magoa, sem intenção, costumo...",opts:[{s:'ans',l:'Ansioso',t:"Reagir com intensidade — é difícil não personalizar e associar a algo maior"},{s:'evi',l:'Evitante',t:"Guardar para mim — é difícil dizer o que senti sem me sentir demasiado exposta"},{s:'seg',l:'Seguro',t:"Conseguir dizer o que senti com calma e resolver sem arrastar"},{s:'des',l:'Desorganizado',t:"Oscilar entre guardar e explodir — a resposta é imprevisível, mesmo para mim"}]},
+  {id:17,text:"A forma como me sinto relativamente a mim mesma dentro de uma relação é...",opts:[{s:'ans',l:'Ansioso',t:"Dependente da forma como o outro me vê — a relação afecta muito a minha auto-estima"},{s:'evi',l:'Evitante',t:"Independente — a minha auto-estima não depende muito de como o outro me trata"},{s:'seg',l:'Seguro',t:"Relativamente estável — a relação influencia-me mas tenho uma base sólida em mim"},{s:'des',l:'Desorganizado',t:"Muito variável — há momentos em que me sinto bem e outros em que me sinto completamente perdida"}]},
+  {id:18,text:"Quando sinto que a relação está em perigo, o meu corpo reage...",opts:[{s:'ans',l:'Ansioso',t:"Com muita intensidade — coração acelerado, pensamentos acelerados, dificuldade em parar"},{s:'evi',l:'Evitante',t:"Pouco — fecho-me emocionalmente e o corpo fica quase anestesiado"},{s:'seg',l:'Seguro',t:"Com algum desconforto mas consigo respirar e pensar com relativa clareza"},{s:'des',l:'Desorganizado',t:"De forma caótica — às vezes explode, outras vezes paralisa — não sei o que vai acontecer"}]},
+  {id:19,text:"Em relação ao amor que recebi em criança, diria que...",opts:[{s:'ans',l:'Ansioso',t:"Era imprevisível — às vezes presente, outras vezes ausente — nunca sabia o que esperar"},{s:'evi',l:'Evitante',t:"Era distante ou racional — mais baseado em actos do que em proximidade emocional"},{s:'seg',l:'Seguro',t:"Era consistente — sentia-me amada e segura mesmo que com imperfeições"},{s:'des',l:'Desorganizado',t:"Era confuso — havia momentos de calor e momentos que me assustavam ou magoavam"}]},
+  {id:20,text:"Quando penso em comprometer-me a longo prazo com alguém, o que sinto é...",opts:[{s:'ans',l:'Ansioso',t:"Alívio — o compromisso dá-me a segurança que preciso para relaxar dentro da relação"},{s:'evi',l:'Evitante',t:"Alguma pressão — o compromisso parece limitar algo que valorizo em mim"},{s:'seg',l:'Seguro',t:"Entusiasmo genuíno — gosto da ideia de construir algo duradouro"},{s:'des',l:'Desorganizado',t:"Ambivalência — quero mas ao mesmo tempo surge um medo que não consigo explicar"}]}
+];
+const APEGO_STYLE_COLORS = {ans:'#b85c6e',evi:'#4a6fa5',seg:'#5a7a6e',des:'#c9702c'};
+const APEGO_STYLE_NAMES  = {ans:'Ansioso/a',evi:'Evitante',seg:'Seguro/a',des:'Desorganizado/a'};
+
+
+// ── MBTI (16 perguntas, formato binário por dimensão) ─────────────────────
+const MBTI_PERGUNTAS = [
+  {id:1,dim:'EI',texto:'Depois de um dia intenso, como recuperas melhor?',opcoes:[{lang:'I',texto:'Fico sozinha em silêncio — o meu espaço interior restabelece-me'},{lang:'E',texto:'Saio ou ligo a pessoas que gosto — a interacção recarrega-me'}]},
+  {id:2,dim:'EI',texto:'Em festas ou grupos grandes, costumas...',opcoes:[{lang:'E',texto:'Circular, falar com várias pessoas e sentir-te energizada'},{lang:'I',texto:'Ficar em conversas mais íntimas com uma ou duas pessoas'}]},
+  {id:3,dim:'EI',texto:'Quando tens de resolver um problema difícil, o teu primeiro impulso é...',opcoes:[{lang:'I',texto:'Reflectir internamente antes de falar com alguém'},{lang:'E',texto:'Falar em voz alta e pensar no processo com outros'}]},
+  {id:4,dim:'EI',texto:'O teu espaço de trabalho ideal é...',opcoes:[{lang:'I',texto:'Silencioso, com poucas interrupções e muito foco'},{lang:'E',texto:'Dinâmico, com interacção e colaboração frequente'}]},
+  {id:5,dim:'SN',texto:'Quando aprendes algo novo, preferes...',opcoes:[{lang:'S',texto:'Exemplos concretos e práticos — quero ver como se aplica'},{lang:'N',texto:'O conceito geral e a teoria por baixo — quero entender o porquê'}]},
+  {id:6,dim:'SN',texto:'Quando planeias algo, focas-te mais em...',opcoes:[{lang:'S',texto:'Detalhes práticos e passos concretos — o que fazer e quando'},{lang:'N',texto:'A visão global e nas possibilidades — o que poderia ser'}]},
+  {id:7,dim:'SN',texto:'Confias mais na tua...',opcoes:[{lang:'S',texto:'Experiência directa e nos factos que podes observar'},{lang:'N',texto:'Intuição e nos padrões que percepciones mesmo sem dados claros'}]},
+  {id:8,dim:'SN',texto:'O que te entusiasma mais é...',opcoes:[{lang:'S',texto:'O que é real e concreto no momento presente'},{lang:'N',texto:'As possibilidades futuras e o que ainda não existe'}]},
+  {id:9,dim:'TF',texto:'Ao tomar decisões importantes, o que pesa mais?',opcoes:[{lang:'T',texto:'A análise lógica, os dados e as consequências objectivas'},{lang:'F',texto:'Os teus valores e como a decisão vai afectar as pessoas'}]},
+  {id:10,dim:'TF',texto:'Num conflito interpessoal, preferes...',opcoes:[{lang:'T',texto:'Chegar à verdade, mesmo que o processo seja desconfortável'},{lang:'F',texto:'Preservar a harmonia e os sentimentos de todos'}]},
+  {id:11,dim:'TF',texto:'Quando um amigo te conta um problema, o teu instinto é...',opcoes:[{lang:'F',texto:'Ouvir com empatia e validar o que sente'},{lang:'T',texto:'Ajudar a encontrar a solução mais eficaz para o problema'}]},
+  {id:12,dim:'TF',texto:'As pessoas criticam-te por vezes por seres demasiado...',opcoes:[{lang:'T',texto:'Racional ou directa — "cortas" sem considerar o emocional'},{lang:'F',texto:'Emocional ou subjectiva — "deixas o coração decidir"'}]},
+  {id:13,dim:'JP',texto:'O teu dia-a-dia funciona melhor com...',opcoes:[{lang:'J',texto:'Planos e rotinas definidas — sabes o que te espera'},{lang:'P',texto:'Flexibilidade e espontaneidade — decides no momento conforme o que surge'}]},
+  {id:14,dim:'JP',texto:'Quando tens um projecto, preferes...',opcoes:[{lang:'J',texto:'Planear bem, cumprir as etapas e concluir dentro do prazo'},{lang:'P',texto:'Explorar, ajustar e ir descobrindo à medida que avança'}]},
+  {id:15,dim:'JP',texto:'Prazos para ti são...',opcoes:[{lang:'J',texto:'Algo a cumprir — planeas para nunca chegar ao limite'},{lang:'P',texto:'Orientativos — trabalhas bem sob pressão de última hora'}]},
+  {id:16,dim:'JP',texto:'Como te sentes quando os planos mudam de repente?',opcoes:[{lang:'J',texto:'Alguma tensão — preferes saber o que esperar e preparar'},{lang:'P',texto:'Adaptas-te facilmente — podes até gostar da novidade inesperada'}]},
+];
+const MBTI_DIM_COLORS = {E:'#4a6fa5',I:'#7b5ea7',S:'#c9702c',N:'#5a7a6e',T:'#1a2744',F:'#b85c6e',J:'#c9a84c',P:'#6b7594'};
+const MBTI_TYPES = {
+  INTJ:'A Arquitecta',INTP:'A Lógica',ENTJ:'A Comandante',ENTP:'A Debatedora',
+  INFJ:'A Conselheira',INFP:'A Mediadora',ENFJ:'A Protagonista',ENFP:'A Activista',
+  ISTJ:'A Logística',ISFJ:'A Defensora',ESTJ:'A Executiva',ESFJ:'A Cônsul',
+  ISTP:'A Virtuosa',ISFP:'A Aventureira',ESTP:'A Empreendedora',ESFP:'A Animadora'
+};
+
+// ── BIG FIVE (25 afirmações, escala 1-5) ──────────────────────────────────
+const BIGFIVE_PERGUNTAS = [
+  {id:1,dim:'O',texto:'Adoro explorar ideias novas, mesmo que sejam abstractas ou pouco práticas.'},
+  {id:2,dim:'O',texto:'A arte, a música e a literatura tocam-me profundamente.'},
+  {id:3,dim:'O',texto:'Tenho muita imaginação e costumo pensar fora do convencional.'},
+  {id:4,dim:'O',texto:'Fico facilmente entusiasmada com novas perspectivas ou formas de ver o mundo.'},
+  {id:5,dim:'O',texto:'Prefiro rotinas familiares a experiências completamente novas.',inv:true},
+  {id:6,dim:'C',texto:'Sou organizada e meticulosa — o meu espaço e projectos reflectem essa ordem.'},
+  {id:7,dim:'C',texto:'Cumpro sempre os compromissos e prazos que assumo.'},
+  {id:8,dim:'C',texto:'Penso bem antes de agir — raramente me arrependo de decisões impulsivas.'},
+  {id:9,dim:'C',texto:'Faço listas, planificações e gosto de ter tudo devidamente organizado.'},
+  {id:10,dim:'C',texto:'Começo muitas coisas mas tenho dificuldade em concluir.',inv:true},
+  {id:11,dim:'E',texto:'Sinto-me com mais energia depois de estar com muitas pessoas.'},
+  {id:12,dim:'E',texto:'Sinto-me à vontade a ser o centro das atenções em grupos grandes.'},
+  {id:13,dim:'E',texto:'Prefiro ficar em casa a sair para eventos sociais grandes.',inv:true},
+  {id:14,dim:'E',texto:'Falo facilmente com estranhos e construo relações com rapidez.'},
+  {id:15,dim:'E',texto:'A solidão esgota-me — preciso de interacção regular para me sentir bem.'},
+  {id:16,dim:'A',texto:'Preocupo-me genuinamente com o bem-estar das pessoas à minha volta.'},
+  {id:17,dim:'A',texto:'Evito conflitos mesmo quando sei que tenho razão.'},
+  {id:18,dim:'A',texto:'Confio facilmente nos outros — parto do princípio que têm boa intenção.'},
+  {id:19,dim:'A',texto:'Ponho as minhas necessidades em primeiro lugar com facilidade.',inv:true},
+  {id:20,dim:'A',texto:'Sinto compaixão facilmente, mesmo por pessoas que não conheço bem.'},
+  {id:21,dim:'N',texto:'Preocupo-me com muitas coisas ao mesmo tempo, mesmo que sejam pequenas.'},
+  {id:22,dim:'N',texto:'O meu estado emocional muda bastante conforme o que acontece à minha volta.'},
+  {id:23,dim:'N',texto:'Quando algo corre mal, demoro a recuperar o equilíbrio emocional.'},
+  {id:24,dim:'N',texto:'Sinto-me geralmente estável e segura mesmo em situações de pressão.',inv:true},
+  {id:25,dim:'N',texto:'Critico-me muito a mim mesma quando cometo erros.'},
+];
+const BIGFIVE_DIMS = {
+  O:{nome:'Abertura',cor:'#7b5ea7',desc:'Criatividade, curiosidade e abertura a novas experiências'},
+  C:{nome:'Conscienciosidade',cor:'#5a7a6e',desc:'Organização, disciplina e orientação para objectivos'},
+  E:{nome:'Extroversão',cor:'#4a6fa5',desc:'Sociabilidade, energia e assertividade'},
+  A:{nome:'Amabilidade',cor:'#c9702c',desc:'Cooperação, confiança e empatia relacional'},
+  N:{nome:'Neuroticismo',cor:'#b85c6e',desc:'Instabilidade emocional, ansiedade e reactividade'},
+};
+const BIGFIVE_ESCALA = ['Nada a ver comigo','Pouco a ver','Mais ou menos','Bastante a ver','Totalmente a ver com a minha forma de ser'];
+
+// ── DISC (10 situações, 4 opções por situação) ────────────────────────────
+const DISC_PERGUNTAS = [
+  {id:1,texto:'Quando há um problema no grupo, o meu impulso natural é...',opcoes:[{lang:'D',texto:'Assumir o controlo e decidir rapidamente o que fazer'},{lang:'I',texto:'Motivar e animar o grupo — trazer energia positiva'},{lang:'S',texto:'Ouvir todos antes de qualquer movimento e garantir que ninguém fica para trás'},{lang:'C',texto:'Analisar a situação em detalhe antes de propor qualquer solução'}]},
+  {id:2,texto:'O que mais me motiva nos projectos é...',opcoes:[{lang:'D',texto:'Superar desafios difíceis e ver resultados concretos'},{lang:'I',texto:'A colaboração, o entusiasmo colectivo e o reconhecimento'},{lang:'S',texto:'A estabilidade, a harmonia da equipa e saber que contribuo'},{lang:'C',texto:'Fazer algo com qualidade e precisão — fazer bem, não depressa'}]},
+  {id:3,texto:'Quando estou sob pressão, costumo...',opcoes:[{lang:'D',texto:'Tornar-me mais directa e exigente — não há tempo a perder'},{lang:'I',texto:'Falar mais e buscar apoio — quero manter a energia positiva'},{lang:'S',texto:'Manter a calma e o ritmo — não entro facilmente em pânico'},{lang:'C',texto:'Verificar tudo com mais detalhe — quero ter a certeza que não erro'}]},
+  {id:4,texto:'Como preferes que te dêem feedback?',opcoes:[{lang:'D',texto:'Directo, claro e sem rodeios — não preciso de papas na língua'},{lang:'I',texto:'Com entusiasmo e foco no positivo — a crítica precisa de ser suave'},{lang:'S',texto:'Com calma e paciência, em privado, sem criar tensão'},{lang:'C',texto:'Com dados e razões concretas — preciso de perceber o porquê exacto'}]},
+  {id:5,texto:'Nas tomadas de decisão, o meu estilo é...',opcoes:[{lang:'D',texto:'Rápido — prefiro agir e corrigir do que perder tempo a analisar'},{lang:'I',texto:'Intuitivo — baseio-me no que sinto e na energia do grupo'},{lang:'S',texto:'Ponderado — espero pelo consenso e pela estabilidade antes de decidir'},{lang:'C',texto:'Analítico — preciso de dados suficientes para uma boa decisão'}]},
+  {id:6,texto:'Em relação a mudanças inesperadas, costumo...',opcoes:[{lang:'D',texto:'Adaptar-me rapidamente — vejo como uma oportunidade'},{lang:'I',texto:'Entusiasmar-me com as novas possibilidades'},{lang:'S',texto:'Precisar de tempo para me adaptar — prefiro estabilidade'},{lang:'C',texto:'Querer perceber o que mudou exactamente antes de avançar'}]},
+  {id:7,texto:'Na comunicação, costumo ser...',opcoes:[{lang:'D',texto:'Directa e concisa — vou ao que interessa'},{lang:'I',texto:'Calorosa, expressiva e cheia de histórias e entusiasmo'},{lang:'S',texto:'Atenciosa e boa ouvinte — dou espaço ao outro falar'},{lang:'C',texto:'Precisa e detalhada — gosto de explicar bem cada ponto'}]},
+  {id:8,texto:'Aquilo que mais me incomoda nos outros é...',opcoes:[{lang:'D',texto:'A indecisão e a falta de objectividade'},{lang:'I',texto:'O pessimismo e a frieza nas relações'},{lang:'S',texto:'A imprevisibilidade e os conflitos desnecessários'},{lang:'C',texto:'A desorganização e a falta de rigor nos detalhes'}]},
+  {id:9,texto:'Quando tenho razão mas enfrento resistência, costumo...',opcoes:[{lang:'D',texto:'Insistir com firmeza — a lógica está do meu lado'},{lang:'I',texto:'Tentar convencer com entusiasmo e apelo emocional'},{lang:'S',texto:'Ceder para preservar a paz — não vale a pena criar tensão'},{lang:'C',texto:'Reunir mais evidências para apresentar o argumento completo'}]},
+  {id:10,texto:'O que me dá mais satisfação ao concluir algo é...',opcoes:[{lang:'D',texto:'Ter alcançado o objectivo nos prazos definidos'},{lang:'I',texto:'A celebração com a equipa e o reconhecimento colectivo'},{lang:'S',texto:'Saber que toda a gente ficou satisfeita e o processo foi harmonioso'},{lang:'C',texto:'A qualidade do produto final e saber que foi feito correctamente'}]},
+];
+const DISC_TYPES = {
+  D:{nome:'Dominância',cor:'#b85c6e',desc:'Directa, orientada para resultados, determinada'},
+  I:{nome:'Influência',cor:'#4a6fa5',desc:'Sociável, entusiasta, persuasiva'},
+  S:{nome:'Estabilidade',cor:'#5a7a6e',desc:'Paciente, leal, colaborativa'},
+  C:{nome:'Conscienciosidade',cor:'#7b5ea7',desc:'Analítica, precisa, orientada para a qualidade'},
+};
+
+// ── ENNEAGRAMA (18 perguntas, 2 opções por tipo, 2 por tipo) ─────────────
+const ENNEAGRAMA_PERGUNTAS = [
+  {id:1,tipo:1,texto:'Tenho padrões muito elevados para mim e para os outros. Quando algo não está certo, é difícil ignorar.',opcoes:[{lang:'1',texto:'Sim — há uma voz interna que me lembra sempre o que podia ser melhor'},{lang:'_',texto:'Não tanto — consigo deixar algumas coisas imperfeitas sem grande desconforto'}]},
+  {id:2,tipo:1,texto:'Sinto-me frequentemente responsável por fazer as coisas correctamente, como se dependessem de mim.',opcoes:[{lang:'1',texto:'Sim — assumo muito essa responsabilidade, mesmo sem que me seja pedida'},{lang:'_',texto:'Não — consigo delegar e aceitar que os outros façam à sua maneira'}]},
+  {id:3,tipo:2,texto:'O meu maior prazer é sentir que sou necessária e que faço diferença na vida das pessoas que amo.',opcoes:[{lang:'2',texto:'Sim — é profundamente satisfatório para mim'},{lang:'_',texto:'Não tanto — satisfaço-me mais com realizações pessoais do que com o impacto nos outros'}]},
+  {id:4,tipo:2,texto:'Tenho muita dificuldade em pedir ajuda — é muito mais fácil dar do que receber.',opcoes:[{lang:'2',texto:'Sim — pedir parece-me uma fraqueza ou um incómodo para os outros'},{lang:'_',texto:'Não — peço ajuda sem grande dificuldade quando preciso'}]},
+  {id:5,tipo:3,texto:'A minha imagem e o que as pessoas pensam de mim importam-me mais do que gosto de admitir.',opcoes:[{lang:'3',texto:'Sim — o sucesso visível e a imagem são importantes para mim'},{lang:'_',texto:'Não — a opinião dos outros não dita muito as minhas escolhas'}]},
+  {id:6,tipo:3,texto:'Adapto facilmente a minha forma de ser ao contexto e às pessoas — sou muito versátil.',opcoes:[{lang:'3',texto:'Sim — torno-me diferente consoante quem está à minha volta, quase sem esforço'},{lang:'_',texto:'Não — sou bastante consistente independentemente do contexto'}]},
+  {id:7,tipo:4,texto:'Sinto frequentemente que há algo em mim que é fundamentalmente diferente dos outros, difícil de explicar.',opcoes:[{lang:'4',texto:'Sim — tenho uma sensação crónica de ser diferente ou mais intensa que os outros'},{lang:'_',texto:'Não — sinto-me bastante parecida com a maioria das pessoas'}]},
+  {id:8,tipo:4,texto:'As emoções intensas, mesmo as difíceis, são parte natural de quem sou. A melancolia pode ser bela.',opcoes:[{lang:'4',texto:'Sim — vivo emocionalmente com intensidade e profundidade'},{lang:'_',texto:'Não — prefiro emoções mais estáveis e positivas'}]},
+  {id:9,tipo:5,texto:'Preciso de perceber tudo muito bem antes de participar — prefiro observar e analisar primeiro.',opcoes:[{lang:'5',texto:'Sim — a análise prévia é necessária para me sentir segura'},{lang:'_',texto:'Não — entro facilmente sem precisar de entender tudo antes'}]},
+  {id:10,tipo:5,texto:'O meu tempo e espaço privados são sagrados — fico esgotada quando me sinto invadida.',opcoes:[{lang:'5',texto:'Sim — a privacidade e o espaço são necessidades fundamentais para mim'},{lang:'_',texto:'Não — não sou muito territorial em relação a tempo e espaço'}]},
+  {id:11,tipo:6,texto:'Questiono muito as coisas — é difícil confiar sem verificar e antecipar o que pode correr mal.',opcoes:[{lang:'6',texto:'Sim — a minha mente antecipa problemas e cenários negativos com facilidade'},{lang:'_',texto:'Não — confio com relativa facilidade e não antecipo muito'}]},
+  {id:12,tipo:6,texto:'A segurança e a lealdade são os valores mais importantes para mim nas relações.',opcoes:[{lang:'6',texto:'Sim — preciso de saber que posso contar verdadeiramente com as pessoas'},{lang:'_',texto:'Não são os primeiros — valorizo mais a liberdade ou a autenticidade'}]},
+  {id:13,tipo:7,texto:'Amo a variedade, as novas experiências e manter as opções em aberto — o compromisso definitivo assusta-me.',opcoes:[{lang:'7',texto:'Sim — o compromisso fixo parece limitar algo importante em mim'},{lang:'_',texto:'Não — gosto de estabilidade e de saber o que esperar'}]},
+  {id:14,tipo:7,texto:'Quando me aparecem emoções difíceis, o meu impulso é focar no positivo e seguir em frente.',opcoes:[{lang:'7',texto:'Sim — ficar presa no sofrimento parece uma escolha que posso evitar'},{lang:'_',texto:'Não — consigo ficar com as emoções difíceis sem ter de as fugir'}]},
+  {id:15,tipo:8,texto:'Não tenho medo do confronto — prefiro ir directo ao assunto do que andar com rodeios.',opcoes:[{lang:'8',texto:'Sim — o confronto não me assusta, é apenas honestidade directa'},{lang:'_',texto:'Não — evito confronto quando possível, não é o meu estilo'}]},
+  {id:16,tipo:8,texto:'Protejo instintivamente quem é mais fraco — a injustiça enfurece-me profundamente.',opcoes:[{lang:'8',texto:'Sim — sinto um impulso forte e imediato de defender quem é vulnerável'},{lang:'_',texto:'Não tanto — não é uma reacção tão automática em mim'}]},
+  {id:17,tipo:9,texto:'Faço grandes esforços para evitar conflitos — a harmonia é essencial para o meu bem-estar.',opcoes:[{lang:'9',texto:'Sim — o conflito perturba-me profundamente e faço muito para o evitar'},{lang:'_',texto:'Não — tolero o conflito bem e não sacrifico a minha posição para manter a paz'}]},
+  {id:18,tipo:9,texto:'Às vezes perco-me nas preferências e agendas dos outros e esqueço o que eu própria quero.',opcoes:[{lang:'9',texto:'Sim — tenho dificuldade em manter o contacto com os meus próprios desejos'},{lang:'_',texto:'Não — sei bem o que quero e não perco facilmente o fio a mim mesma'}]},
+];
+const ENNEAGRAMA_TYPES = {
+  '1':{nome:'O Reformador',cor:'#5a7a6e',desc:'Perfeccionista, com padrões elevados e voz crítica interna'},
+  '2':{nome:'O Ajudante',cor:'#b85c6e',desc:'Orientada para os outros, dificuldade em receber'},
+  '3':{nome:'O Realizador',cor:'#c9702c',desc:'Orientada para a imagem e o sucesso visível'},
+  '4':{nome:'O Individualista',cor:'#7b5ea7',desc:'Emocionalmente intensa, sensação de ser diferente'},
+  '5':{nome:'O Investigador',cor:'#4a6fa5',desc:'Observadora, analítica, necessita de espaço privado'},
+  '6':{nome:'O Leal',cor:'#c9a84c',desc:'Ansiosa, questiona muito, valoriza a segurança'},
+  '7':{nome:'O Entusiasta',cor:'#e8c97a',desc:'Orientada para o prazer, evita o sofrimento'},
+  '8':{nome:'O Desafiante',cor:'#b85c6e',desc:'Directa, protectora, não teme o confronto'},
+  '9':{nome:'O Pacificador',cor:'#5a7a6e',desc:'Harmoniosa, evita conflito, perde contacto consigo'},
+};
+
+function renderPreviewQuiz(q) {
+  // ── MBTI ──
+  if (q.id === 'mbti') {
+    let html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
+    html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">Os rótulos (E/I/S/N/T/F/J/P) são <strong style=\'color:white\'>INVISÍVEIS para a cliente</strong>. No quiz as opções aparecem sem rótulos.</div></div>';
+    MBTI_PERGUNTAS.forEach(function(pq) {
+      html += '<div style="background:white;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px">';
+      html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
+      html += '<span style="font-size:10px;font-weight:700;color:var(--gold);background:rgba(201,168,76,.1);padding:2px 8px;border-radius:99px">' + pq.id + '/16</span>';
+      html += '<span style="font-size:10px;color:var(--text-lt);background:var(--cream);padding:2px 8px;border-radius:99px">Dimensão ' + pq.dim + '</span>';
+      html += '</div>';
+      html += '<div style="font-size:13.5px;color:var(--navy);font-style:italic;margin-bottom:10px;line-height:1.5">"' + pq.texto + '"</div>';
+      html += '<div style="display:flex;flex-direction:column;gap:6px">';
+      pq.opcoes.forEach(function(opt) {
+        var cor = MBTI_DIM_COLORS[opt.lang] || '#999';
+        html += '<div style="display:flex;gap:10px;align-items:center;padding:8px 12px;background:var(--cream);border-left:3px solid ' + cor + ';border-radius:0 7px 7px 0">';
+        html += '<span style="font-size:12px;font-weight:700;color:white;background:' + cor + ';padding:2px 9px;border-radius:99px;flex-shrink:0">' + opt.lang + '</span>';
+        html += '<span style="font-size:13px;color:var(--text);line-height:1.5">' + opt.texto + '</span>';
+        html += '</div>';
+      });
+      html += '</div></div>';
+    });
+    html += '<div style="padding:10px 14px;background:var(--cream);border-radius:8px;font-size:12px;color:var(--text-lt)">ℹ️ A cliente escolhe a opção que mais a representa em cada par. Resultado: 4 letras (ex: INFJ).</div>';
+    return html;
+  }
+  // ── BIG FIVE ──
+  if (q.id === 'bigfive') {
+    let html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
+    html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">Os rótulos de dimensão são <strong style=\'color:white\'>INVISÍVEIS para a cliente</strong>. A escala vai de 1 a 5.</div></div>';
+    var lastDim = '';
+    BIGFIVE_PERGUNTAS.forEach(function(pq) {
+      var dim = BIGFIVE_DIMS[pq.dim];
+      if (pq.dim !== lastDim) {
+        html += '<div style="padding:6px 12px;background:' + dim.cor + '22;border-radius:6px;margin-bottom:8px;font-size:11px;font-weight:700;color:' + dim.cor + ';text-transform:uppercase;letter-spacing:1px">' + dim.nome + ' (' + pq.dim + ') — ' + dim.desc + '</div>';
+        lastDim = pq.dim;
+      }
+      html += '<div style="background:white;border:1px solid var(--border);border-left:3px solid ' + dim.cor + ';border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px">';
+      html += '<span style="font-size:10px;font-weight:700;color:white;background:' + dim.cor + ';padding:2px 7px;border-radius:99px;flex-shrink:0;margin-top:2px">' + pq.dim + (pq.inv ? '⁻¹' : '') + '</span>';
+      html += '<span style="font-size:13px;color:var(--text);line-height:1.6">' + pq.texto + (pq.inv ? ' <em style="font-size:11px;color:var(--text-lt)">(pontuação invertida)</em>' : '') + '</span>';
+      html += '</div>';
+    });
+    html += '<div style="padding:10px 14px;background:var(--cream);border-radius:8px;font-size:12px;color:var(--text-lt)">ℹ️ A cliente avalia cada afirmação de 1 (Nada a ver) a 5 (Totalmente a ver). Score médio por dimensão.</div>';
+    return html;
+  }
+  // ── DISC ──
+  if (q.id === 'disc') {
+    let html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
+    html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">Os estilos DISC são <strong style=\'color:white\'>INVISÍVEIS para a cliente</strong>. A cliente escolhe 1ª e 2ª opção.</div></div>';
+    DISC_PERGUNTAS.forEach(function(pq) {
+      html += '<div style="background:white;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px">';
+      html += '<span style="font-size:10px;font-weight:700;color:var(--gold);background:rgba(201,168,76,.1);padding:2px 8px;border-radius:99px">' + pq.id + '/10</span>';
+      html += '<div style="font-size:13.5px;color:var(--navy);font-style:italic;margin:8px 0 10px;line-height:1.5">"' + pq.texto + '"</div>';
+      html += '<div style="display:flex;flex-direction:column;gap:6px">';
+      pq.opcoes.forEach(function(opt) {
+        var cor = DISC_TYPES[opt.lang]?.cor || '#999';
+        html += '<div style="display:flex;gap:10px;align-items:center;padding:8px 12px;background:var(--cream);border-left:3px solid ' + cor + ';border-radius:0 7px 7px 0">';
+        html += '<span style="font-size:10px;font-weight:700;color:white;background:' + cor + ';padding:1px 7px;border-radius:99px;white-space:nowrap;flex-shrink:0">' + opt.lang + '</span>';
+        html += '<span style="font-size:13px;color:var(--text);line-height:1.5">' + opt.texto + '</span>';
+        html += '</div>';
+      });
+      html += '</div></div>';
+    });
+    html += '<div style="padding:10px 14px;background:var(--cream);border-radius:8px;font-size:12px;color:var(--text-lt)">ℹ️ A cliente escolhe a opção que mais a descreve (1ª escolha pesa mais). Resultado: perfil DISC dominante.</div>';
+    return html;
+  }
+  // ── ENNEAGRAMA ──
+  if (q.id === 'enneagrama') {
+    let html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
+    html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">Os números de tipo são <strong style=\'color:white\'>INVISÍVEIS para a cliente</strong>. Duas perguntas por tipo.</div></div>';
+    var lastTipo = '';
+    ENNEAGRAMA_PERGUNTAS.forEach(function(pq) {
+      var t = ENNEAGRAMA_TYPES[String(pq.tipo)];
+      var cor = t?.cor || '#999';
+      if (String(pq.tipo) !== lastTipo) {
+        html += '<div style="padding:6px 12px;background:' + cor + '22;border-radius:6px;margin-bottom:8px;font-size:11px;font-weight:700;color:' + cor + ';text-transform:uppercase;letter-spacing:1px">Tipo ' + pq.tipo + ' — ' + (t?.nome||'') + '</div>';
+        lastTipo = String(pq.tipo);
+      }
+      html += '<div style="background:white;border:1px solid var(--border);border-left:3px solid ' + cor + ';border-radius:0 10px 10px 0;padding:12px 16px;margin-bottom:8px">';
+      html += '<div style="font-size:13px;color:var(--navy);line-height:1.6;margin-bottom:8px">"' + pq.texto + '"</div>';
+      pq.opcoes.forEach(function(opt) {
+        var isType = opt.lang !== '_';
+        html += '<div style="display:flex;gap:8px;align-items:center;padding:6px 10px;margin-bottom:4px;background:' + (isType ? cor + '11' : 'var(--cream)') + ';border-radius:6px">';
+        html += '<span style="font-size:10px;font-weight:700;color:' + (isType ? cor : 'var(--text-lt)') + ';flex-shrink:0">' + (isType ? '✓ T'+pq.tipo : '○') + '</span>';
+        html += '<span style="font-size:12.5px;color:var(--text);line-height:1.5">' + opt.texto + '</span>';
+        html += '</div>';
+      });
+      html += '</div>';
+    });
+    html += '<div style="padding:10px 14px;background:var(--cream);border-radius:8px;font-size:12px;color:var(--text-lt)">ℹ️ A cliente escolhe a opção que mais a representa em cada par. Os 2 tipos com mais "sim" = tipo + asa.</div>';
+    return html;
+  }
+  if (q.id === 'estilo-apego') {
+    let html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
+    html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">As etiquetas de estilo são <strong style=\'color:white\'>INVISÍVEIS para a cliente</strong>. No quiz, as opções aparecem sem rótulos.</div></div>';
+    APEGO_PERGUNTAS.forEach(function(pq) {
+      html += '<div style="background:white;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px">';
+      html += '<span style="font-size:10px;font-weight:700;color:var(--gold);background:rgba(201,168,76,.1);padding:2px 8px;border-radius:99px">' + pq.id + '/20</span>';
+      html += '<div style="font-size:13.5px;color:var(--navy);font-style:italic;margin:8px 0 10px;line-height:1.5">"' + pq.text + '"</div>';
+      html += '<div style="display:flex;flex-direction:column;gap:6px">';
+      pq.opts.forEach(function(opt) {
+        var cor = APEGO_STYLE_COLORS[opt.s] || '#999';
+        html += '<div style="display:flex;gap:10px;align-items:center;padding:8px 12px;background:var(--cream);border-left:3px solid ' + cor + ';border-radius:0 7px 7px 0">';
+        html += '<span style="font-size:10px;font-weight:700;color:white;background:' + cor + ';padding:1px 7px;border-radius:99px;white-space:nowrap;flex-shrink:0">' + (APEGO_STYLE_NAMES[opt.s]||opt.s) + '</span>';
+        html += '<span style="font-size:13px;color:var(--text);line-height:1.5">' + opt.t + '</span>';
+        html += '</div>';
+      });
+      html += '</div></div>';
+    });
+    html += '<div style="padding:10px 14px;background:var(--cream);border-radius:8px;font-size:12px;color:var(--text-lt)">ℹ️ A cliente escolhe a opção que mais a representa. Resultados enviados automaticamente.</div>';
+    return html;
+  }
+  if (q.id !== 'linguagem-amor') {
+    if (!q.disponivel) return '<div style="text-align:center;padding:20px;color:var(--text-lt)"><div style="font-size:24px;margin-bottom:8px">🔧</div><p style="font-size:13px">Em desenvolvimento.</p></div>';
+    return '<div style="padding:16px;color:var(--text-lt);font-size:13px">Perguntas em construção para este quiz.</div>';
+  }
+  let showLabels = true;
+  let html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">';
+  html += '<div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
+  html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">As etiquetas abaixo são <strong style=\'color:white\'>INVISÍVEIS para a cliente</strong>. No quiz real, as opções aparecem <strong style=\'color:white\'>sem rótulos e em ordem aleatória</strong>.</div></div>';
+  html += '<div style="display:flex;gap:8px;flex-shrink:0">';
+  html += '<button id="btn-view-terapeuta" onclick="window._previewMode=\'terapeuta\';document.getElementById(\'sbody-preview\').innerHTML=renderPreviewQuiz(activeQuizObj)" style="padding:6px 12px;background:#c9a84c;color:#1a2744;border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:\'DM Sans\',sans-serif">👁 Terapeuta</button>';
+  html += '<button id="btn-view-cliente" onclick="window._previewMode=\'cliente\';document.getElementById(\'sbody-preview\').innerHTML=renderPreviewQuiz(activeQuizObj)" style="padding:6px 12px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.2);border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:\'DM Sans\',sans-serif">👤 Cliente</button>';
+  html += '</div></div>';
+  const isClienteView = window._previewMode === 'cliente';
+  LA_PERGUNTAS.forEach(function(pq) {
+    html += '<div style="background:white;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px">';
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
+    html += '<span style="font-size:10px;font-weight:700;color:var(--gold);background:rgba(201,168,76,.1);padding:2px 8px;border-radius:99px">' + pq.id + '/20</span>';
+    html += '<span style="font-size:10px;color:var(--text-lt);background:var(--cream);padding:2px 8px;border-radius:99px">' + (pq.tag==='dar'?'➡️ Como expressas amor':'⬅️ Como recebes amor') + '</span>';
+    html += '</div>';
+    html += '<div style="font-size:13.5px;color:var(--navy);font-style:italic;margin-bottom:10px;line-height:1.5">"' + pq.texto + '"</div>';
+    html += '<div style="display:flex;flex-direction:column;gap:6px">';
+    var letters = ['A','B','C','D','E'];
+    var shuffled = pq.opcoes.slice();
+    // In client view, shuffle and hide labels
+    if (isClienteView) {
+      shuffled = shuffled.sort(function() { return Math.random()-0.5; });
+    }
+    shuffled.forEach(function(opt, oi) {
+      if (isClienteView) {
+        // Client view: no labels, just letter + text
+        html += '<div style="display:flex;gap:10px;align-items:center;padding:10px 14px;background:white;border:2px solid var(--border);border-radius:10px;cursor:default">';
+        html += '<span style="font-size:11px;font-weight:700;color:var(--text-lt);background:var(--cream2);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">' + letters[oi] + '</span>';
+        html += '<span style="font-size:13.5px;color:var(--text);line-height:1.5">' + opt.texto + '</span>';
+        html += '</div>';
+      } else {
+        // Therapist view: colored labels
+        var cor = LA_LANG_COLORS[opt.lang];
+        html += '<div style="display:flex;gap:10px;align-items:center;padding:8px 12px;background:var(--cream);border-left:3px solid ' + cor + ';border-radius:0 7px 7px 0">';
+        html += '<span style="font-size:10px;font-weight:700;color:white;background:' + cor + ';padding:1px 7px;border-radius:99px;white-space:nowrap;flex-shrink:0">' + LA_LANG_NAMES[opt.lang] + '</span>';
+        html += '<span style="font-size:13px;color:var(--text);line-height:1.5">' + opt.texto + '</span>';
+        html += '</div>';
+      }
+    });
+    html += '</div></div>';
+  });
+  html += '<div style="padding:10px 14px;background:var(--cream);border-radius:8px;font-size:12px;color:var(--text-lt)">ℹ️ A cliente escolhe até 2 opções (1ª pesa mais). Resultados enviados automaticamente.</div>';
+  return html;
+}
+
+function renderSection(id, icon, title, subtitle, body) {
+  return `
+    <div class="section" id="sec-${id}">
+      <div class="section-head" onclick="toggleSection('${id}')">
+        <span class="section-head-icon">${icon}</span>
+        <div class="section-head-text">
+          <h3>${title}</h3>
+          <p>${subtitle}</p>
+        </div>
+        <span class="section-toggle" id="stog-${id}">▾</span>
+      </div>
+      <div class="section-body hidden" id="sbody-${id}">${body}</div>
+    </div>`;
+}
+
+function toggleSection(id) {
+  const body = document.getElementById('sbody-' + id);
+  const tog  = document.getElementById('stog-' + id);
+  if (!body) return;
+  const hidden = body.classList.toggle('hidden');
+  if (tog) tog.classList.toggle('open', !hidden);
+}
+
+function renderHipoteses(hipoteses) {
+  return `<div class="result-grid">${hipoteses.map((h, i) => `
+    <div class="result-card" style="border-color:${h.cor}33">
+      <div class="result-card-head" style="background:${h.bg}" onclick="this.nextElementSibling.classList.toggle('open')">
+        <div style="width:10px;height:10px;border-radius:50%;background:${h.cor};flex-shrink:0"></div>
+        <span class="result-card-label" style="color:${h.cor}">${h.label}</span>
+        <span style="font-size:12px;color:${h.cor};opacity:.6">▾</span>
+      </div>
+      <div class="result-card-body">
+        <p>${h.texto}</p>
+        <div class="tag-row">${h.tags.map(t => `<span class="tag" style="background:${h.bg};color:${h.cor};border:1px solid ${h.cor}33">${t}</span>`).join('')}</div>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+function renderDecisoes(decisoes) {
+  return `<div class="decision-tree">${decisoes.map(d => `
+    <div class="dt-item">
+      <div class="dt-condition">
+        <span>IF</span> ${d.cond}
+      </div>
+      <div class="dt-action">
+        <ul>${d.acoes.map(a => `<li>${a}</li>`).join('')}</ul>
+      </div>
+    </div>`).join('')}</div>`;
+}
+
+let _casalMode = {};
+function setCasalMode(quizId, mode) {
+  _casalMode[quizId] = mode;
+  const q = QUIZZES.find(x => x.id === quizId);
+  if (q) {
+    const el = document.getElementById('sbody-envio');
+    if (el) el.innerHTML = renderSendContent(q);
+  }
+}
+function renderSendSection(q) {
+  if (!q.disponivel || !q.file) {
+    return `
+      <div class="section" id="sec-envio">
+        <div class="section-head" onclick="toggleSection('envio')">
+          <span class="section-head-icon">📤</span>
+          <div class="section-head-text"><h3>Enviar ao Cliente</h3><p>Quiz em desenvolvimento</p></div>
+          <span class="section-toggle" id="stog-envio">▾</span>
+        </div>
+        <div class="section-body hidden" id="sbody-envio">
+          <div style="text-align:center;padding:24px;color:var(--text-lt)">
+            <div style="font-size:28px;margin-bottom:8px">🔧</div>
+            <p style="font-size:13px">Este quiz está em desenvolvimento e ainda não pode ser enviado.</p>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  return renderSendSection_wrapper(q);
+}
+
+function renderSendContent(q) {
+  const mode = _casalMode[q.id] || 'individual';
+  const baseUrl = localStorage.getItem('dd_quiz_base_url') || '';
+  const clienteNome = activeClientId && clients[activeClientId]?.dados?.f_nome || '—';
+  const clienteEmail = activeClientId && clients[activeClientId]?.dados?.f_contacto?.includes('@')
+    ? clients[activeClientId].dados.f_contacto : '';
+  const hasModos = q.modos && q.modos.includes('casal');
+
+  const tabsHtml = hasModos ? `
+    <div class="modo-tabs">
+      <button class="modo-tab ${mode==='individual'?'active':''}" onclick="setCasalMode('${q.id}','individual')">👤 Individual</button>
+      <button class="modo-tab ${mode==='casal'?'active':''}" onclick="setCasalMode('${q.id}','casal')">💑 Casal</button>
+    </div>` : '';
+
+  if (mode === 'casal' && hasModos) {
+    return tabsHtml + `
+      <div class="casal-links">
+        <div style="font-size:12px;color:rgba(255,255,255,.55);margin-bottom:12px;line-height:1.6">
+          Gera dois links únicos — um para cada parceiro. Ambos partilham um ID de casal que une os resultados.
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:140px">
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.35);margin-bottom:4px">Nome — Parceiro A</div>
+            <input type="text" id="casalNomeA_${q.id}" placeholder="Ex: Maria"
+              style="width:100%;padding:7px 10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:6px;color:white;font-size:12px;font-family:'DM Sans',sans-serif"/>
+          </div>
+          <div style="flex:1;min-width:140px">
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.35);margin-bottom:4px">Nome — Parceiro B</div>
+            <input type="text" id="casalNomeB_${q.id}" placeholder="Ex: João"
+              style="width:100%;padding:7px 10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:6px;color:white;font-size:12px;font-family:'DM Sans',sans-serif"/>
+          </div>
+        </div>
+        <button class="btn btn-gold" onclick="gerarLinkCasal('${q.id}')">🔗 Gerar Links do Casal</button>
+        <div style="margin-top:14px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.3);margin-bottom:6px">ID do Casal: <span class="casal-id-badge" id="casalId_${q.id}">—</span></div>
+        <div class="casal-partner">
+          <div class="casal-partner-label">🅐 Parceiro A</div>
+          <div class="casal-partner-link" id="casalLinkA_${q.id}">— clica em "Gerar Links do Casal" —</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn btn-outline-w btn-sm" onclick="copiarLinkCasal('${q.id}','A')">📋 Copiar A</button>
+            <button class="btn btn-whatsapp btn-sm" onclick="enviarWhatsAppCasal('${q.id}','A','${q.name}')">💬 WhatsApp A</button>
+          </div>
+        </div>
+        <div class="casal-partner">
+          <div class="casal-partner-label">🅑 Parceiro B</div>
+          <div class="casal-partner-link" id="casalLinkB_${q.id}">— clica em "Gerar Links do Casal" —</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="btn btn-outline-w btn-sm" onclick="copiarLinkCasal('${q.id}','B')">📋 Copiar B</button>
+            <button class="btn btn-whatsapp btn-sm" onclick="enviarWhatsAppCasal('${q.id}','B','${q.name}')">💬 WhatsApp B</button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // Modo individual (existente)
+  return tabsHtml + `
+    <div class="section" id="sec-envio">
+      <div class="section-head" onclick="toggleSection('envio')">
+        <span class="section-head-icon">📤</span>
+        <div class="section-head-text"><h3>Enviar ao Cliente</h3><p>Gerar link e enviar por email ou WhatsApp</p></div>
+        <span class="section-toggle" id="stog-envio">▾</span>
+      </div>
+      <div class="section-body hidden" id="sbody-envio">
+        <div class="send-box">
+          <h3>Enviar ${q.name}</h3>
+          <p>O link é personalizado com o nome e ID da cliente. As respostas chegam automaticamente ao Google Sheets e à ficha.</p>
+
+          <!-- URL config -->
+          <div style="margin-bottom:14px">
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.35);margin-bottom:5px">🌐 URL base do site (Netlify)</div>
+            <div style="display:flex;gap:8px">
+              <input type="text" id="urlBase_${q.id}" value="${baseUrl}"
+                placeholder="https://danieledallavecchia-netizen.github.io/Quizzes"
+                oninput="saveBaseUrl(this.value)"
+                style="flex:1;padding:7px 10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:6px;color:white;font-size:12px;font-family:'DM Sans',sans-serif"/>
+            </div>
+          </div>
+
+          <!-- Cliente -->
+          <div class="send-client-info">
+            <div>
+              <div class="lbl">Cliente seleccionada</div>
+              <div class="val" id="sendClientName_${q.id}">${clienteNome}</div>
+            </div>
+          </div>
+
+          <!-- Link gerado -->
+          <div class="send-link-box" id="sendLink_${q.id}">— clica em "Gerar Link" —</div>
+          <div class="send-actions">
+            <button class="btn btn-gold" onclick="gerarLink('${q.id}','${q.file}')">🔗 Gerar Link</button>
+            <button class="btn btn-outline-w btn-sm" onclick="copiarLink('${q.id}')">📋 Copiar</button>
+            <button class="btn btn-whatsapp btn-sm" onclick="enviarWhatsApp('${q.id}','${q.name}')">💬 WhatsApp</button>
+          </div>
+
+          <!-- Email -->
+          <div style="margin-bottom:4px">
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.35);margin-bottom:6px">📧 Enviar por email</div>
+            <div class="email-row">
+              <input type="email" id="emailInput_${q.id}" placeholder="email da cliente"
+                value="${clienteEmail}" />
+              <button class="btn btn-outline-w btn-sm" onclick="enviarEmail('${q.id}','${q.name}')">✉️ Abrir email</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderSendSection_wrapper(q) {
+  const baseUrl = localStorage.getItem('dd_quiz_base_url') || '';
+  const clienteNome = activeClientId && clients[activeClientId]?.dados?.f_nome || '—';
+  const clienteEmail = activeClientId && clients[activeClientId]?.dados?.f_contacto?.includes('@')
+    ? clients[activeClientId].dados.f_contacto : '';
+  return `
+    <div class="section" id="sec-envio">
+      <div class="section-head" onclick="toggleSection('envio')">
+        <span class="section-head-icon">📤</span>
+        <div class="section-head-text"><h3>Enviar ao Cliente</h3><p>Individual ou modo casal</p></div>
+        <span class="section-toggle" id="stog-envio">▾</span>
+      </div>
+      <div class="section-body hidden" id="sbody-envio">
+        <div class="send-box">
+          <h3>Enviar ${q.name}</h3>
+          <p>Escolhe o modo de envio — individual ou casal (dois links separados).</p>
+          ${renderSendContent(q)}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderIASection(q) {
+  if (!activeClientId || !clients[activeClientId]) {
+    return `
+      <div class="section" id="sec-ia">
+        <div class="section-head" onclick="toggleSection('ia')">
+          <span class="section-head-icon">🧠</span>
+          <div class="section-head-text"><h3>Interpretação com IA</h3><p>Selecciona um cliente para ver os resultados e gerar interpretação</p></div>
+          <span class="section-toggle" id="stog-ia">▾</span>
+        </div>
+        <div class="section-body hidden" id="sbody-ia">
+          <div class="ia-box-body">
+            <div class="ia-empty">
+              <div class="ie-icon">👤</div>
+              <p>Selecciona uma cliente no topo da barra lateral para ver os seus resultados deste quiz e gerar uma interpretação clínica com IA.</p>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  const c = clients[activeClientId];
+  const resultados = (c.quiz_resultados || []).filter(r => r.quiz === q.id || r.quiz === q.name);
+
+  // Detect casal pair: 2 results from same quiz with parceiro field
+  const casalResults = resultados.filter(r => r.parceiro);
+  const hasCasalPair = casalResults.length >= 2;
+  const casalBtnHtml = hasCasalPair ? `
+    <div style="margin:12px 0 4px;padding:12px 14px;background:linear-gradient(135deg,rgba(123,94,167,.08),rgba(74,111,165,.08));border:1px solid rgba(123,94,167,.2);border-radius:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:180px">
+        <div style="font-size:13px;font-weight:600;color:var(--text-main)">💑 Resultados do casal disponíveis</div>
+        <div style="font-size:11px;color:var(--text-lt);margin-top:2px">${casalResults[0].nome||'Parceiro A'} e ${casalResults[1].nome||'Parceiro B'} — análise comparativa</div>
+      </div>
+      <button onclick="interpretarIACasal('${q.id}')"
+        style="padding:8px 16px;background:linear-gradient(135deg,#7b5ea7,#4a6fa5);color:white;border:none;border-radius:8px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600">
+        💑 Interpretar Compatibilidade
+      </button>
+    </div>
+    <div id="ia-casal-result-${q.id}" style="display:none;margin-top:8px"></div>` : '';
+
+  const bodyHtml = resultados.length === 0 ?
+    `<div class="ia-empty">
+      <div class="ie-icon">📋</div>
+      <p>Ainda não há resultados deste quiz para ${c.dados?.f_nome || 'esta cliente'}.<br>Envia o quiz e aguarda a resposta.</p>
+    </div>` :
+    `<div class="ia-result-list">${resultados.map(r => renderIAResultItem(r, q)).join('')}</div>`;
+
+  return `
+    <div class="section" id="sec-ia">
+      <div class="section-head" onclick="toggleSection('ia')">
+        <span class="section-head-icon">🧠</span>
+        <div class="section-head-text">
+          <h3>Interpretação com IA — ${c.dados?.f_nome || 'Cliente'}</h3>
+          <p>${resultados.length} resultado(s) · Análise clínica personalizada com Claude</p>
+        </div>
+        <span class="section-toggle" id="stog-ia">▾</span>
+      </div>
+      <div class="section-body hidden" id="sbody-ia">
+        <div class="ia-box-body">${bodyHtml}</div>
+      </div>
+    </div>`;
+}
+
+function renderIAResultItem(r, q) {
+  const dataStr = r.timestamp ? new Date(r.timestamp).toLocaleDateString('pt-PT') : (r.data || '—');
+  return `
+    <div class="ia-result-item" id="iaitem-${r.id||r.timestamp}">
+      <div class="ia-result-item-head">
+        <div>
+          <div class="quiz-name">${q.icon} ${q.name}</div>
+          <div class="quiz-date">${dataStr}</div>
+        </div>
+        <button onclick="interpretarIA('${r.id||r.timestamp}', '${q.id}')"
+          id="iabtn-${r.id||r.timestamp}"
+          style="padding:6px 14px;background:linear-gradient(135deg,#7b5ea7,#4a6fa5);color:white;border:none;border-radius:6px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif">
+          ${r.ia_interpretacao ? '↺ Regenerar' : '🧠 Interpretar com IA'}
+        </button>
+      </div>
+      <div class="ia-result-raw">📊 ${r.resumo || JSON.stringify(r.dados||{}).slice(0,100)}</div>
+      <div class="ia-interpretation" id="iainterp-${r.id||r.timestamp}">
+        ${r.ia_interpretacao ?
+          `<div class="ia-interpretation-text">${r.ia_interpretacao}</div>
+           <div class="concordar-bar">
+             <span class="concordar-label">A tua posição sobre esta análise:</span>
+             <button class="concordar-btn concordo ${r.ia_concordancia==='concordo'?'active':''}"
+               onclick="saveConcordancia('${r.id||r.timestamp}','concordo')">✓ Concordo</button>
+             <button class="concordar-btn discordo ${r.ia_concordancia==='discordo'?'active':''}"
+               onclick="saveConcordancia('${r.id||r.timestamp}','discordo')">✗ Discordo</button>
+           </div>` :
+          `<div style="color:var(--text-lt);font-size:12px;padding:8px 0;font-style:italic">Clica em "Interpretar com IA" para gerar a análise clínica.</div>`
+        }
+        <div class="ia-notas-label">💬 A minha leitura — notas e comentários</div>
+        <textarea class="ia-notas-area"
+          id="ianotas-${r.id||r.timestamp}"
+          placeholder="Escreve aqui a tua leitura, dúvidas, ou conversa com a IA sobre este resultado..."
+          oninput="saveIaNotas('${r.id||r.timestamp}', this.value)">${r.ia_notas||''}</textarea>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+// LINK + EMAIL
+// ══════════════════════════════════════════════════════════════
+function saveBaseUrl(val) {
+  localStorage.setItem('dd_quiz_base_url', val.trim());
+}
+
+// URLs individuais por quiz (cada um no seu próprio site Netlify)
+const QUIZ_URLS = {
+  'linguagem-amor':    'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_amor.html',
+  'padroes-parentais': 'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_padroes.html',
+  'estilo-apego':      'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_apego.html',
+  'mbti':              'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_mbti.html',
+  'mbti-casal':        'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_mbti_casal.html',
+  'bigfive':           'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_bigfive.html',
+  'bigfive-casal':     'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_bigfive_casal.html',
+  'disc':              'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_disc.html',
+  'disc-casal':        'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_disc_casal.html',
+  'enneagrama':        'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_enneagrama.html',
+  'enneagrama-casal':  'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_enneagrama_casal.html',
+};
+
+function gerarLink(quizId, file) {
+  if (!activeClientId || !clients[activeClientId]) { showToast('Selecciona um cliente primeiro', 'error'); return; }
+
+  const c = clients[activeClientId];
+  const nome = c.dados?.f_nome || '';
+  const id   = c.dados?.f_id || activeClientId;
+  const params = new URLSearchParams({ nome, id });
+  
+  // URL individual por quiz
+  const quizUrl = QUIZ_URLS[quizId];
+  const url = quizUrl + '?' + params.toString();
+
+  if (!url) { showToast('URL não configurado para este quiz', 'error'); return; }
+
+  const el = document.getElementById('sendLink_' + quizId);
+  if (el) el.textContent = url;
+  showToast('✓ Link gerado!', 'success');
+}
+
+function copiarLink(quizId) {
+  const el = document.getElementById('sendLink_' + quizId);
+  const url = el?.textContent?.trim();
+  if (!url || url.startsWith('—')) { showToast('Gera o link primeiro', 'error'); return; }
+  navigator.clipboard?.writeText(url).then(() => showToast('✓ Link copiado!', 'success'))
+    .catch(() => { document.execCommand && (el.select?.(), document.execCommand('copy'), showToast('✓ Copiado!', 'success')); });
+}
+
+function enviarWhatsApp(quizId, quizName) {
+  const el = document.getElementById('sendLink_' + quizId);
+  const url = el?.textContent?.trim();
+  if (!url || url.startsWith('—')) { gerarLink(quizId, QUIZZES.find(q=>q.id===quizId)?.file||''); return; }
+  const nome = activeClientId && clients[activeClientId]?.dados?.f_nome?.split(' ')[0] || '';
+  const msg = encodeURIComponent(`Olá ${nome}!\n\nDeixo aqui o link para o quiz que combinámos. São apenas alguns minutos e ajuda-nos muito no nosso trabalho juntas 🌿\n\n${url}`);
+  window.open('https://wa.me/?text=' + msg, '_blank');
+}
+
+function enviarEmail(quizId, quizName) {
+  const linkEl = document.getElementById('sendLink_' + quizId);
+  let url = linkEl?.textContent?.trim();
+  if (!url || url.startsWith('—')) { gerarLink(quizId, QUIZZES.find(q=>q.id===quizId)?.file||''); url = linkEl?.textContent?.trim() || ''; }
+  const email = document.getElementById('emailInput_' + quizId)?.value?.trim() || '';
+  const nome  = activeClientId && clients[activeClientId]?.dados?.f_nome?.split(' ')[0] || '';
+  const subj  = encodeURIComponent(`${quizName} — um momento para ti 🌿`);
+  const body  = encodeURIComponent(`Olá ${nome}!\n\nDeixo aqui o link para o quiz que combinámos. São apenas alguns minutos e ajuda-nos muito no nosso trabalho juntas.\n\n👉 ${url}\n\nResponde com atenção e no teu ritmo. Não há respostas certas ou erradas.\n\nCom carinho,\nDaniele Dallavecchia`);
+  window.open(`mailto:${email}?subject=${subj}&body=${body}`, '_blank');
+}
+
+// ══════════════════════════════════════════════════════════════
+// IA INTERPRETATION (Anthropic API)
+// ══════════════════════════════════════════════════════════════
+async function interpretarIA(rid, quizId) {
+  if (!activeClientId || !clients[activeClientId]) return;
+  const c = clients[activeClientId];
+  const arr = c.quiz_resultados || [];
+  const r = arr.find(x => (x.id === rid) || (x.timestamp === rid));
+  if (!r) return;
+
+  const btn = document.getElementById('iabtn-' + rid);
+  if (btn) { btn.textContent = '⏳ A interpretar...'; btn.disabled = true; }
+
+  const q    = QUIZZES.find(x => x.id === quizId);
+  const cd   = c.dados || {};
+  const ca   = c.anamnese || {};
+  const cm   = c.modulo || {};
+
+  const contexto = [
+    cd.f_nome ? `Cliente: ${cd.f_nome}` : '',
+    cd.f_dob  ? `Idade: ${new Date().getFullYear() - new Date(cd.f_dob).getFullYear()} anos` : '',
+    cd.f_estadocivil ? `Estado civil: ${cd.f_estadocivil}` : '',
+    ca.a_queixa      ? `Queixa principal: ${ca.a_queixa}` : '',
+    ca.a_traumas     ? `Traumas/historial: ${ca.a_traumas}` : '',
+    ca.a_padroes     ? `Padrões identificados: ${ca.a_padroes}` : '',
+    cm.hx_central    ? `Hipótese diagnóstica anterior: ${cm.hx_central}` : '',
+    cm.hx_recursos   ? `Recursos identificados: ${cm.hx_recursos}` : '',
+  ].filter(Boolean).join('\n');
+
+  const hipotesesQuiz = q?.hipoteses?.map(h => `• ${h.label}: ${h.tags.join(', ')}`).join('\n') || '';
+
+  const prompt = `És uma psicoterapeuta clínica especializada em Schema Therapy (Jeffrey Young), Teoria da Vinculação (Bowlby, Ainsworth), Trauma (Van der Kolk, Peter Levine, Porges), EFT (Tapping), Hipnose Terapêutica e Psicodrama. Trabalhas dentro do Psicanálise e Psicoterapia da Psicanálise e Psicoterapia — protocolo de 9 sessões que integra Hipnose, EFT, Psicodrama e Mapa Quântico. Também conheces as Feridas da Infância (Lise Bourbeau) e a Metafísica da Saúde (Evette Rose).
+
+CONTEXTO CLÍNICO DA CLIENTE:
+${contexto || '(sem contexto adicional disponível)'}
+
+QUIZ REALIZADO: ${q?.name || r.quiz}
+DATA: ${r.data || r.timestamp || '—'}
+RESULTADO RESUMIDO: ${r.resumo || '—'}
+DADOS COMPLETOS: ${JSON.stringify(r.dados || {})}
+
+HIPÓTESES PREVISTAS PARA ESTE QUIZ (referência):
+${hipotesesQuiz}
+
+Gera uma interpretação clínica personalizada e estruturada:
+
+**1. LEITURA DOS RESULTADOS**
+Interpretação clínica específica destes resultados para esta cliente — tendo em conta o contexto dela.
+
+**2. HIPÓTESES DIAGNÓSTICAS PROVÁVEIS**
+Com base nos resultados: esquemas maladaptativos (Young), padrão de vinculação, feridas de infância, dinâmicas somáticas. Sê específica e fundamentada.
+
+**3. CONEXÕES COM O CONTEXTO CLÍNICO**
+Como este resultado se relaciona com a queixa principal, os traumas e os padrões já identificados desta cliente.
+
+**4. IMPLICAÇÕES PARA O PROTOCOLO HLE**
+• Que sessão/momento é mais indicado para trabalhar estes resultados
+• Que técnica priorizar (EFT, hipnose, psicodrama) e porquê
+• Sugestão de foco de linguagem e abordagem
+
+**5. PERGUNTAS CLÍNICAS PERSONALIZADAS**
+3-4 perguntas específicas para aprofundar com esta cliente na próxima sessão.
+
+**6. NOTAS DE CUIDADO**
+Aspectos sensíveis, contraindições ou áreas que requerem atenção especial.
+
+Responde em português europeu. Sê concreta, clínica, e orientada para a prática terapêutica.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await resp.json();
+    const interpretacao = data?.content?.[0]?.text || 'Erro ao gerar interpretação.';
+
+    // Save to client record
+    r.ia_interpretacao = interpretacao;
+    localStorage.setItem('dd_clients_v1', JSON.stringify(clients));
+
+    // Update UI
+    const interp = document.getElementById('iainterp-' + rid);
+    if (interp) {
+      interp.innerHTML = `
+        <div class="ia-interpretation-text">${interpretacao}</div>
+        <div class="concordar-bar">
+          <span class="concordar-label">A tua posição sobre esta análise:</span>
+          <button class="concordar-btn concordo" onclick="saveConcordancia('${rid}','concordo')">✓ Concordo</button>
+          <button class="concordar-btn discordo" onclick="saveConcordancia('${rid}','discordo')">✗ Discordo</button>
+        </div>
+        <div class="ia-notas-label">💬 A minha leitura — notas e comentários</div>
+        <textarea class="ia-notas-area" id="ianotas-${rid}"
+          placeholder="Escreve aqui a tua leitura, dúvidas ou conversa com a IA..."
+          oninput="saveIaNotas('${rid}', this.value)">${r.ia_notas||''}</textarea>`;
+    }
+    if (btn) { btn.textContent = '↺ Regenerar'; btn.disabled = false; }
+    showToast('✓ Interpretação clínica gerada!', 'success');
+
+  } catch(err) {
+    console.error('[IA]', err);
+    if (btn) { btn.textContent = '🧠 Interpretar com IA'; btn.disabled = false; }
+    showToast('Erro ao contactar a IA. Tenta novamente.', 'error');
+  }
+}
+
+function saveIaNotas(rid, val) {
+  if (!activeClientId || !clients[activeClientId]) return;
+  const arr = clients[activeClientId].quiz_resultados || [];
+  const r = arr.find(x => (x.id === rid) || (x.timestamp === rid));
+  if (r) {
+    r.ia_notas = val;
+    localStorage.setItem('dd_clients_v1', JSON.stringify(clients));
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════════
+let _toastTimer;
+
+// ── FUNÇÕES MODO CASAL ───────────────────────────────────────────────────
+function gerarLinkCasal(quizId) {
+  if (!activeClientId || !clients[activeClientId]) { showToast('Selecciona um cliente primeiro', 'error'); return; }
+  const c = clients[activeClientId];
+  const idCliente = c.dados?.f_id || activeClientId;
+  const casalId = Math.random().toString(36).substr(2, 6).toUpperCase();
+  const nomeA = document.getElementById('casalNomeA_' + quizId)?.value?.trim() || 'Parceiro A';
+  const nomeB = document.getElementById('casalNomeB_' + quizId)?.value?.trim() || 'Parceiro B';
+  const q = QUIZZES.find(x => x.id === quizId);
+  const baseUrl = localStorage.getItem('dd_quiz_base_url') || 'https://danieledallavecchia-netizen.github.io/Quizzes';
+  const fileUrl = baseUrl + '/' + (q?.file_casal || q?.file || '');
+  const linkA = fileUrl + '?nome=' + encodeURIComponent(nomeA) + '&id=' + encodeURIComponent(idCliente) + '&casal_id=' + casalId + '&parceiro=1';
+  const linkB = fileUrl + '?nome=' + encodeURIComponent(nomeB) + '&id=' + encodeURIComponent(idCliente) + '&casal_id=' + casalId + '&parceiro=2';
+  const elA = document.getElementById('casalLinkA_' + quizId);
+  const elB = document.getElementById('casalLinkB_' + quizId);
+  const elId = document.getElementById('casalId_' + quizId);
+  if (elA) elA.textContent = linkA;
+  if (elB) elB.textContent = linkB;
+  if (elId) elId.textContent = casalId;
+  showToast('\u2713 Links do casal gerados! ID: ' + casalId, 'success');
+}
+function copiarLinkCasal(quizId, parceiro) {
+  const el = document.getElementById('casalLink' + parceiro + '_' + quizId);
+  if (!el || el.textContent.startsWith('\u2014')) { showToast('Gera os links primeiro', 'warning'); return; }
+  navigator.clipboard.writeText(el.textContent).then(() => showToast('\u2713 Link do Parceiro ' + parceiro + ' copiado!', 'success'));
+}
+function enviarWhatsAppCasal(quizId, parceiro, quizName) {
+  const el = document.getElementById('casalLink' + parceiro + '_' + quizId);
+  if (!el || el.textContent.startsWith('\u2014')) { showToast('Gera os links primeiro', 'warning'); return; }
+  const msg = encodeURIComponent('Ol\u00e1! Segue o link para o teu question\u00e1rio de ' + quizName + ':\n' + el.textContent);
+  window.open('https://wa.me/?text=' + msg, '_blank');
+}
+// ── CONCORDAR / DISCORDAR ─────────────────────────────────────────────────
+function saveConcordancia(rid, valor) {
+  if (!activeClientId || !clients[activeClientId]) return;
+  const arr = clients[activeClientId].quiz_resultados || [];
+  const r = arr.find(x => x.id === rid || x.timestamp === rid);
+  if (r) {
+    r.ia_concordancia = r.ia_concordancia === valor ? null : valor;
+    localStorage.setItem('dd_clients_v1', JSON.stringify(clients));
+    renderQuizView(activeQuizId);
+  }
+}
+// ── IA CASAL ─────────────────────────────────────────────────────────────
+function interpretarIACasal(quizId) {
+  if (!activeClientId || !clients[activeClientId]) return;
+  const c = clients[activeClientId];
+  const arr = (c.quiz_resultados || []).filter(x => x.quiz === quizId);
+  const r1 = arr.find(x => x.parceiro === '1') || arr[0];
+  const r2 = arr.find(x => x.parceiro === '2') || arr[1];
+  if (!r1 || !r2) { showToast('Precisas de 2 resultados do casal para comparar', 'warning'); return; }
+  const q = QUIZZES.find(x => x.id === quizId);
+  const nomeA = r1.nome || 'Parceiro A';
+  const nomeB = r2.nome || 'Parceiro B';
+  const promptCasal = 'Es uma terapeuta psicanalit\u00edca especializada em terapia de casal. Analisa os dois perfis de ' + (q?.name||quizId) + ' e fornece uma interpret\u00e7\u00e3o cl\u00ednica comparativa em portugu\u00eas europeu.\n\nPERFIL A \u2014 ' + nomeA + ': ' + JSON.stringify(r1.resumo || r1.dados || r1) + '\nPERFIL B \u2014 ' + nomeB + ': ' + JSON.stringify(r2.resumo || r2.dados || r2) + '\n\nInclui: 1) Din\u00e2mica relacional 2) Pontos de complementaridade 3) Zonas de tens\u00e3o 4) Sugest\u00f5es terap\u00eauticas espec\u00edficas para este casal.';
+
+  const iaBox = document.getElementById('ia-casal-result-' + quizId);
+  if (iaBox) {
+    iaBox.style.display = 'block';
+    iaBox.innerHTML = '<div class="ia-loading"><div class="ia-spinner"></div><span>A analisar compatibilidade do casal...</span></div>';
+  }
+  const antKey = localStorage.getItem('dd_ant_key') || '';
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-api-key': antKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+    body: JSON.stringify({
+      model: 'claude-opus-4-5', max_tokens: 1200,
+      system: 'Es uma terapeuta psicanalit\u00edca. Escreve notas cl\u00ednicas confidenciais em portugu\u00eas europeu. Usa markdown b\u00e1sico.',
+      messages: [{ role: 'user', content: promptCasal }]
+    })
+  })
+  .then(function(resp) { return resp.json(); })
+  .then(function(data) {
+    const text = (data.content && data.content[0] && data.content[0].text) || 'Erro na interpreta\u00e7\u00e3o.';
+    const rid = 'casal_' + quizId + '_' + Date.now();
+    if (iaBox) {
+      iaBox.innerHTML = '<div class="ia-interpretation">' +
+        '<div class="ia-interpretation-header"><span class="ia-model-badge">\ud83d\udc91 An\u00e1lise de Casal \u2014 ' + nomeA + ' & ' + nomeB + '</span></div>' +
+        '<div class="ia-text" style="white-space:pre-wrap;line-height:1.7">' + text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>') + '</div>' +
+        '<div class="concordar-bar"><span class="concordar-label">A tua posi\u00e7\u00e3o sobre esta an\u00e1lise:</span>' +
+        '<button class="concordar-btn concordo" onclick="saveCasalConcordancia(\'' + rid + '\',\'concordo\',\'' + quizId + '\')">\u2713 Concordo</button>' +
+        '<button class="concordar-btn discordo" onclick="saveCasalConcordancia(\'' + rid + '\',\'discordo\',\'' + quizId + '\')">\u2717 Discordo</button>' +
+        '</div>' +
+        '<div style="margin-top:12px"><label style="font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--text-lt)">A minha leitura \u2014 notas e coment\u00e1rios</label>' +
+        '<textarea id="notas-casal-' + rid + '" rows="4" placeholder="Observa\u00e7\u00f5es cl\u00ednicas, concord\u00e2ncias, diverg\u00eancias..." style="width:100%;margin-top:6px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-family:\'DM Sans\',sans-serif;font-size:13px;resize:vertical;background:white"></textarea>' +
+        '<button class="btn btn-primary" style="margin-top:8px" onclick="saveCasalNotas(\'' + rid + '\',\'' + quizId + '\')">\ud83d\udcbe Guardar Notas</button>' +
+        '</div></div>';
+    }
+  })
+  .catch(function(err) { if (iaBox) iaBox.innerHTML = '<div style="color:red;padding:10px">Erro: ' + err.message + '</div>'; });
+}
+function saveCasalConcordancia(rid, valor, quizId) {
+  if (!activeClientId || !clients[activeClientId]) return;
+  if (!clients[activeClientId].ia_casal) clients[activeClientId].ia_casal = {};
+  clients[activeClientId].ia_casal[rid] = { concordancia: valor };
+  localStorage.setItem('dd_clients_v1', JSON.stringify(clients));
+  const cBtn = document.getElementById('conc-concordo-' + rid);
+  const dBtn = document.getElementById('conc-discordo-' + rid);
+  document.querySelectorAll('.concordar-btn').forEach(b => b.classList.remove('active'));
+  showToast('Posi\u00e7\u00e3o guardada', 'success');
+}
+function saveCasalNotas(rid, quizId) {
+  const ta = document.getElementById('notas-casal-' + rid);
+  if (!ta || !activeClientId || !clients[activeClientId]) return;
+  if (!clients[activeClientId].ia_casal) clients[activeClientId].ia_casal = {};
+  if (!clients[activeClientId].ia_casal[rid]) clients[activeClientId].ia_casal[rid] = {};
+  clients[activeClientId].ia_casal[rid].notas = ta.value;
+  localStorage.setItem('dd_clients_v1', JSON.stringify(clients));
+  showToast('\u2713 Notas guardadas', 'success');
+}
+
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ══════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  populateClientSelect();
+  window.addEventListener('storage', e => { if (e.key === 'dd_clients_v1') populateClientSelect(); });
+  renderNav();
+  renderWelcomeStats();
+  // Auto-seleccionar quiz se vier da ficha com ?quiz=...
+  // Pre-set Netlify URL in localStorage if not already set
+  if (!localStorage.getItem('dd_quiz_base_url')) localStorage.setItem('dd_quiz_base_url', 'https://danieledallavecchia-netizen.github.io/Quizzes');
+  const _qp = new URLSearchParams(window.location.search).get('quiz');
+  if (_qp) setTimeout(() => selectQuiz(_qp), 200);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DISC — Modo Casal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',system-ui,sans-serif;background:linear-gradient(135deg,#fff5ee 0%,#fff0f8 100%);min-height:100vh;color:#2d2d3a}
+.cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center}
+.cover-icon{width:80px;height:80px;background:linear-gradient(135deg,#e67e22,#9b59b6);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 24px}
+.casal-badge{display:inline-block;padding:6px 18px;background:linear-gradient(135deg,#e67e22,#9b59b6);color:white;border-radius:99px;font-size:13px;font-weight:600;margin-bottom:16px}
+.cover-title{font-size:clamp(22px,5vw,30px);font-weight:700;margin-bottom:8px}
+.cover-sub{font-size:15px;color:#6b6b80;max-width:440px;line-height:1.7;margin-bottom:10px}
+.instr{background:white;border-radius:14px;padding:14px 18px;max-width:440px;text-align:left;margin-bottom:20px;font-size:13px;line-height:1.7;color:#4a4a5a;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.cover-time{font-size:13px;color:#c08050;margin-bottom:28px}
+.cover-start{padding:14px 40px;background:linear-gradient(135deg,#e67e22,#9b59b6);color:white;border:none;border-radius:50px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}
+.cover-start:hover{transform:translateY(-2px)}
+.quiz-wrap{max-width:640px;margin:0 auto;padding:24px 20px}
+.parceiro-bar{background:linear-gradient(135deg,#e67e22,#9b59b6);border-radius:12px;padding:10px 16px;color:white;font-size:14px;font-weight:600;margin-bottom:16px}
+.progress-bar{background:#fde8d0;border-radius:99px;height:6px;margin-bottom:8px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#e67e22,#9b59b6);border-radius:99px;transition:.4s}
+.q-counter{font-size:12px;color:#c08050;text-align:right;margin-bottom:20px}
+.phase-badge{display:inline-block;padding:4px 14px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px;background:rgba(230,126,34,.12);color:#e67e22}
+.q-text{font-size:clamp(16px,4vw,18px);font-weight:600;line-height:1.5;margin-bottom:8px}
+.q-sub{font-size:13px;color:#8b8ba0;margin-bottom:20px}
+.option-btn{width:100%;text-align:left;padding:14px 18px;margin-bottom:10px;background:white;border:2px solid #fde8d0;border-radius:12px;font-size:14px;font-family:inherit;cursor:pointer;transition:.15s;color:#2d2d3a}
+.option-btn:hover{border-color:#e67e22}
+.option-btn.first-sel{border-color:#e67e22;background:rgba(230,126,34,.08);font-weight:600}
+.option-btn.second-sel{border-color:#9b59b6;background:rgba(155,89,182,.06)}
+.sel-indicator{float:right;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px}
+.sel-1{background:#e67e22;color:white}
+.sel-2{background:#9b59b6;color:white}
+.nav-row{display:flex;justify-content:space-between;margin-top:24px}
+.btn-nav{padding:11px 28px;border-radius:99px;border:none;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.btn-back{background:#fde8d0;color:#e67e22}
+.btn-next{background:linear-gradient(135deg,#e67e22,#9b59b6);color:white}
+.btn-next:disabled{opacity:.35;cursor:default}
+.result-wrap{max-width:640px;margin:0 auto;padding:24px 20px 60px}
+.result-card{background:white;border-radius:16px;padding:22px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.disc-ring{display:flex;gap:10px;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
+.disc-seg{padding:14px 16px;border-radius:14px;text-align:center;flex:1;min-width:70px}
+.disc-l{font-size:26px;font-weight:700;display:block}
+.disc-p{font-size:12px;font-weight:600}
+.card-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#c08050;margin-bottom:10px}
+.profile-desc{font-size:14px;line-height:1.7;color:#4a4a5a}
+.hidden{display:none}
+.sending{text-align:center;padding:60px 20px}
+.sending-icon{font-size:40px;margin-bottom:16px}
+.sending p{color:#8b8ba0;font-size:14px}
+.nome-tag{font-size:13px;color:white;opacity:.75;margin-bottom:6px}
+</style>
+</head>
+<body>
+<div id="cover" class="cover">
+  <div class="cover-icon">🎯</div>
+  <div class="casal-badge">💑 Modo Casal</div>
+  <h1 class="cover-title">Perfil DISC — Casal</h1>
+  <p class="cover-sub">Responde honestamente e de forma independente. Os resultados serão comparados pelo terapeuta.</p>
+  <div class="instr">Em cada situação: <strong>1ª escolha</strong> — a que mais te descreve. <strong>2ª escolha</strong> — a que se segue.</div>
+  <p class="cover-time">⏱ 8–12 minutos · 10 situações</p>
+  <button class="cover-start" onclick="iniciar()">Começar →</button>
+</div>
+
+<div id="quiz" class="quiz-wrap hidden">
+  <div class="parceiro-bar" id="parceiroBar">💑 A carregar…</div>
+  <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+  <div class="q-counter" id="counter"></div>
+  <div class="phase-badge" id="phaseBadge"></div>
+  <div class="q-text" id="qtext"></div>
+  <div class="q-sub" id="qsub"></div>
+  <div id="options"></div>
+  <div class="nav-row">
+    <button class="btn-nav btn-back" onclick="anterior()">← Anterior</button>
+    <button class="btn-nav btn-next" id="btnNext" onclick="proximo()" disabled>Seguinte →</button>
+  </div>
+</div>
+
+<div id="sending" class="sending hidden">
+  <div class="sending-icon">📤</div>
+  <p>A enviar o teu resultado…</p>
+</div>
+
+<div id="result" class="result-wrap hidden"></div>
+
+<script>
+const APPS_URL='https://script.google.com/macros/s/AKfycbyoqgW9fP6hMGYNrlQwI9BpN7z3QKw7mcE7Khz1KzJ1Xz6nt6WLrnykFGWztY_LHXT2/exec';
+const params=new URLSearchParams(window.location.search);
+const NOME=params.get('nome')||'Parceiro';
+const CLIENT_ID=params.get('id')||'';
+const CASAL_ID=params.get('casal_id')||'';
+const PARCEIRO=params.get('parceiro')||'1';
+
+const PERGUNTAS=[
+  {texto:'Quando há um problema a resolver na equipa ou em casa, a tua reacção natural é…',opcoes:[{polo:'D',texto:'Tomar a frente e decidir — prefiro agir a esperar'},{polo:'I',texto:'Motivar e envolver as pessoas — juntas é mais fácil'},{polo:'S',texto:'Ouvir todos e procurar uma solução que funcione para o grupo'},{polo:'C',texto:'Analisar o problema em detalhe antes de avançar'}]},
+  {texto:'Numa reunião ou encontro de grupo, o teu comportamento mais natural é…',opcoes:[{polo:'D',texto:'Tomar a palavra, dirigir a discussão, ir ao ponto'},{polo:'I',texto:'Animar o grupo, criar ligações, manter a energia positiva'},{polo:'S',texto:'Ouvir com atenção, apoiar quem fala, evitar conflitos'},{polo:'C',texto:'Fazer perguntas precisas, verificar factos, pensar antes de falar'}]},
+  {texto:'Face a uma mudança inesperada nos planos, a tua primeira reacção é…',opcoes:[{polo:'D',texto:'Adaptar-me rapidamente e decidir o próximo passo'},{polo:'I',texto:'Ver o lado positivo e entusiasmar quem está à volta'},{polo:'S',texto:'Precisar de tempo para me adaptar — mudanças repentinas perturbam-me'},{polo:'C',texto:'Querer perceber bem o que mudou e porquê antes de agir'}]},
+  {texto:'O que mais valorizas numa relação próxima?',opcoes:[{polo:'D',texto:'Honestidade directa — prefiro a verdade, mesmo que doa'},{polo:'I',texto:'Alegria e cumplicidade — quero rir, partilhar e celebrar'},{polo:'S',texto:'Lealdade e estabilidade — estar sempre lá, nos bons e maus momentos'},{polo:'C',texto:'Profundidade — conversas com substância, honestidade e inteligência'}]},
+  {texto:'Quando tens de tomar uma decisão importante, como procedes?',opcoes:[{polo:'D',texto:'Decido rapidamente — a indecisão é pior do que um erro'},{polo:'I',texto:'Consulto pessoas de confiança e ouço o que os outros acham'},{polo:'S',texto:'Penso bem, consulto quem me é próximo e tomo tempo para decidir'},{polo:'C',texto:'Recolho toda a informação disponível e analiso antes de decidir'}]},
+  {texto:'Quando há conflito com alguém próximo, a tua tendência é…',opcoes:[{polo:'D',texto:'Enfrentar directamente — não gosto de deixar as coisas por resolver'},{polo:'I',texto:'Tentar desanuviar a tensão e encontrar um terreno comum'},{polo:'S',texto:'Ceder para manter a paz — o conflito aberto cansa-me muito'},{polo:'C',texto:'Analisar o que correu mal antes de falar, com argumentos claros'}]},
+  {texto:'No trabalho ou nos projectos pessoais, o que mais te motiva?',opcoes:[{polo:'D',texto:'Resultados concretos, desafios e autonomia para agir'},{polo:'I',texto:'Reconhecimento, variedade e trabalhar com pessoas energizantes'},{polo:'S',texto:'Estabilidade, rotina previsível e sentir que ajudo quem me rodeia'},{polo:'C',texto:'Qualidade, rigor e a satisfação de fazer algo muito bem feito'}]},
+  {texto:'Em situações de pressão ou stresse elevado, como te comportas?',opcoes:[{polo:'D',texto:'Foco-me no objectivo e acelero — a pressão motiva-me'},{polo:'I',texto:'Procuro apoio social e energia nos outros para não paralisar'},{polo:'S',texto:'Preciso de estabilidade — stresse excessivo bloqueia-me facilmente'},{polo:'C',texto:'Analiso melhor, verifico tudo duas vezes — não posso falhar'}]},
+  {texto:'Como preferias que te descrevessem as pessoas que te conhecem bem?',opcoes:[{polo:'D',texto:'Determinada, corajosa, directa e que não perde tempo'},{polo:'I',texto:'Carismática, entusiasta, boa comunicadora e cheia de energia'},{polo:'S',texto:'Confiável, paciente, leal e sempre disponível para os outros'},{polo:'C',texto:'Precisa, rigorosa, analítica e que faz as coisas direito'}]},
+  {texto:'Quando começas um projecto novo, o que fazes primeiro?',opcoes:[{polo:'D',texto:'Defino logo o objectivo e começo a agir — pensar a fazer'},{polo:'I',texto:'Falo com outras pessoas, procuro entusiasmo e apoio'},{polo:'S',texto:'Percebo bem o que é esperado de mim antes de começar'},{polo:'C',texto:'Planeio com cuidado, listo os passos e preparo-me bem'}]},
+];
+
+const TIPOS={
+  D:{nome:'Dominância',cor:'#c0392b',emoji:'🦁',desc:'Directa, orientada para resultados e tomada de decisões.'},
+  I:{nome:'Influência',cor:'#e67e22',emoji:'🌟',desc:'Entusiasta, persuasiva e orientada para as pessoas.'},
+  S:{nome:'Steadiness',cor:'#27ae60',emoji:'🌿',desc:'Paciente, leal e consistente. Prefere estabilidade.'},
+  C:{nome:'Conscienciosidade',cor:'#2980b9',emoji:'🔬',desc:'Analítica, precisa e orientada para a qualidade.'},
+};
+
+let atual=0,respostas={};
+
+function iniciar(){
+  document.getElementById('cover').classList.add('hidden');
+  document.getElementById('quiz').classList.remove('hidden');
+  document.getElementById('parceiroBar').innerHTML=`💑 Parceiro ${PARCEIRO} — <strong>${NOME}</strong> · Casal ID: ${CASAL_ID}`;
+  mostrarPergunta();
+}
+
+function mostrarPergunta(){
+  const p=PERGUNTAS[atual],total=PERGUNTAS.length;
+  document.getElementById('prog').style.width=((atual/total)*100)+'%';
+  document.getElementById('counter').textContent=`Situação ${atual+1} de ${total}`;
+  document.getElementById('qtext').textContent=p.texto;
+  const r=respostas[atual]||{};
+  const hasFirst=r.first!==undefined,hasSecond=r.second!==undefined;
+  const badge=document.getElementById('phaseBadge');
+  badge.textContent=hasFirst&&hasSecond?'✓ Completo':hasFirst?'2ª Escolha — qual se segue?':'1ª Escolha — qual mais te descreve?';
+  document.getElementById('qsub').textContent=hasFirst&&!hasSecond?'Agora escolhe a segunda opção que mais se aproxima.':'';
+  document.getElementById('btnNext').disabled=!(hasFirst&&hasSecond);
+  document.getElementById('options').innerHTML=p.opcoes.map(o=>{
+    const isFirst=r.first===o.polo,isSecond=r.second===o.polo;
+    let cls='option-btn';
+    if(isFirst)cls+=' first-sel';
+    if(isSecond)cls+=' second-sel';
+    let ind='';
+    if(isFirst)ind='<span class="sel-indicator sel-1">1ª</span>';
+    if(isSecond)ind='<span class="sel-indicator sel-2">2ª</span>';
+    return `<button class="${cls}" onclick="selecionar('${o.polo}')">${ind}${o.texto}</button>`;
+  }).join('');
+}
+
+function selecionar(polo){
+  if(!respostas[atual])respostas[atual]={};
+  const r=respostas[atual];
+  if(!r.first){r.first=polo;}
+  else if(r.first===polo){r.first=undefined;r.second=undefined;}
+  else if(!r.second){if(polo!==r.first)r.second=polo;}
+  else if(r.second===polo){r.second=undefined;}
+  mostrarPergunta();
+}
+
+function anterior(){if(atual>0){atual--;mostrarPergunta();}}
+function proximo(){if(atual<PERGUNTAS.length-1){atual++;mostrarPergunta();}else{calcular();}}
+
+function calcular(){
+  document.getElementById('quiz').classList.add('hidden');
+  document.getElementById('sending').classList.remove('hidden');
+  const scores={D:0,I:0,S:0,C:0};
+  Object.values(respostas).forEach(r=>{if(r.first)scores[r.first]+=2;if(r.second)scores[r.second]+=1;});
+  const total=Object.values(scores).reduce((a,b)=>a+b,0)||1;
+  const pct={};Object.keys(scores).forEach(k=>pct[k]=Math.round((scores[k]/total)*100));
+  const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const primary=sorted[0][0],secondary=sorted[1][0];
+  const resumo=`${primary}${secondary} — ${TIPOS[primary].nome}/${TIPOS[secondary].nome}`;
+  enviar({quiz:'disc',resumo,dados:{primary,secondary,...pct},nome:NOME,id:CLIENT_ID,casal_id:CASAL_ID,parceiro:PARCEIRO},()=>mostrarResultado(pct,primary,secondary));
+}
+
+function enviar(payload,cb){
+  const cbName='cb_'+Date.now();window[cbName]=()=>{cb();};
+  const s=document.createElement('script');
+  s.src=APPS_URL+'?callback='+cbName+'&data='+encodeURIComponent(JSON.stringify(payload));
+  s.onerror=()=>cb();document.head.appendChild(s);setTimeout(cb,6000);
+}
+
+function mostrarResultado(pct,primary,secondary){
+  document.getElementById('sending').classList.add('hidden');
+  const el=document.getElementById('result');el.classList.remove('hidden');
+  const ringHtml=Object.entries(TIPOS).map(([k,t])=>`
+    <div class="disc-seg" style="background:${t.cor}15;border:2px solid ${k===primary?t.cor:'transparent'}">
+      <span class="disc-l" style="color:${t.cor}">${k}</span>
+      <div class="disc-p" style="color:${t.cor}">${pct[k]}%</div>
+    </div>`).join('');
+  const p=TIPOS[primary],s=TIPOS[secondary];
+  el.innerHTML=`
+    <div class="result-card" style="background:linear-gradient(135deg,${p.cor},${s.cor});color:white;text-align:center">
+      <div class="nome-tag">💑 Parceiro ${PARCEIRO} — ${NOME}</div>
+      <div style="font-size:28px;margin-bottom:6px">${p.emoji}${s.emoji}</div>
+      <div style="font-size:16px;font-weight:700">${primary}${secondary}</div>
+    </div>
+    <div class="result-card"><div class="disc-ring">${ringHtml}</div></div>
+    <div class="result-card"><div class="card-title">Perfil — ${p.nome} / ${s.nome}</div><div class="profile-desc">${p.desc}<br><br>${s.desc}</div></div>
+    <div class="result-card" style="text-align:center;color:#c08050;font-size:13px">✓ Enviado · Casal ID: ${CASAL_ID}</div>`;
+}
+
+if(NOME&&NOME!=='Parceiro') iniciar();
+</script>
+</body>
+</html>
