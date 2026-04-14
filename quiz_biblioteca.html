@@ -348,6 +348,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(
         <option value="">— Seleccionar —</option>
       </select>
     </div>
+    <button onclick="voltarFicha()" style="margin-top:12px;width:100%;display:flex;align-items:center;gap:8px;padding:9px 12px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);border-radius:7px;color:var(--gold-lt);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:.15s" onmouseover="this.style.background='rgba(201,168,76,.2)'" onmouseout="this.style.background='rgba(201,168,76,.1)'">
+      <span style="font-size:14px">←</span> Voltar à Ficha Cliente
+    </button>
   </div>
 
   <div class="sb-nav" id="sbNav">
@@ -490,8 +493,8 @@ const QUIZZES = [
   name: 'Esquemas de Young',
   cat: 'Esquemas',
   icon: '🗺️', color: '#7b5ea7', bg: 'rgba(123,94,167,.12)',
-  tempo: '20 min', disponivel: false,
-  file: null,
+  tempo: '15–20 min', disponivel: true,
+  file: 'quiz_esquemas_young.html',
   proposito: 'Identificar os esquemas maladaptativos precoces (EMPs) dominantes segundo a Schema Therapy de Jeffrey Young. Os esquemas são padrões cognitivo-emocionais disfuncionais formados na infância que organizam toda a percepção relacional e auto-percepção da cliente.',
   dimensoes: [
     'Domínio I: Desconexão e Rejeição (abandono, desconfiança, privação emocional, defeituosidade, isolamento)',
@@ -504,11 +507,20 @@ const QUIZZES = [
     { label: 'Domínio I: Abandono / Instabilidade', cor: '#b85c6e', bg: 'rgba(184,92,110,.08)', texto: 'Crença central de que os outros vão partir, morrer ou ser imprevisíveis. Origem típica: morte, divórcio, doença parental, inconsistência emocional. Alta correlação com apego ansioso e medo de abandono crónico.', tags: ['Medo de Abandono', 'Apego Ansioso', 'Hipersensibilidade à Rejeição'] },
     { label: 'Domínio IV: Auto-Sacrifício', cor: '#c9702c', bg: 'rgba(201,112,44,.08)', texto: 'A cliente coloca consistentemente as necessidades dos outros acima das suas, frequentemente com ressentimento acumulado. Origine comum: responsabilização precoce pelo bem-estar parental (parentificação). Risco de burnout relacional e somatização.', tags: ['Parentificação', 'Somatização', 'Ressentimento', 'Esgotamento'] },
     { label: 'Domínio I: Privação Emocional', cor: '#4a6fa5', bg: 'rgba(74,111,165,.08)', texto: 'Expectativa de que as necessidades emocionais fundamentais (cuidado, empatia, protecção) nunca serão satisfeitas. Frequente em filhos de pais emocionalmente frios ou narcísicos. Dificuldade em pedir e receber apoio.', tags: ['Privação Emocional', 'Frieza Parental', 'Dificuldade em Pedir'] },
+    { label: 'Domínio I: Defeituosidade / Vergonha', cor: '#7b5ea7', bg: 'rgba(123,94,167,.08)', texto: 'Crença central de ser fundamentalmente defeituosa, má, indesejável ou inferior. A vergonha não é situacional mas identitária — "sou assim". Alta correlação com ferida de rejeição (Bourbeau) e apego evitante. Em terapia: cuidado redobrado com a aliança — esta cliente espera ser julgada.', tags: ['Vergonha Identitária', 'Ferida de Rejeição', 'Apego Evitante', 'Autocrítica Severa'] },
+    { label: 'Domínio V: Padrões Inflexíveis / Hipercriticismo', cor: '#5a7a6e', bg: 'rgba(90,122,110,.08)', texto: 'Pressão interna para atingir padrões muito elevados, com foco excessivo em erros e imperfeições. A cliente nunca é suficientemente boa para si própria. Frequentemente aprendeu que o seu valor dependia da performance. Alta correlação com ferida de injustiça e tipo MBTI J (Julgamento).', tags: ['Perfeccionismo', 'Ferida de Injustiça', 'Burnout', 'Hiperexigência'] },
+    { label: 'Domínio IV: Subjugação', cor: '#1a2744', bg: 'rgba(26,39,68,.06)', texto: 'Rendição excessiva ao controlo dos outros por medo de consequências (punição, abandono). A cliente suprime as suas próprias necessidades, desejos e emoções para não desapontar ou irritar. Diferente do auto-sacrifício: aqui há componente de medo activo, não apenas de desejo de agradar.', tags: ['Medo de Represálias', 'Supressão Emocional', 'Limites Frágeis', 'Raiva Reprimida'] },
   ],
   decisoes: [
     { cond: 'Em desenvolvimento', acoes: ['Quiz disponível em breve'] },
   ],
-  perguntas_sessao: ['Quiz em desenvolvimento'],
+  perguntas_sessao: [
+    'Que esquema nomearias como mais activo neste momento da tua vida? Como se manifesta no dia-a-dia?',
+    'Lembras-te da primeira vez que sentiste isso? Que idade tinhas?',
+    'O que o esquema te diz sobre ti própria? Concordas com essa voz?',
+    'Como o esquema aparece nas tuas relações mais próximas? Dás-me um exemplo concreto?',
+    'O que precisaria de acontecer para que esse esquema tivesse menos força?',
+  ],
 },
 // ── TRAUMA ──────────────────────────────────────────────────
 {
@@ -516,8 +528,8 @@ const QUIZZES = [
   name: 'Experiências Adversas na Infância (ACE)',
   cat: 'Trauma',
   icon: '🌱', color: '#5a7a6e', bg: 'rgba(90,122,110,.12)',
-  tempo: '8 min', disponivel: false,
-  file: null,
+  tempo: '3–5 min', disponivel: true,
+  file: 'quiz_ace.html',
   proposito: 'Rastreio das experiências adversas na infância e avaliação do score de impacto acumulado (ACE Score). Essencial para compreender a carga alostática e o risco de somatização, doenças crónicas e disfunções emocionais. Informa a ordem e intensidade das intervenções.',
   dimensoes: [
     'Abuso (emocional, físico, sexual)',
@@ -528,19 +540,26 @@ const QUIZZES = [
   hipoteses: [
     { label: 'ACE Score ≥ 4', cor: '#b85c6e', bg: 'rgba(184,92,110,.08)', texto: 'Score elevado. Risco significativamente aumentado de PTSD complexo, doenças crónicas, somatização e disfunção imunológica. Abordagem: estabilização antes de reprocessamento. Não avançar para regressão sem janela de tolerância estabelecida.', tags: ['PTSD Complexo', 'Somatização', 'Janela de Tolerância', 'Estabilização Prioritária'] },
     { label: 'ACE Score 1-3', cor: '#c9702c', bg: 'rgba(201,112,44,.08)', texto: 'Score moderado. Trauma pontual ou adversidade crónica de menor intensidade. Abordagem padrão do protocolo HLE com atenção aos gatilhos específicos.', tags: ['Trauma Pontual', 'Protocolo HLE Standard'] },
+    { label: 'ACE Score 0 (sem adversidades detectadas)', cor: '#5a7a6e', bg: 'rgba(90,122,110,.08)', texto: 'Ausência de adversidades reportadas. Leitura clínica cautelosa: pode reflectir resiliência genuína — ou negação, dissociação, ou minimização das experiências. A ausência de score não exclui sofrimento não reconhecido. Explorar com curiosidade: "O que é que era normal em casa que os outros achavam estranho?"', tags: ['Recurso de Resiliência', 'Cautela Clínica', 'Possível Minimização', 'Explorar com Abertura'] },
   ],
   decisoes: [
     { cond: 'Em desenvolvimento', acoes: ['Quiz disponível em breve'] },
   ],
-  perguntas_sessao: ['Quiz em desenvolvimento'],
+  perguntas_sessao: [
+    'Das 10 categorias, qual te tocou mais ao responder? Porquê?',
+    'Como é que essas experiências influenciaram a forma como te relacionas hoje?',
+    'Há alguma dessas experiências que nunca contaste a ninguém?',
+    'O que aprendeste sobre ti própria nesse ambiente para sobreviver?',
+    'Como o teu corpo reage quando pensas nessas memórias?',
+  ],
 },
 {
   id: 'feridas-infancia',
   name: 'Feridas da Infância',
   cat: 'Trauma',
   icon: '💔', color: '#b85c6e', bg: 'rgba(184,92,110,.12)',
-  tempo: '14 min', disponivel: false,
-  file: null,
+  tempo: '8–12 min', disponivel: true,
+  file: 'quiz_feridas_infancia.html',
   proposito: 'Identificar as cinco feridas primordiais segundo Lise Bourbeau: Rejeição, Abandono, Humilhação, Traição e Injustiça. Cada ferida cria uma máscara/personagem de adaptação e um padrão de sofrimento específico.',
   dimensoes: [
     'Ferida dominante e ferida secundária',
@@ -551,11 +570,20 @@ const QUIZZES = [
   hipoteses: [
     { label: 'Ferida de Abandono', cor: '#b85c6e', bg: 'rgba(184,92,110,.08)', texto: 'Medo profundo de ser deixada sozinha. Máscara: Dependente. Comportamentos: agarrar-se ao outro, dificuldade em estar só, over-giving para manter o outro perto. Origem: abandono real ou percebido na infância (físico ou emocional).', tags: ['Dependência', 'Apego Ansioso', 'Over-giving', 'Medo de Solidão'] },
     { label: 'Ferida de Rejeição', cor: '#7b5ea7', bg: 'rgba(123,94,167,.08)', texto: 'Medo de não merecer existir, de não ser suficiente. Máscara: Fugitivo. Comportamentos: isolamento, auto-sabotagem, evitar exposição. Origem: rejeição real ou percebida pelos pais — "não queria que eu existisse."', tags: ['Auto-Sabotagem', 'Isolamento', 'Vergonha Profunda', 'Apego Evitante'] },
+    { label: 'Ferida de Humilhação', cor: '#c9702c', bg: 'rgba(201,112,44,.08)', texto: 'Medo de ser humilhada, de mostrar necessidades e ser envergonhada por isso. Máscara: Masoquista. Comportamentos: auto-punição, subordinação excessiva, rejeição do próprio corpo, tendência para se diminuir antes que os outros o façam. Origem: pais que humilhavam, envergonhavam ou ridicularizavam a criança pelas suas necessidades naturais.', tags: ['Vergonha do Corpo', 'Auto-Punição', 'Submissão', 'Ferida de Digidade'] },
+    { label: 'Ferida de Traição', cor: '#4a6fa5', bg: 'rgba(74,111,165,.08)', texto: 'Medo de ser enganada, traída ou de perder o controlo. Máscara: Controlador. Comportamentos: necessidade de controlar tudo e todos, dificuldade em delegar, ciúme intenso, desconfiança sistemática. Origem: figuras parentais que não cumpriam promessas, eram inconsistentes ou usavam a criança para os seus próprios fins.', tags: ['Hipercontrolo', 'Desconfiança', 'Ciúme', 'Dificuldade em Confiar'] },
+    { label: 'Ferida de Injustiça', cor: '#5a7a6e', bg: 'rgba(90,122,110,.08)', texto: 'Medo de não ser reconhecida no seu valor, de ser tratada de forma injusta. Máscara: Rígido. Comportamentos: perfeccionismo, dificuldade em pedir ajuda, crítica interna severa, dificuldade em sentir prazer. Origem: pais frios, exigentes ou que desvalorizavam constantemente as conquistas da criança, negando a sua importância.', tags: ['Perfeccionismo', 'Rigidez', 'Auto-Crítica Severa', 'Dificuldade em Receber'] },
   ],
   decisoes: [
     { cond: 'Em desenvolvimento', acoes: ['Quiz disponível em breve'] },
   ],
-  perguntas_sessao: ['Quiz em desenvolvimento'],
+  perguntas_sessao: [
+    'Qual das 5 feridas te pareceu mais familiar ao ler?',
+    'Como essa ferida se manifesta nas tuas relações? Consegues dar um exemplo?',
+    'Que máscara usas mais frequentemente — fugir, agarrar, ceder, controlar, perfeccionar?',
+    'Quando foi a primeira vez que sentiste essa dor? Com quem?',
+    'O que precisarias de ouvir ou receber para que essa ferida começasse a sarar?',
+  ],
 },
 // ── ESTADO MENTAL ────────────────────────────────────────────
 {
@@ -563,8 +591,8 @@ const QUIZZES = [
   name: 'Rastreio Ansiedade / Depressão',
   cat: 'Estado Mental',
   icon: '🌊', color: '#4a6fa5', bg: 'rgba(74,111,165,.12)',
-  tempo: '7 min', disponivel: false,
-  file: null,
+  tempo: '5–8 min', disponivel: true,
+  file: 'quiz_ansiedade_depressao.html',
   proposito: 'Rastreio clínico de sintomas de ansiedade (GAD-7 adaptado) e depressão (PHQ-9 adaptado). Permite monitorizar a evolução ao longo do protocolo e identificar momentos que podem requerer encaminhamento médico ou psiquiátrico.',
   dimensoes: [
     'Sintomas de ansiedade generalizada (GAD-7): score e severidade',
@@ -575,19 +603,28 @@ const QUIZZES = [
   hipoteses: [
     { label: 'Score Ansiedade ≥ 15 (severa)', cor: '#b85c6e', bg: 'rgba(184,92,110,.08)', texto: 'Ansiedade severa. Verificar contraindições para hipnose (presente na ficha — atenção a esquizofrenia/psicose). Considerar encaminhamento psiquiátrico. Abordagem: estabilização com EFT antes de qualquer trabalho de profundidade.', tags: ['Contraindição Hipnose', 'Encaminhamento', 'Estabilização EFT'] },
     { label: 'Score Depressão ≥ 10 + ideação', cor: '#c9702c', bg: 'rgba(201,112,44,.08)', texto: 'Depressão moderada a severa com possível ideação. Encaminhamento médico obrigatório. Protocolo HLE pode ser coadjuvante mas não substituto do tratamento médico.', tags: ['Encaminhamento Obrigatório', 'Coadjuvante', 'Não Substituto'] },
+    { label: 'Score Ansiedade 8-14 (moderada)', cor: '#7b5ea7', bg: 'rgba(123,94,167,.08)', texto: 'Ansiedade moderada. Trabalho de regulação do sistema nervoso autónomo prioritário. EFT no início de cada sessão. Hipnose de profundidade média acessível com preparação. Monitorizar evolução — se não reduzir nas primeiras 4 sessões, considerar avaliação médica.', tags: ['Regulação SNA', 'EFT Prioritário', 'Monitorização', 'Hipnose Moderada'] },
+    { label: 'Score Depressão 5-9 (leve a moderada)', cor: '#4a6fa5', bg: 'rgba(74,111,165,.08)', texto: 'Depressão leve a moderada. Protocolo HLE acessível com ajuste de ritmo. Atenção à energia disponível da cliente — sessões mais curtas se necessário. Hipnose com reforço de recursos internos (lugar seguro, figura de suporte). Não iniciar trabalho de luto ou regressão nesta fase.', tags: ['Ritmo Ajustado', 'Reforço de Recursos', 'Hipnose de Suporte', 'Evitar Regressão'] },
+    { label: 'Scores baixos (ansiedade < 8 / depressão < 5)', cor: '#5a7a6e', bg: 'rgba(90,122,110,.08)', texto: 'Estado mental estável. Boa janela de tolerância disponível. Protocolo completo acessível. Recurso a usar como linha de base — repetir rastreio a cada 4-6 sessões para monitorizar evolução. Scores baixos no início do processo são um bom prognóstico.', tags: ['Janela de Tolerância Ampla', 'Protocolo Completo', 'Prognóstico Favorável', 'Monitorização Regular'] },
   ],
   decisoes: [
     { cond: 'Em desenvolvimento', acoes: ['Quiz disponível em breve'] },
   ],
-  perguntas_sessao: ['Quiz em desenvolvimento'],
+  perguntas_sessao: [
+    'Quando foi a última vez que te sentiste mesmo bem, com energia e esperança? O que era diferente?',
+    'Onde no corpo sentes a ansiedade? O que acontece ao teu corpo quando ela chega?',
+    'Há um pensamento que se repete muito quando estás em baixo? Qual é?',
+    'A que situação ou pessoa a tua ansiedade está mais ligada neste momento?',
+    'O que faz o teu sistema nervoso sentir-se mais seguro? O que ajuda, mesmo que seja pequeno?',
+  ],
 },
 {
   id: 'alexitimia',
   name: 'Alexitimia — Acesso Emocional',
   cat: 'Estado Mental',
   icon: '🔍', color: '#5a7a6e', bg: 'rgba(90,122,110,.12)',
-  tempo: '10 min', disponivel: false,
-  file: null,
+  tempo: '6–10 min', disponivel: true,
+  file: 'quiz_alexitimia.html',
   proposito: 'Avaliar a capacidade da cliente de identificar, nomear e comunicar emoções internas. Clientes com alexitimia alta precisam de abordagens mais concretas, corporais e graduais — a linguagem emocional directa não funciona sem preparação.',
   dimensoes: [
     'Dificuldade em identificar emoções (DIF)',
@@ -597,11 +634,19 @@ const QUIZZES = [
   ],
   hipoteses: [
     { label: 'Alexitimia Alta (TAS-20 ≥ 61)', cor: '#b85c6e', bg: 'rgba(184,92,110,.08)', texto: 'Cliente com dificuldade significativa em aceder ao mundo emocional. Apego evitante frequente. Estratégia: entrar pelo corpo (onde está a tensão? que cor tem?), pelo comportamento (o que fazes quando sentes isso?) e só depois pela emoção.', tags: ['Apego Evitante', 'Abordagem Somática', 'EFT Corporal', 'Metáforas'] },
+    { label: 'Alexitimia Moderada (TAS-20 50-60)', cor: '#c9702c', bg: 'rgba(201,112,44,.08)', texto: 'Dificuldade parcial no acesso emocional — a cliente consegue identificar emoções básicas mas tem dificuldade em nomeá-las com precisão ou em comunicá-las. Estratégia: trabalho de expansão do vocabulário emocional, uso de cartas de emoções, metáforas e imagens. A hipnose imagética é especialmente útil neste nível — o inconsciente comunica em imagens.', tags: ['Vocabulário Emocional Limitado', 'Hipnose Imagética', 'Psicoeducação Emocional', 'EFT Gradual'] },
+    { label: 'Sem Alexitimia (TAS-20 < 50)', cor: '#5a7a6e', bg: 'rgba(90,122,110,.08)', texto: 'Boa capacidade de acesso, identificação e comunicação emocional. Recurso terapêutico significativo. O trabalho emocional directo é acessível — hipnose de profundidade, psicodrama e regressão têm boa janela de entrada. Atenção: acesso emocional elevado não significa regulação emocional — verificar se a cliente é capaz de processar sem ser avassalada.', tags: ['Recurso de Acesso Emocional', 'Hipnose de Profundidade', 'Verificar Regulação', 'Bom Prognóstico'] },
   ],
   decisoes: [
     { cond: 'Em desenvolvimento', acoes: ['Quiz disponível em breve'] },
   ],
-  perguntas_sessao: ['Quiz em desenvolvimento'],
+  perguntas_sessao: [
+    'Quando alguém te pergunta "como te sentes?", o que acontece dentro de ti?',
+    'Sabes dizer a diferença entre estar triste, assustada e zangada? São sensações distintas para ti?',
+    'Tens consciência de quando uma emoção muda durante uma conversa?',
+    'Quando o corpo te dá um sinal (nó no estômago, aperto no peito), consegues ligar a uma emoção?',
+    'O que te acontece quando alguém fala das suas emoções de forma intensa?',
+  ],
 },
 // ── PERSONALIDADE ────────────────────────────────────────────
 {
@@ -790,6 +835,17 @@ function populateClientSelect() {
       const id   = clients[k].dados.f_id || '';
       return '<option value="' + k + '">' + nome + (id ? ' · ' + id : '') + '</option>';
     }).join('');
+}
+
+// Voltar à ficha terapeuta
+function voltarFicha() {
+  if (document.referrer && document.referrer.includes(window.location.hostname)) {
+    window.history.back();
+    return;
+  }
+  const base = window.location.href.replace(/[^/\\]*$/, '');
+  const fichaFile = localStorage.getItem('dd_ficha_filename') || 'ficha_terapeuta_v32.html';
+  window.open(base + fichaFile, '_blank');
 }
 
 // Reload clients button click handler
@@ -1076,7 +1132,7 @@ const ENNEAGRAMA_TYPES = {
 function renderPreviewQuiz(q) {
   // ── MBTI ──
   if (q.id === 'mbti') {
-    let html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
+    var html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
     html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">Os rótulos (E/I/S/N/T/F/J/P) são <strong style=\'color:white\'>INVISÍVEIS para a cliente</strong>. No quiz as opções aparecem sem rótulos.</div></div>';
     MBTI_PERGUNTAS.forEach(function(pq) {
       html += '<div style="background:white;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px">';
@@ -1100,7 +1156,7 @@ function renderPreviewQuiz(q) {
   }
   // ── BIG FIVE ──
   if (q.id === 'bigfive') {
-    let html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
+    var html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
     html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">Os rótulos de dimensão são <strong style=\'color:white\'>INVISÍVEIS para a cliente</strong>. A escala vai de 1 a 5.</div></div>';
     var lastDim = '';
     BIGFIVE_PERGUNTAS.forEach(function(pq) {
@@ -1119,7 +1175,7 @@ function renderPreviewQuiz(q) {
   }
   // ── DISC ──
   if (q.id === 'disc') {
-    let html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
+    var html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
     html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">Os estilos DISC são <strong style=\'color:white\'>INVISÍVEIS para a cliente</strong>. A cliente escolhe 1ª e 2ª opção.</div></div>';
     DISC_PERGUNTAS.forEach(function(pq) {
       html += '<div style="background:white;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px">';
@@ -1140,7 +1196,7 @@ function renderPreviewQuiz(q) {
   }
   // ── ENNEAGRAMA ──
   if (q.id === 'enneagrama') {
-    let html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
+    var html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
     html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">Os números de tipo são <strong style=\'color:white\'>INVISÍVEIS para a cliente</strong>. Duas perguntas por tipo.</div></div>';
     var lastTipo = '';
     ENNEAGRAMA_PERGUNTAS.forEach(function(pq) {
@@ -1165,7 +1221,7 @@ function renderPreviewQuiz(q) {
     return html;
   }
   if (q.id === 'estilo-apego') {
-    let html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
+    var html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
     html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">As etiquetas de estilo são <strong style=\'color:white\'>INVISÍVEIS para a cliente</strong>. No quiz, as opções aparecem sem rótulos.</div></div>';
     APEGO_PERGUNTAS.forEach(function(pq) {
       html += '<div style="background:white;border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:12px">';
@@ -1184,12 +1240,219 @@ function renderPreviewQuiz(q) {
     html += '<div style="padding:10px 14px;background:var(--cream);border-radius:8px;font-size:12px;color:var(--text-lt)">ℹ️ A cliente escolhe a opção que mais a representa. Resultados enviados automaticamente.</div>';
     return html;
   }
+  // ── ACE ──
+  if (q.id === 'ace') {
+    var acePerguntas = [
+      {cat:'Abuso Físico', texto:'Um dos teus pais ou adulto em casa te empurrou, agarrou, estapiou ou bateu de forma a deixar marcas?'},
+      {cat:'Abuso Emocional', texto:'Algum adulto em casa te insultou, humilhou ou fez sentir inferior, com medo ou em perigo?'},
+      {cat:'Abuso Sexual', texto:'Algum adulto ou pessoa 5+ anos mais velha alguma vez te tocou de forma sexual ou pediu que o tocaras?'},
+      {cat:'Negligência Física', texto:'Com frequência não tinhas roupa suficiente, comida, protecção ou os teus pais não conseguiam cuidar de ti?'},
+      {cat:'Negligência Emocional', texto:'Com frequência sentias que ninguém na família te amava, te achava especial ou se interessava por ti?'},
+      {cat:'Violência Doméstica', texto:'A tua mãe/madrasta era empurrada, agarrada, estapeada, chutada ou sujeita a violência física?'},
+      {cat:'Substâncias no Lar', texto:'Algum dos teus pais tinha problemas com álcool ou drogas?'},
+      {cat:'Saúde Mental no Lar', texto:'Algum dos teus pais sofria de depressão, doença mental, ou tentou o suicídio?'},
+      {cat:'Separação Parental', texto:'Os teus pais alguma vez se separaram ou divorciaram?'},
+      {cat:'Encarceramento', texto:'Algum familiar foi preso ou esteve na prisão?'},
+    ];
+    var html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
+    html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">Formato <strong style=\'color:white\'>Sim / Não</strong>. Score 0–10. Cada resposta "Sim" conta 1 ponto.</div></div>';
+    acePerguntas.forEach(function(p, i) {
+      html += '<div style="background:white;border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start">';
+      html += '<span style="font-size:10px;font-weight:700;color:white;background:#8b1a1a;padding:2px 7px;border-radius:99px;flex-shrink:0;margin-top:2px">'+(i+1)+'/10</span>';
+      html += '<div><div style="font-size:10px;color:#8b3a3a;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">'+p.cat+'</div>';
+      html += '<div style="font-size:13px;color:var(--navy);line-height:1.55">'+p.texto+'</div></div></div>';
+    });
+    html += '<div style="padding:10px 14px;background:var(--cream);border-radius:8px;font-size:12px;color:var(--text-lt)">ℹ️ ACE Study — Felitti et al. (1998). Score ≥ 4 indica risco elevado. Resposta: Sim = 1pt / Não = 0pt.</div>';
+    return html;
+  }
+  // ── FERIDAS DA INFÂNCIA ──
+  if (q.id === 'feridas-infancia') {
+    var feridaGrupos = [
+      {nome:'Rejeição', cor:'#5a2d9a', perguntas:[
+        'Tenho a sensação de que não pertenço a lugar nenhum — ou que não sou "normal" como os outros.',
+        'Evito situações onde possa ser rejeitada, preferindo não tentar a arriscar a rejeição.',
+        'Tenho tendência a rejeitar-me a mim própria antes que os outros o façam.',
+        'Sinto com frequência que a minha existência incomoda ou é demais para os outros.',
+        'Isolo-me facilmente e prefiro a invisibilidade à exposição.',
+      ]},
+      {nome:'Abandono', cor:'#2d4fa5', perguntas:[
+        'Fico muito perturbada quando alguém importante para mim não aparece ou não responde como esperava.',
+        'Tenho tendência a depender muito de outras pessoas para me sentir bem comigo própria.',
+        'O pensamento de ficar sozinha enche-me de angústia.',
+        'Faço muitos esforços para que as pessoas não me deixem, mesmo cedendo em coisas que não quero.',
+        'Sinto tristeza crónica e uma espécie de vazio que não consigo explicar.',
+      ]},
+      {nome:'Humilhação', cor:'#8b3a00', perguntas:[
+        'Sinto vergonha do meu corpo, das minhas necessidades ou dos meus desejos.',
+        'Coloco constantemente as necessidades dos outros à frente das minhas.',
+        'Tenho tendência a privar-me de prazeres porque sinto que não os mereço.',
+        'Sinto que sou "demasiado" — demasiado intensa, demasiado exigente, demasiado sensível.',
+        'Critico-me duramente quando cometo erros, mais do que faria com qualquer outra pessoa.',
+      ]},
+      {nome:'Traição', cor:'#8b1a1a', perguntas:[
+        'Tenho dificuldade em confiar que as pessoas fazem o que disseram que iriam fazer.',
+        'Sinto uma necessidade forte de controlar as situações e as pessoas à minha volta.',
+        'A decepção é muito difícil de tolerar — prefiro não esperar nada para não ser defraudada.',
+        'Sinto ciúme frequente nas relações próximas.',
+        'Às vezes minto ou omito para evitar conflitos ou para controlar a situação.',
+      ]},
+      {nome:'Injustiça', cor:'#7a6a00', perguntas:[
+        'Tenho dificuldade em exprimir o que sinto, especialmente quando preciso de algo.',
+        'Sou muito exigente comigo própria — nada do que faço parece suficientemente bom.',
+        'Sinto raiva facilmente mas raramente a expresso directamente.',
+        'Prefiro resolver tudo sozinha a pedir ajuda.',
+        'Sinto que o mundo é injusto e que tenho de ser perfeita para compensar.',
+      ]},
+    ];
+    var html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
+    html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">Escala <strong style=\'color:white\'>1–5</strong> (Nunca → Sempre). 5 perguntas por ferida. Lise Bourbeau — 5 Feridas da Infância.</div></div>';
+    feridaGrupos.forEach(function(g) {
+      html += '<div style="background:'+g.cor+'12;border-left:3px solid '+g.cor+';border-radius:0 8px 8px 0;padding:8px 12px;margin-bottom:8px;font-size:11px;font-weight:700;color:'+g.cor+';text-transform:uppercase;letter-spacing:.8px">Ferida da '+g.nome+'</div>';
+      g.perguntas.forEach(function(p, i) {
+        html += '<div style="background:white;border:1px solid var(--border);border-left:3px solid '+g.cor+';border-radius:0 10px 10px 0;padding:10px 14px;margin-bottom:6px;font-size:13px;color:var(--navy);line-height:1.55">'+(i+1)+'. '+p+'</div>';
+      });
+    });
+    html += '<div style="padding:10px 14px;background:var(--cream);border-radius:8px;font-size:12px;color:var(--text-lt)">ℹ️ A ferida com score mais alto é a dominante. Scores próximos indicam feridas combinadas.</div>';
+    return html;
+  }
+  // ── ANSIEDADE & DEPRESSÃO ──
+  if (q.id === 'ansiedade-depressao') {
+    var adSeccoes = [
+      {nome:'PHQ-9 — Rastreio de Depressão', cor:'#2d4fa5', escala:'0 = Nenhum dia · 1 = Vários dias · 2 = Mais de metade dos dias · 3 = Quase todos os dias', perguntas:[
+        'Pouco interesse ou prazer em fazer as coisas',
+        'A sentires-te em baixo, deprimida ou sem esperança',
+        'Com dificuldade em adormecer, continuar a dormir, ou a dormir demasiado',
+        'A sentires-te cansada ou com pouca energia',
+        'Com falta de apetite ou a comer em excesso',
+        'A sentires-te mal contigo própria — ou a sentires que és um fracasso ou que desiludiste a tua família',
+        'Com dificuldade em concentrar-te nas coisas',
+        'A mexer-te ou a falar tão devagar que as pessoas podiam notar — ou tão agitada que andavas mais do que habitual',
+        'Com pensamentos de que seria melhor estares morta, ou de te magoares de alguma forma',
+      ]},
+      {nome:'GAD-7 — Rastreio de Ansiedade', cor:'#7b2d9a', escala:'0 = Nenhum dia · 1 = Vários dias · 2 = Mais de metade dos dias · 3 = Quase todos os dias', perguntas:[
+        'A sentires-te nervosa, ansiosa ou muito tensa',
+        'Sem conseguir parar ou controlar as preocupações',
+        'A preocupares-te demasiado com as mais diversas coisas',
+        'Com dificuldade em relaxar',
+        'Tão inquieta que te era difícil ficar sentada quieta',
+        'A irritares-te ou ficares aborrecida facilmente',
+        'Com medo de que algo terrível pudesse acontecer',
+      ]},
+    ];
+    var html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
+    html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">Escala <strong style=\'color:white\'>0–3</strong>. PHQ-9 (0–27) + GAD-7 (0–21). Spitzer, Williams & Löwe.</div></div>';
+    adSeccoes.forEach(function(sec) {
+      html += '<div style="background:'+sec.cor+'18;border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:11px;font-weight:700;color:'+sec.cor+';text-transform:uppercase;letter-spacing:.8px">'+sec.nome+'</div>';
+      html += '<div style="font-size:11px;color:var(--text-lt);margin:-6px 0 10px;padding:0 4px;font-style:italic">Escala: '+sec.escala+'</div>';
+      sec.perguntas.forEach(function(p, i) {
+        html += '<div style="background:white;border:1px solid var(--border);border-left:3px solid '+sec.cor+';border-radius:0 10px 10px 0;padding:10px 14px;margin-bottom:6px;font-size:13px;color:var(--navy);line-height:1.55">'+(i+1)+'. Nas últimas 2 semanas, sentiste-te incomodada com: <em>'+p+'</em></div>';
+      });
+    });
+    html += '<div style="padding:10px 14px;background:var(--cream);border-radius:8px;font-size:12px;color:var(--text-lt)">ℹ️ PHQ-9 ≥ 10 = depressão moderada a grave. GAD-7 ≥ 10 = ansiedade moderada. Ambos requerem avaliação aprofundada.</div>';
+    return html;
+  }
+  // ── ALEXITIMIA ──
+  if (q.id === 'alexitimia') {
+    var alexDims = [
+      {id:'DIF', nome:'Identificar Emoções', cor:'#8b1a5a', items:[
+        {texto:'Muitas vezes estou confusa sobre que emoção estou a sentir.', inv:false},
+        {texto:'Tenho dificuldade em perceber se estou triste, assustada ou zangada.', inv:false},
+        {texto:'Às vezes tenho sensações físicas que os médicos não conseguem explicar.', inv:false},
+        {texto:'Quando estou perturbada, não consigo perceber o que se passa dentro de mim.', inv:false},
+        {texto:'Raramente sei ao certo o que estou a sentir.', inv:false},
+        {texto:'Consigo identificar claramente as minhas emoções.', inv:true},
+        {texto:'Tenho sentimentos que não consigo dar nome.', inv:false},
+      ]},
+      {id:'DDF', nome:'Descrever Emoções', cor:'#5a2d9a', items:[
+        {texto:'Tenho dificuldade em encontrar as palavras certas para descrever o que sinto.', inv:false},
+        {texto:'Consigo descrever facilmente os meus sentimentos.', inv:true},
+        {texto:'As pessoas dizem-me que não expresso as minhas emoções de forma clara.', inv:false},
+        {texto:'Acho difícil revelar sentimentos profundos mesmo a pessoas próximas.', inv:false},
+        {texto:'Tenho facilidade em falar sobre o que sinto.', inv:true},
+      ]},
+      {id:'EOT', nome:'Pensamento Concreto', cor:'#2d4fa5', items:[
+        {texto:'Prefiro falar com as pessoas sobre o quotidiano do que sobre os sentimentos.', inv:false},
+        {texto:'Prefiro filmes de acção ou comédia a filmes sobre emoções e relações.', inv:false},
+        {texto:'Prefiro procurar soluções práticas a explorar o porquê das coisas.', inv:false},
+        {texto:'Examinar os meus sentimentos é útil para resolver problemas.', inv:true},
+        {texto:'Procuro perceber o que me motiva e como funciono emocionalmente.', inv:true},
+        {texto:'Prefiro que as coisas aconteçam naturalmente, sem pensar muito sobre elas.', inv:false},
+        {texto:'Questionar o porquê das coisas parece uma perda de tempo.', inv:false},
+        {texto:'Tenho uma vida imaginativa e emocional rica.', inv:true},
+      ]},
+    ];
+    var html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
+    html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">Escala <strong style=\'color:white\'>1–5</strong>. TAS-20 — Taylor, Bagby & Parker (1994). Score total: &lt;51 sem alexitimia · 52–60 borderline · &gt;61 com alexitimia.</div></div>';
+    var qNum = 0;
+    alexDims.forEach(function(d) {
+      html += '<div style="background:'+d.cor+'18;border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:11px;font-weight:700;color:'+d.cor+';text-transform:uppercase;letter-spacing:.8px">'+d.id+' — '+d.nome+'</div>';
+      d.items.forEach(function(item) {
+        qNum++;
+        html += '<div style="background:white;border:1px solid var(--border);border-left:3px solid '+d.cor+';border-radius:0 10px 10px 0;padding:10px 14px;margin-bottom:6px;display:flex;align-items:flex-start;gap:10px">';
+        html += '<span style="font-size:10px;font-weight:700;color:white;background:'+d.cor+';padding:2px 6px;border-radius:99px;flex-shrink:0;margin-top:2px">'+qNum+(item.inv?' ⁻¹':'')+'</span>';
+        html += '<span style="font-size:13px;color:var(--navy);line-height:1.55">'+item.texto+'</span></div>';
+      });
+    });
+    html += '<div style="padding:10px 14px;background:var(--cream);border-radius:8px;font-size:12px;color:var(--text-lt)">ℹ️ ⁻¹ = pergunta de pontuação invertida. Quanto maior o score, maior a dificuldade no acesso emocional.</div>';
+    return html;
+  }
+  // ── ESQUEMAS DE YOUNG ──
+  if (q.id === 'esquemas-young') {
+    var youngDomains = [
+      {nome:'Domínio I — Desconexão e Rejeição', cor:'#8b1a3a', esquemas:[
+        {nome:'Abandono/Instabilidade', perguntas:['As pessoas de quem gosto acabam sempre por me abandonar.','Tenho medo que as pessoas a quem me apego me deixem ou morram.','Agarro-me às pessoas por medo de serem deixadas — mesmo quando sei que não deveria.']},
+        {nome:'Desconfiança/Abuso', perguntas:['Sinto que as pessoas vão magoar-me se lhes der a oportunidade.','Não me deixo ficar muito próxima porque acho que nunca se pode confiar nelas.','É apenas uma questão de tempo até as pessoas me magoarem.']},
+        {nome:'Privação Emocional', perguntas:['Durante a maior parte da minha vida não tive ninguém que quisesse estar perto de mim.','Nunca tive ninguém que me ouvisse de verdade e compreendesse as minhas necessidades.','Sinto que nenhuma das relações na minha vida dá origem a uma ligação emocional verdadeira.']},
+        {nome:'Defeito/Vergonha', perguntas:['Ninguém que eu deseje poderia amar-me se conhecesse os meus verdadeiros defeitos.','Sou indigna de amor e mereço ser rejeitada.','Tenho segredos que não partilho com ninguém porque seria envergonhada demais.']},
+        {nome:'Isolamento Social', perguntas:['Não me encaixo em lado nenhum.','Sou fundamentalmente diferente dos outros.','Não pertenço a nenhum grupo nem comunidade.']},
+      ]},
+      {nome:'Domínio II — Autonomia Prejudicada', cor:'#5a1a8a', esquemas:[
+        {nome:'Dependência/Incompetência', perguntas:['Não consigo dar conta das tarefas do dia-a-dia sozinha.','Sinto que não sou capaz de me safar sozinha.','Precisaria de ser orientada por outra pessoa para saber como viver.']},
+        {nome:'Vulnerabilidade ao Dano', perguntas:['Tenho sempre medo de que algo de mau me aconteça.','Não consigo deixar de pensar que vou contrair uma doença grave.','Vivo com medo constante de um desastre — acidente, crime, doença.']},
+        {nome:'Emaranhamento', perguntas:['A minha mãe/pai e eu somos tão próximos que não sei onde termino eu e onde começa o outro.','Tenho dificuldade em tomar decisões sem a opinião das pessoas próximas.','É muito difícil para mim manter a minha identidade própria nos relacionamentos.']},
+        {nome:'Fracasso', perguntas:['Sinto que sou um fracasso no que se refere a realizações.','A maior parte dos meus colegas são mais competentes do que eu.','Não sou tão inteligente quanto a maioria das pessoas em contexto de trabalho ou escola.']},
+      ]},
+      {nome:'Domínio III — Limites Deficitários', cor:'#1a4a6a', esquemas:[
+        {nome:'Grandiosidade/Autorização', perguntas:['Sou especial e não devia ter de aceitar as restrições que se aplicam às pessoas normais.','Tenho dificuldade em aceitar um "não" quando quero algo.','Sinto que as outras pessoas deveriam dobrar-se às minhas preferências.']},
+        {nome:'Autocontrolo Insuficiente', perguntas:['Se não consigo atingir um objectivo, fico facilmente frustrada e desisto.','Tenho dificuldade em resistir a fazer coisas que sei que me irão prejudicar.','Tenho dificuldade em impor-me disciplina para atingir objectivos a longo prazo.']},
+      ]},
+      {nome:'Domínio IV — Orientação para o Outro', cor:'#1a5a3a', esquemas:[
+        {nome:'Subjugação', perguntas:['Deixo as outras pessoas controlarem-me porque tenho medo das suas reacções.','Sinto que as minhas necessidades, opiniões e sentimentos não têm importância.','Não expresso os meus sentimentos verdadeiros porque tenho medo das consequências.']},
+        {nome:'Auto-Sacrifício', perguntas:['Sou a pessoa que cuida dos outros em situações de crise.','Sou boa a encontrar o que os outros precisam, mas tenho dificuldade em saber o que eu preciso.','Nunca me importo suficientemente comigo mesma — estou sempre a cuidar dos outros.']},
+        {nome:'Procura de Aprovação', perguntas:['A minha auto-estima depende muito da opinião que os outros têm de mim.','Tenho dificuldade em fazer coisas que os outros desaprovem, mesmo quando sei que tenho razão.','É importante para mim ser apreciada pelas pessoas que me rodeiam.']},
+      ]},
+      {nome:'Domínio V — Hipervigilância e Inibição', cor:'#4a4a1a', esquemas:[
+        {nome:'Negativismo/Pessimismo', perguntas:['Na maioria das situações concentro-me nas coisas negativas e descuro as positivas.','Tenho a sensação de que algo de mau vai acontecer inevitavelmente.','Quando as coisas correm bem, penso que é apenas uma questão de tempo até tudo correr mal.']},
+        {nome:'Inibição Emocional', perguntas:['Sinto que não devo mostrar os meus sentimentos aos outros.','Controlo-me de tal forma que as pessoas pensam que não tenho emoções.','Tenho dificuldade em ser espontânea.']},
+        {nome:'Padrões Exigentes', perguntas:['Tenho de ser a melhor em praticamente tudo o que faço — não aceito um segundo lugar.','Tenho dificuldade em aceitar os meus erros e imperfeições.','A minha lista de coisas a fazer não deixa tempo para lazer.']},
+        {nome:'Punição', perguntas:['Quando cometo erros, mereço ser punida.','Tenho dificuldade em ser compreensiva com erros — meus ou dos outros.','Sou intolerante com as pessoas (incluindo eu mesma) que não se esforçam o suficiente.']},
+      ]},
+    ];
+    var html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
+    html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">Escala <strong style=\'color:white\'>1–6</strong> (Completamente falso → Completamente verdadeiro). 18 esquemas × 3 perguntas = 54 itens. YSQ-S3 — Jeffrey Young.</div></div>';
+    var qNum = 0;
+    youngDomains.forEach(function(dom) {
+      html += '<div style="background:'+dom.cor+'18;border-radius:8px;padding:8px 12px;margin:14px 0 10px;font-size:11px;font-weight:700;color:'+dom.cor+';text-transform:uppercase;letter-spacing:.6px">'+dom.nome+'</div>';
+      dom.esquemas.forEach(function(esq) {
+        html += '<div style="font-size:12px;font-weight:700;color:'+dom.cor+';margin:8px 0 4px;padding-left:4px">📌 '+esq.nome+'</div>';
+        esq.perguntas.forEach(function(p) {
+          qNum++;
+          html += '<div style="background:white;border:1px solid var(--border);border-left:3px solid '+dom.cor+';border-radius:0 8px 8px 0;padding:9px 14px;margin-bottom:5px;display:flex;gap:8px;align-items:flex-start">';
+          html += '<span style="font-size:10px;font-weight:700;color:white;background:'+dom.cor+';padding:1px 6px;border-radius:99px;flex-shrink:0;margin-top:2px">'+qNum+'</span>';
+          html += '<span style="font-size:12.5px;color:var(--navy);line-height:1.55">'+p+'</span></div>';
+        });
+      });
+    });
+    html += '<div style="padding:10px 14px;background:var(--cream);border-radius:8px;font-size:12px;color:var(--text-lt)">ℹ️ Score por esquema: 3–18 pontos (3 perguntas × escala 1–6). Score ≥ 12 = esquema clinicamente activo.</div>';
+    return html;
+  }
+
   if (q.id !== 'linguagem-amor') {
     if (!q.disponivel) return '<div style="text-align:center;padding:20px;color:var(--text-lt)"><div style="font-size:24px;margin-bottom:8px">🔧</div><p style="font-size:13px">Em desenvolvimento.</p></div>';
     return '<div style="padding:16px;color:var(--text-lt);font-size:13px">Perguntas em construção para este quiz.</div>';
   }
   let showLabels = true;
-  let html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">';
+  var html = '<div style="background:#1a2744;border-radius:10px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">';
   html += '<div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#c9a84c;margin-bottom:3px">🔒 Visão exclusiva da terapeuta</div>';
   html += '<div style="font-size:12px;color:rgba(255,255,255,.65);line-height:1.5">As etiquetas abaixo são <strong style=\'color:white\'>INVISÍVEIS para a cliente</strong>. No quiz real, as opções aparecem <strong style=\'color:white\'>sem rótulos e em ordem aleatória</strong>.</div></div>';
   html += '<div style="display:flex;gap:8px;flex-shrink:0">';
@@ -1368,16 +1631,9 @@ function renderSendContent(q) {
 
   // Modo individual (existente)
   return tabsHtml + `
-    <div class="section" id="sec-envio">
-      <div class="section-head" onclick="toggleSection('envio')">
-        <span class="section-head-icon">📤</span>
-        <div class="section-head-text"><h3>Enviar ao Cliente</h3><p>Gerar link e enviar por email ou WhatsApp</p></div>
-        <span class="section-toggle" id="stog-envio">▾</span>
-      </div>
-      <div class="section-body hidden" id="sbody-envio">
-        <div class="send-box">
-          <h3>Enviar ${q.name}</h3>
-          <p>O link é personalizado com o nome e ID da cliente. As respostas chegam automaticamente ao Google Sheets e à ficha.</p>
+    <div class="send-box">
+      <h3>Enviar ${q.name}</h3>
+      <p>O link é personalizado com o nome e ID da cliente. As respostas chegam automaticamente ao Google Sheets e à ficha.</p>
 
           <!-- URL config -->
           <div style="margin-bottom:14px">
@@ -1415,8 +1671,6 @@ function renderSendContent(q) {
               <button class="btn btn-outline-w btn-sm" onclick="enviarEmail('${q.id}','${q.name}')">✉️ Abrir email</button>
             </div>
           </div>
-        </div>
-      </div>
     </div>`;
 }
 
@@ -1550,17 +1804,22 @@ function saveBaseUrl(val) {
 
 // URLs individuais por quiz (cada um no seu próprio site Netlify)
 const QUIZ_URLS = {
-  'linguagem-amor':    'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_amor.html',
-  'padroes-parentais': 'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_padroes.html',
-  'estilo-apego':      'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_apego.html',
-  'mbti':              'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_mbti.html',
-  'mbti-casal':        'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_mbti_casal.html',
-  'bigfive':           'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_bigfive.html',
-  'bigfive-casal':     'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_bigfive_casal.html',
-  'disc':              'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_disc.html',
-  'disc-casal':        'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_disc_casal.html',
-  'enneagrama':        'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_enneagrama.html',
-  'enneagrama-casal':  'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_enneagrama_casal.html',
+  'linguagem-amor':      'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_amor.html',
+  'estilo-apego':        'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_apego.html',
+  'padroes-parentais':   'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_padroes.html',
+  'esquemas-young':      'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_esquemas_young.html',
+  'ace':                 'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_ace.html',
+  'feridas-infancia':    'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_feridas_infancia.html',
+  'ansiedade-depressao': 'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_ansiedade_depressao.html',
+  'alexitimia':          'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_alexitimia.html',
+  'mbti':                'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_mbti.html',
+  'mbti-casal':          'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_mbti_casal.html',
+  'bigfive':             'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_bigfive.html',
+  'bigfive-casal':       'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_bigfive_casal.html',
+  'disc':                'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_disc.html',
+  'disc-casal':          'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_disc_casal.html',
+  'enneagrama':          'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_enneagrama.html',
+  'enneagrama-casal':    'https://danieledallavecchia-netizen.github.io/Quizzes/quiz_enneagrama_casal.html',
 };
 
 function gerarLink(quizId, file) {
