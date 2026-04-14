@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Esquemas de Young — YSQ</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',system-ui,sans-serif;background:linear-gradient(135deg,#f0f2ff 0%,#eef8f4 100%);min-height:100vh;color:#2d2d3a}
+.cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center}
+.cover-icon{width:80px;height:80px;background:linear-gradient(135deg,#1a2744,#2d6a4f);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 24px;box-shadow:0 8px 24px rgba(26,39,68,.25)}
+.cover-title{font-size:clamp(20px,5vw,28px);font-weight:700;color:#2d2d3a;margin-bottom:8px}
+.cover-sub{font-size:14px;color:#6b6b80;max-width:460px;line-height:1.75;margin-bottom:10px}
+.cover-note{font-size:12.5px;color:#8b8ba0;max-width:440px;line-height:1.6;margin-bottom:10px;font-style:italic}
+.cover-time{font-size:13px;color:#1a2744;margin-bottom:28px}
+.cover-start{padding:14px 40px;background:linear-gradient(135deg,#1a2744,#2d6a4f);color:white;border:none;border-radius:50px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px rgba(26,39,68,.3);transition:.2s}
+.cover-start:hover{transform:translateY(-2px)}
+.quiz-wrap{max-width:640px;margin:0 auto;padding:24px 20px}
+.domain-bar{border-radius:12px;padding:10px 16px;color:white;font-size:12px;font-weight:600;margin-bottom:6px}
+.esquema-badge{display:inline-block;padding:3px 12px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.5px;margin-bottom:14px}
+.progress-bar{background:#d8dff8;border-radius:99px;height:6px;margin-bottom:8px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#1a2744,#2d6a4f);border-radius:99px;transition:.4s}
+.q-counter{font-size:12px;color:#1a2744;text-align:right;margin-bottom:16px}
+.q-text{font-size:clamp(14px,4vw,17px);font-weight:600;color:#1a1a2e;line-height:1.6;margin-bottom:24px}
+.scale-wrap{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:10px}
+.scale-btn{padding:12px 4px;background:white;border:2px solid #d8dff8;border-radius:10px;font-size:12px;font-family:inherit;cursor:pointer;transition:.15s;color:#2d2d3a;text-align:center;font-weight:600}
+.scale-btn:hover{border-color:#1a2744;background:#f0f2ff}
+.scale-btn.selected{border-color:#1a2744;background:rgba(26,39,68,.1);color:#1a2744;font-weight:700}
+.scale-labels{display:flex;justify-content:space-between;font-size:10px;color:#8b9aa8;padding:0 2px;margin-bottom:20px}
+.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.btn-nav{padding:11px 28px;border-radius:99px;border:none;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:.15s}
+.btn-back{background:#d8dff8;color:#1a2744}
+.btn-next{background:linear-gradient(135deg,#1a2744,#2d6a4f);color:white;box-shadow:0 4px 12px rgba(26,39,68,.25)}
+.btn-next:disabled{opacity:.35;cursor:default;box-shadow:none}
+.result-wrap{max-width:640px;margin:0 auto;padding:24px 20px 60px}
+.result-header{background:linear-gradient(135deg,#1a2744,#2d6a4f);border-radius:20px;padding:28px;color:white;margin-bottom:16px;text-align:center}
+.result-title{font-size:20px;font-weight:700;margin-bottom:4px}
+.result-sub{font-size:13px;opacity:.8}
+.result-card{background:white;border-radius:16px;padding:20px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.card-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#1a2744;margin-bottom:14px}
+.esquema-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f0ece8;font-size:13px}
+.esquema-row:last-child{border-bottom:none}
+.esquema-nome{color:#2d2d3a;font-weight:500;flex:1}
+.esquema-bar-wrap{width:80px;height:6px;background:#e8ecf0;border-radius:99px;overflow:hidden;margin:0 10px}
+.esquema-fill{height:100%;border-radius:99px;transition:.5s}
+.esquema-score{font-size:13px;font-weight:700;min-width:30px;text-align:right}
+.domain-section{margin-bottom:8px}
+.domain-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:6px 10px;border-radius:6px;margin-bottom:4px;display:inline-block}
+.top-esquemas{padding:14px 16px;border-radius:10px;margin-bottom:8px;font-size:13px;line-height:1.65}
+.sending{text-align:center;padding:60px 20px}
+.sending-icon{font-size:40px;margin-bottom:16px}
+.sending p{color:#8b8ba0;font-size:14px}
+.hidden{display:none}
+.nome-tag{font-size:13px;color:white;opacity:.75;margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<div id="cover" class="cover">
+  <div class="cover-icon">📐</div>
+  <h1 class="cover-title">Esquemas — Schema Therapy</h1>
+  <p class="cover-sub">Este questionário identifica os 18 esquemas emocionais nucleares desenvolvidos na infância que continuam a influenciar as tuas relações, emoções e decisões hoje.</p>
+  <p class="cover-note">Baseado no Young Schema Questionnaire (YSQ-S3). Responde como és na maioria do tempo — não como gostarias de ser.</p>
+  <p class="cover-time">⏱ 15–20 minutos · 54 afirmações · Escala 1–6</p>
+  <button class="cover-start" onclick="iniciar()">Começar →</button>
+</div>
+
+<div id="quiz" class="quiz-wrap hidden">
+  <div class="domain-bar" id="domainBar"></div>
+  <div class="esquema-badge" id="esquemaBadge"></div>
+  <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+  <div class="q-counter" id="counter"></div>
+  <div class="q-text" id="qtext"></div>
+  <div class="scale-wrap" id="scaleWrap"></div>
+  <div class="scale-labels"><span>Completamente falso</span><span>Completamente verdadeiro</span></div>
+  <div class="nav-row">
+    <button class="btn-nav btn-back" onclick="anterior()">← Anterior</button>
+    <button class="btn-nav btn-next" id="btnNext" onclick="proximo()" disabled>Seguinte →</button>
+  </div>
+</div>
+
+<div id="sending" class="sending hidden">
+  <div class="sending-icon">📤</div>
+  <p>A guardar o teu resultado…</p>
+</div>
+
+<div id="result" class="result-wrap hidden"></div>
+
+<script>
+const APPS_URL='https://script.google.com/macros/s/AKfycbyoqgW9fP6hMGYNrlQwI9BpN7z3QKw7mcE7Khz1KzJ1Xz6nt6WLrnykFGWztY_LHXT2/exec';
+const params=new URLSearchParams(window.location.search);
+const NOME=params.get('nome')||'';
+const CLIENT_ID=params.get('id')||'';
+
+const DOMAINS=[
+  {id:'D1',nome:'Desconexão e Rejeição',cor:'#8b1a3a',bg:'rgba(139,26,58,.08)'},
+  {id:'D2',nome:'Autonomia Prejudicada',cor:'#5a1a8a',bg:'rgba(90,26,138,.08)'},
+  {id:'D3',nome:'Limites Deficitários',cor:'#1a4a6a',bg:'rgba(26,74,106,.08)'},
+  {id:'D4',nome:'Orientação para o Outro',cor:'#1a5a3a',bg:'rgba(26,90,58,.08)'},
+  {id:'D5',nome:'Hipervigilância e Inibição',cor:'#4a4a1a',bg:'rgba(74,74,26,.08)'},
+];
+
+const ESQUEMAS=[
+  {id:'AB',nome:'Abandono',domain:'D1',cor:'#c0392b',
+   desc:'Instabilidade e insegurança nas relações — medo de ser deixada.',
+   perguntas:['As pessoas de quem gosto acabam sempre por me abandonar.',
+     'Tenho medo que as pessoas a quem me apego me deixem ou morram.',
+     'Agarro-me às pessoas por medo de serem deixadas — mesmo quando sei que não deveria.']},
+  {id:'MA',nome:'Desconfiança/Abuso',domain:'D1',cor:'#922b21',
+   desc:'Expectativa de que os outros vão magoar, enganar ou abusar.',
+   perguntas:['Sinto que as pessoas vão magoar-me se lhes der a oportunidade.',
+     'Não me deixo ficar muito próxima das pessoas porque acho que nunca se pode confiar nelas.',
+     'É apenas uma questão de tempo até as pessoas me magoarem.']},
+  {id:'ED',nome:'Privação Emocional',domain:'D1',cor:'#884ea0',
+   desc:'Expectativa de que as próprias necessidades emocionais não serão satisfeitas.',
+   perguntas:['Durante a maior parte da minha vida não tive ninguém que quisesse estar perto de mim, que me quisesse partilhar o tempo ou que se interessasse pelo que me acontecia.',
+     'Nunca tive ninguém que me ouvisse de verdade, que me compreendesse ou sintonia com as minhas necessidades.',
+     'Sinto que nenhuma das relações na minha vida dá origem a uma ligação emocional verdadeira.']},
+  {id:'DS',nome:'Defeito/Vergonha',domain:'D1',cor:'#6e2fa2',
+   desc:'Sentimento de ser fundamentalmente defeituosa, má, indesejável.',
+   perguntas:['Ninguém que eu deseje podia amar-me se conhecesse os meus verdadeiros defeitos.',
+     'Sou indigna de amor e mereço ser rejeitada.',
+     'Tenho segredos que não partilho com ninguém porque seria envergonhada demais.']},
+  {id:'SI',nome:'Isolamento Social',domain:'D1',cor:'#1a5276',
+   desc:'Sentimento de ser diferente dos outros e de não pertencer a nenhum grupo.',
+   perguntas:['Não me encaixo em lado nenhum.',
+     'Sou fundamentalmente diferente dos outros.',
+     'Não pertenço a nenhum grupo nem comunidade.']},
+  {id:'DI',nome:'Dependência/Incompetência',domain:'D2',cor:'#784212',
+   desc:'Crença de não conseguir lidar com as responsabilidades do dia-a-dia.',
+   perguntas:['Não consigo dar conta das tarefas do dia-a-dia sozinha.',
+     'Sinto que não sou capaz de me safar sozinha.',
+     'Precisaria de ser orientada por outra pessoa para saber como viver.']},
+  {id:'VH',nome:'Vulnerabilidade ao Dano',domain:'D2',cor:'#7d6608',
+   desc:'Medo exagerado de catástrofes iminentes — doença, crime, desastres.',
+   perguntas:['Tenho sempre medo de que algo de mau me aconteça.',
+     'Não consigo deixar de pensar que vou contrair uma doença grave.',
+     'Vivo com medo constante de um desastre — acidente, crime, doença.']},
+  {id:'EM',nome:'Emaranhamento',domain:'D2',cor:'#6e2fa2',
+   desc:'Fusão excessiva com figuras próximas — falta de identidade separada.',
+   perguntas:['A minha mãe/pai e eu somos tão próximos que não sei bem onde termino eu e onde começa o outro.',
+     'Tenho dificuldade em tomar decisões sem a opinião das pessoas próximas.',
+     'É muito difícil para mim manter a minha identidade própria nos relacionamentos.']},
+  {id:'FA',nome:'Fracasso',domain:'D2',cor:'#1a2e5a',
+   desc:'Crença de que irá inevitavelmente fracassar nas suas capacidades.',
+   perguntas:['Sinto que sou um fracasso no que se refere a realizações.',
+     'A maior parte dos meus colegas ou pares são mais competentes do que eu.',
+     'Não sou tão inteligente quanto a maioria das pessoas em contexto de trabalho ou escola.']},
+  {id:'ET',nome:'Grandiosidade/Autorização',domain:'D3',cor:'#2e4057',
+   desc:'Crença de ser superior e ter o direito de regras especiais.',
+   perguntas:['Sou especial e não devia ter de aceitar as restrições que se aplicam às pessoas normais.',
+     'Tenho dificuldade em aceitar um "não" quando quero algo.',
+     'Sinto que as outras pessoas deveriam dobrar-se às minhas preferências.']},
+  {id:'IS',nome:'Autocontrolo Insuficiente',domain:'D3',cor:'#5d4037',
+   desc:'Dificuldade em tolerar a frustração, controlar impulsos e emoções.',
+   perguntas:['Se não consigo atingir um objectivo, fico facilmente frustrada e desisto.',
+     'Tenho dificuldade em resistir a fazer coisas que sei que me irão prejudicar.',
+     'Tenho dificuldade em impor-me disciplina para atingir objectivos a longo prazo.']},
+  {id:'SB',nome:'Subjugação',domain:'D4',cor:'#1a5a3a',
+   desc:'Entrega excessiva do controlo aos outros por medo de represálias.',
+   perguntas:['Deixo as outras pessoas controlarem-me porque tenho medo das suas reacções se não o fizer.',
+     'Sinto que as minhas necessidades, opiniões e sentimentos não têm importância para os outros.',
+     'Não expresso os meus sentimentos verdadeiros porque tenho medo das consequências.']},
+  {id:'SS',nome:'Auto-Sacrifício',domain:'D4',cor:'#2d6a4f',
+   desc:'Foco excessivo nas necessidades dos outros em detrimento das próprias.',
+   perguntas:['Sou a pessoa que cuida dos outros em situações de crise.',
+     'Sou boa a encontrar o que os outros precisam, mas tenho dificuldade em saber o que eu própria preciso.',
+     'Nunca me importo suficientemente comigo mesma — estou sempre a cuidar dos outros.']},
+  {id:'AS',nome:'Procura de Aprovação',domain:'D4',cor:'#117a65',
+   desc:'Ênfase excessiva em obter aprovação dos outros.',
+   perguntas:['A minha auto-estima depende muito da opinião que os outros têm de mim.',
+     'Tenho dificuldade em fazer coisas que os outros desaprovem, mesmo quando sei que tenho razão.',
+     'É importante para mim ser apreciada pelas pessoas que me rodeiam.']},
+  {id:'NP',nome:'Negativismo/Pessimismo',domain:'D5',cor:'#6e6e6e',
+   desc:'Foco pervasivo nos aspectos negativos enquanto minimiza os positivos.',
+   perguntas:['Na maioria das situações, concentro-me nas coisas negativas e descuro as positivas.',
+     'Tenho a sensação de que algo de mau vai acontecer inevitavelmente.',
+     'Quando as coisas correm bem, penso que é apenas uma questão de tempo até tudo correr mal.']},
+  {id:'EI',nome:'Inibição Emocional',domain:'D5',cor:'#4a4a5a',
+   desc:'Inibição excessiva de acções, sentimentos e comunicação espontânea.',
+   perguntas:['Sinto que não devo mostrar os meus sentimentos aos outros.',
+     'Controlo-me de tal forma que as pessoas pensam que não tenho emoções.',
+     'Tenho dificuldade em ser espontânea.']},
+  {id:'US',nome:'Padrões Exigentes',domain:'D5',cor:'#2c3e50',
+   desc:'Crença de que deve esforçar-se para atingir padrões muito elevados.',
+   perguntas:['Tenho de ser a melhor em praticamente tudo o que faço — não aceito um segundo lugar.',
+     'Tenho dificuldade em aceitar os meus erros e imperfeições.',
+     'A minha lista de coisas a fazer não deixa tempo para lazer.']},
+  {id:'PU',nome:'Punição',domain:'D5',cor:'#922b21',
+   desc:'Crença de que as pessoas devem ser punidas duramente pelos seus erros.',
+   perguntas:['Quando cometo erros, mereço ser punida.',
+     'Tenho dificuldade em ser compreensiva com erros — meus ou dos outros.',
+     'Sou intolerante com as pessoas (incluindo eu mesma) que não se esforçam o suficiente.']},
+];
+
+const PERGUNTAS=[];
+ESQUEMAS.forEach(e=>{
+  e.perguntas.forEach(p=>{PERGUNTAS.push({esquemaId:e.id,texto:p});});
+});
+
+let atual=0,respostas={};
+
+function iniciar(){
+  document.getElementById('cover').classList.add('hidden');
+  document.getElementById('quiz').classList.remove('hidden');
+  mostrarPergunta();
+}
+
+function mostrarPergunta(){
+  const p=PERGUNTAS[atual],total=PERGUNTAS.length;
+  document.getElementById('prog').style.width=((atual/total)*100)+'%';
+  document.getElementById('counter').textContent=`Afirmação ${atual+1} de ${total}`;
+  const esq=ESQUEMAS.find(e=>e.id===p.esquemaId);
+  const dom=DOMAINS.find(d=>d.id===esq.domain);
+  document.getElementById('domainBar').textContent=dom.nome;
+  document.getElementById('domainBar').style.background=dom.cor;
+  const badge=document.getElementById('esquemaBadge');
+  badge.textContent=esq.nome;
+  badge.style.background=esq.cor+'18';badge.style.color=esq.cor;
+  document.getElementById('qtext').textContent=p.texto;
+  const sel=respostas[atual];
+  document.getElementById('btnNext').disabled=sel===undefined;
+  document.getElementById('scaleWrap').innerHTML=[1,2,3,4,5,6].map(v=>`
+    <button class="scale-btn ${sel===v?'selected':''}" onclick="selecionar(${v})"
+      style="${sel===v?'border-color:'+esq.cor+';color:'+esq.cor+';background:'+esq.cor+'18':''}">${v}</button>`).join('');
+}
+
+function selecionar(v){respostas[atual]=v;mostrarPergunta();}
+function anterior(){if(atual>0){atual--;mostrarPergunta();}}
+function proximo(){if(atual<PERGUNTAS.length-1){atual++;mostrarPergunta();}else{calcular();}}
+
+function calcular(){
+  document.getElementById('quiz').classList.add('hidden');
+  document.getElementById('sending').classList.remove('hidden');
+  const scores={};
+  ESQUEMAS.forEach(e=>{scores[e.id]=0;});
+  PERGUNTAS.forEach((p,i)=>{scores[p.esquemaId]+=(respostas[i]||0);});
+  // Convert to % of max (3 questions × 6 = 18 max per schema)
+  const pct={};Object.keys(scores).forEach(k=>{pct[k]=Math.round((scores[k]/18)*100);});
+  const sorted=Object.entries(pct).sort((a,b)=>b[1]-a[1]);
+  const top3=sorted.slice(0,3).map(([k])=>ESQUEMAS.find(e=>e.id===k).nome).join(', ');
+  const resumo=`Top esquemas: ${top3}`;
+  enviar({quiz:'esquemas_young',resumo,dados:pct,nome:NOME,id:CLIENT_ID},()=>mostrarResultado(pct,sorted));
+}
+
+function enviar(payload,cb){
+  const cbName='cb_'+Date.now();window[cbName]=()=>{cb();};
+  const s=document.createElement('script');
+  s.src=APPS_URL+'?callback='+cbName+'&data='+encodeURIComponent(JSON.stringify(payload));
+  s.onerror=()=>cb();document.head.appendChild(s);setTimeout(cb,6000);
+}
+
+function mostrarResultado(pct,sorted){
+  document.getElementById('sending').classList.add('hidden');
+  const el=document.getElementById('result');el.classList.remove('hidden');
+
+  // Top 5 esquemas
+  const top5Html=sorted.slice(0,5).map(([k,v])=>{
+    const e=ESQUEMAS.find(x=>x.id===k);
+    return `<div class="esquema-row">
+      <span class="esquema-nome">${e.nome}</span>
+      <div class="esquema-bar-wrap"><div class="esquema-fill" style="width:${v}%;background:${e.cor}"></div></div>
+      <span class="esquema-score" style="color:${e.cor}">${v}%</span>
+    </div>`;}).join('');
+
+  // All by domain
+  const domainHtml=DOMAINS.map(dom=>{
+    const domEsqs=ESQUEMAS.filter(e=>e.domain===dom.id);
+    const rows=domEsqs.map(e=>`<div class="esquema-row">
+      <span class="esquema-nome">${e.nome}</span>
+      <div class="esquema-bar-wrap"><div class="esquema-fill" style="width:${pct[e.id]}%;background:${e.cor}"></div></div>
+      <span class="esquema-score" style="color:${e.cor}">${pct[e.id]}%</span>
+    </div>`).join('');
+    return `<div class="domain-section">
+      <span class="domain-label" style="background:${dom.bg};color:${dom.cor}">${dom.nome}</span>
+      ${rows}
+    </div>`;
+  }).join('');
+
+  const top1=ESQUEMAS.find(e=>e.id===sorted[0][0]);
+
+  el.innerHTML=`
+    <div class="result-header">
+      ${NOME?`<div class="nome-tag">${NOME}</div>`:''}
+      <div class="result-title">Perfil de Esquemas — Young</div>
+      <div class="result-sub">YSQ-S3 · Jeffrey Young · Schema Therapy</div>
+    </div>
+    <div class="top-esquemas" style="background:${top1.cor}10;border-left:4px solid ${top1.cor}">
+      <strong style="color:${top1.cor}">Esquema dominante: ${top1.nome}</strong><br>
+      <span style="color:#3a3a4a">${top1.desc}</span>
+    </div>
+    <div class="result-card">
+      <div class="card-title">Top 5 esquemas mais activos</div>
+      ${top5Html}
+    </div>
+    <div class="result-card">
+      <div class="card-title">Todos os esquemas por domínio</div>
+      ${domainHtml}
+    </div>
+    <div class="result-card" style="text-align:center;color:#1a2744;font-size:13px">✓ Resultado enviado à tua terapeuta</div>`;
+}
+
+if(NOME) iniciar();
+</script>
+</body>
+</html>

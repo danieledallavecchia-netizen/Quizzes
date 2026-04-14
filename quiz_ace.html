@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Experiências Adversas na Infância — ACE</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',system-ui,sans-serif;background:linear-gradient(135deg,#fdf2f2 0%,#f5f0ff 100%);min-height:100vh;color:#2d2d3a}
+.cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center}
+.cover-icon{width:80px;height:80px;background:linear-gradient(135deg,#8b1a1a,#5a1a8a);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 24px;box-shadow:0 8px 24px rgba(139,26,26,.25)}
+.cover-title{font-size:clamp(20px,5vw,28px);font-weight:700;color:#2d2d3a;margin-bottom:8px}
+.cover-sub{font-size:14px;color:#6b6b80;max-width:480px;line-height:1.75;margin-bottom:10px}
+.cover-note{font-size:12.5px;color:#8b8ba0;max-width:460px;line-height:1.6;margin-bottom:28px;font-style:italic}
+.cover-time{font-size:13px;color:#8b3a3a;margin-bottom:28px}
+.cover-start{padding:14px 40px;background:linear-gradient(135deg,#8b1a1a,#5a1a8a);color:white;border:none;border-radius:50px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px rgba(139,26,26,.3);transition:.2s}
+.cover-start:hover{transform:translateY(-2px)}
+.quiz-wrap{max-width:640px;margin:0 auto;padding:24px 20px}
+.progress-bar{background:#f0d8d8;border-radius:99px;height:6px;margin-bottom:8px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#8b1a1a,#5a1a8a);border-radius:99px;transition:.4s}
+.q-counter{font-size:12px;color:#8b3a3a;text-align:right;margin-bottom:20px}
+.cat-badge{display:inline-block;padding:4px 14px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px}
+.q-text{font-size:clamp(14px,4vw,17px);font-weight:600;color:#1a1a2e;line-height:1.6;margin-bottom:10px}
+.q-sub{font-size:12.5px;color:#8b8ba0;margin-bottom:22px;font-style:italic}
+.option-wrap{display:flex;gap:12px;margin-bottom:24px}
+.opt-btn{flex:1;padding:16px 12px;background:white;border:2px solid #e8d8d8;border-radius:12px;font-size:15px;font-family:inherit;cursor:pointer;transition:.15s;color:#2d2d3a;text-align:center;font-weight:600}
+.opt-btn:hover{border-color:#8b1a1a;background:#fdf5f5}
+.opt-btn.selected-sim{border-color:#8b1a1a;background:linear-gradient(135deg,rgba(139,26,26,.12),rgba(90,26,138,.08));color:#8b1a1a}
+.opt-btn.selected-nao{border-color:#1a6a3a;background:rgba(26,106,58,.08);color:#1a6a3a}
+.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.btn-nav{padding:11px 28px;border-radius:99px;border:none;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:.15s}
+.btn-back{background:#f0d8d8;color:#8b1a1a}
+.btn-next{background:linear-gradient(135deg,#8b1a1a,#5a1a8a);color:white;box-shadow:0 4px 12px rgba(139,26,26,.25)}
+.btn-next:disabled{opacity:.35;cursor:default;box-shadow:none}
+.result-wrap{max-width:640px;margin:0 auto;padding:24px 20px 60px}
+.result-header{border-radius:20px;padding:28px;color:white;margin-bottom:16px;text-align:center}
+.result-score-circle{width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 14px;border:3px solid rgba(255,255,255,.4)}
+.result-score-num{font-size:32px;font-weight:700;line-height:1}
+.result-score-label{font-size:11px;opacity:.75;margin-top:2px}
+.result-title{font-size:18px;font-weight:700;margin-bottom:4px}
+.result-sub{font-size:13px;opacity:.8}
+.result-card{background:white;border-radius:16px;padding:22px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.card-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#8b3a3a;margin-bottom:14px}
+.cat-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0ece8;font-size:13px}
+.cat-row:last-child{border-bottom:none}
+.cat-name{color:#4a4a5a}
+.cat-badge-r{padding:2px 8px;border-radius:99px;font-size:11px;font-weight:700}
+.badge-sim{background:rgba(139,26,26,.1);color:#8b1a1a}
+.badge-nao{background:rgba(26,106,58,.1);color:#1a6a3a}
+.risk-box{border-radius:10px;padding:16px 18px;margin-bottom:10px;font-size:13px;line-height:1.65}
+.sending{text-align:center;padding:60px 20px}
+.sending-icon{font-size:40px;margin-bottom:16px}
+.sending p{color:#8b8ba0;font-size:14px}
+.hidden{display:none}
+.nome-tag{font-size:13px;color:white;opacity:.75;margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<div id="cover" class="cover">
+  <div class="cover-icon">🛡️</div>
+  <h1 class="cover-title">Experiências Adversas na Infância</h1>
+  <p class="cover-sub">Este questionário avalia experiências difíceis vividas antes dos 18 anos. As respostas são confidenciais e ajudam a compreender melhor o teu percurso de vida.</p>
+  <p class="cover-note">Não há respostas certas ou erradas. Responde com honestidade — as tuas respostas ficam apenas com a tua terapeuta.</p>
+  <p class="cover-time">⏱ 3–5 minutos · 10 perguntas · Sim / Não</p>
+  <button class="cover-start" onclick="iniciar()">Começar →</button>
+</div>
+
+<div id="quiz" class="quiz-wrap hidden">
+  <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+  <div class="q-counter" id="counter"></div>
+  <div class="cat-badge" id="catBadge"></div>
+  <div class="q-text" id="qtext"></div>
+  <div class="q-sub" id="qsub"></div>
+  <div class="option-wrap">
+    <button class="opt-btn" id="btnSim" onclick="selecionar('sim')">✓ Sim</button>
+    <button class="opt-btn" id="btnNao" onclick="selecionar('nao')">✗ Não</button>
+  </div>
+  <div class="nav-row">
+    <button class="btn-nav btn-back" onclick="anterior()">← Anterior</button>
+    <button class="btn-nav btn-next" id="btnNext" onclick="proximo()" disabled>Seguinte →</button>
+  </div>
+</div>
+
+<div id="sending" class="sending hidden">
+  <div class="sending-icon">📤</div>
+  <p>A guardar o teu resultado…</p>
+</div>
+
+<div id="result" class="result-wrap hidden"></div>
+
+<script>
+const APPS_URL='https://script.google.com/macros/s/AKfycbyoqgW9fP6hMGYNrlQwI9BpN7z3QKw7mcE7Khz1KzJ1Xz6nt6WLrnykFGWztY_LHXT2/exec';
+const params=new URLSearchParams(window.location.search);
+const NOME=params.get('nome')||'';
+const CLIENT_ID=params.get('id')||'';
+
+const CATEGORIAS={
+  abuso_fisico:{nome:'Abuso Físico',cor:'#c0392b',bg:'rgba(192,57,43,.08)'},
+  abuso_emocional:{nome:'Abuso Emocional',cor:'#8b1a1a',bg:'rgba(139,26,26,.08)'},
+  abuso_sexual:{nome:'Abuso Sexual',cor:'#6b1a4a',bg:'rgba(107,26,74,.08)'},
+  negligencia_fisica:{nome:'Negligência Física',cor:'#8b4a00',bg:'rgba(139,74,0,.08)'},
+  negligencia_emocional:{nome:'Negligência Emocional',cor:'#7a5a00',bg:'rgba(122,90,0,.08)'},
+  violencia_domestica:{nome:'Violência Doméstica',cor:'#5a1a8a',bg:'rgba(90,26,138,.08)'},
+  substancias:{nome:'Substâncias no Lar',cor:'#1a4a6a',bg:'rgba(26,74,106,.08)'},
+  saude_mental:{nome:'Saúde Mental no Lar',cor:'#2a5a3a',bg:'rgba(42,90,58,.08)'},
+  separacao:{nome:'Separação Parental',cor:'#4a4a8a',bg:'rgba(74,74,138,.08)'},
+  prisao:{nome:'Encarceramento',cor:'#4a3a2a',bg:'rgba(74,58,42,.08)'},
+};
+
+const PERGUNTAS=[
+  {cat:'abuso_fisico',
+   texto:'Antes de completares 18 anos, um dos teus pais ou outro adulto em casa alguma vez te empurrou, agarrou, estapeou ou atirou algo contra ti? Ou bateu-te tão forte que ficaste com marcas ou feridas?',
+   sub:'Pensa na tua infância e adolescência'},
+  {cat:'abuso_emocional',
+   texto:'Algum dos teus pais ou outro adulto em casa te insultou, humilhou ou te fez sentir inferior, com medo ou em perigo?',
+   sub:'Insultos, ameaças, humilhações frequentes'},
+  {cat:'abuso_sexual',
+   texto:'Algum adulto ou pessoa pelo menos 5 anos mais velha do que tu alguma vez te tocou de forma sexual, ou te pediu para o/a tocar de forma sexual?',
+   sub:'Qualquer contacto ou tentativa de contacto de natureza sexual'},
+  {cat:'negligencia_fisica',
+   texto:'Com frequência não tinhas roupa suficiente para te vestir, não tinhas o que comer, não estavas protegida/o, ou os teus pais estavam demasiado intoxicados para cuidar de ti?',
+   sub:'Necessidades físicas básicas não asseguradas'},
+  {cat:'negligencia_emocional',
+   texto:'Com frequência sentias que ninguém na tua família te amava ou achava especial? Que as pessoas em casa não cuidavam umas das outras, não eram próximas ou não se apoiavam mutuamente?',
+   sub:'Ausência de calor emocional, vínculo ou suporte afectivo'},
+  {cat:'violencia_domestica',
+   texto:'A tua mãe (ou madrasta) era empurrada, agarrada, estapeada, chutada ou sujeita a qualquer outra forma de violência física repetida?',
+   sub:'Violência física entre adultos no lar'},
+  {cat:'substancias',
+   texto:'Algum dos teus pais tinha problemas com álcool ou drogas?',
+   sub:'Consumo problemático de substâncias por adultos em casa'},
+  {cat:'saude_mental',
+   texto:'Algum dos teus pais sofria de depressão, doença mental, ou algum deles tentou o suicídio?',
+   sub:'Doença mental diagnosticada ou tentativa de suicídio'},
+  {cat:'separacao',
+   texto:'Os teus pais alguma vez se separaram ou divorciaram?',
+   sub:'Separação permanente ou divórcio dos progenitores'},
+  {cat:'prisao',
+   texto:'Algum dos teus familiares foi preso ou esteve na prisão?',
+   sub:'Encarceramento de um membro do agregado familiar'},
+];
+
+let atual=0,respostas={};
+
+function iniciar(){
+  document.getElementById('cover').classList.add('hidden');
+  document.getElementById('quiz').classList.remove('hidden');
+  mostrarPergunta();
+}
+
+function mostrarPergunta(){
+  const p=PERGUNTAS[atual],total=PERGUNTAS.length;
+  document.getElementById('prog').style.width=((atual/total)*100)+'%';
+  document.getElementById('counter').textContent=`Pergunta ${atual+1} de ${total}`;
+  const cat=CATEGORIAS[p.cat];
+  const badge=document.getElementById('catBadge');
+  badge.textContent=cat.nome;
+  badge.style.background=cat.bg;
+  badge.style.color=cat.cor;
+  document.getElementById('qtext').textContent=p.texto;
+  document.getElementById('qsub').textContent=p.sub||'';
+  const r=respostas[atual];
+  document.getElementById('btnNext').disabled=r===undefined;
+  const btnSim=document.getElementById('btnSim');
+  const btnNao=document.getElementById('btnNao');
+  btnSim.className='opt-btn'+(r==='sim'?' selected-sim':'');
+  btnNao.className='opt-btn'+(r==='nao'?' selected-nao':'');
+}
+
+function selecionar(v){
+  respostas[atual]=v;
+  mostrarPergunta();
+}
+
+function anterior(){if(atual>0){atual--;mostrarPergunta();}}
+function proximo(){if(atual<PERGUNTAS.length-1){atual++;mostrarPergunta();}else{calcular();}}
+
+function calcular(){
+  document.getElementById('quiz').classList.add('hidden');
+  document.getElementById('sending').classList.remove('hidden');
+  const score=Object.values(respostas).filter(v=>v==='sim').length;
+  const cats={};
+  PERGUNTAS.forEach((p,i)=>{cats[p.cat]=respostas[i]==='sim';});
+  const nivel=score<=1?'Baixo':score<=3?'Moderado':score<=6?'Elevado':'Muito Elevado';
+  const resumo=`ACE Score: ${score}/10 — Risco ${nivel}`;
+  const dados={score,...cats};
+  enviar({quiz:'ace',resumo,dados,nome:NOME,id:CLIENT_ID},()=>mostrarResultado(score,cats,nivel));
+}
+
+function enviar(payload,cb){
+  const cbName='cb_'+Date.now();window[cbName]=()=>{cb();};
+  const s=document.createElement('script');
+  s.src=APPS_URL+'?callback='+cbName+'&data='+encodeURIComponent(JSON.stringify(payload));
+  s.onerror=()=>cb();document.head.appendChild(s);setTimeout(cb,6000);
+}
+
+function mostrarResultado(score,cats,nivel){
+  document.getElementById('sending').classList.add('hidden');
+  const el=document.getElementById('result');el.classList.remove('hidden');
+
+  const gradMap={0:'#2d6a4f',1:'#2d6a4f',2:'#7a6a00',3:'#7a6a00',4:'#8b3a00',5:'#8b1a1a',6:'#8b1a1a',7:'#6b0a0a',8:'#6b0a0a',9:'#5a0a0a',10:'#5a0a0a'};
+  const grad=gradMap[Math.min(score,10)];
+
+  const riskTexts={
+    'Baixo':'Score entre 0–1. Pouquíssimas adversidades identificadas na infância. Boa base de resiliência.',
+    'Moderado':'Score entre 2–3. Algumas adversidades presentes. Pode haver padrões relacionais ou somáticos subtis a explorar na terapia.',
+    'Elevado':'Score entre 4–6. Número significativo de ACEs. A investigação associa este nível a maior risco de doenças crónicas, dificuldades relacionais e padrões dissociativos. Trabalho terapêutico aprofundado recomendado.',
+    'Muito Elevado':'Score entre 7–10. Exposição cumulativa intensa. A carga alostática pode manifestar-se no corpo, nas relações e nos padrões emocionais. Abordagem trauma-informada é essencial.'
+  };
+  const riskColor={'Baixo':'#2d6a4f','Moderado':'#7a6a00','Elevado':'#8b3a00','Muito Elevado':'#8b1a1a'};
+  const riskBg={'Baixo':'#f0fff8','Moderado':'#fffbf0','Elevado':'#fff5f0','Muito Elevado':'#fff0f0'};
+
+  const catsHtml=Object.entries(cats).map(([k,v])=>`
+    <div class="cat-row">
+      <span class="cat-name">${CATEGORIAS[k].nome}</span>
+      <span class="cat-badge-r ${v?'badge-sim':'badge-nao'}">${v?'Sim':'Não'}</span>
+    </div>`).join('');
+
+  el.innerHTML=`
+    <div class="result-header" style="background:linear-gradient(135deg,${grad},#5a1a8a)">
+      ${NOME?`<div class="nome-tag">${NOME}</div>`:''}
+      <div class="result-score-circle">
+        <span class="result-score-num">${score}</span>
+        <span class="result-score-label">/ 10</span>
+      </div>
+      <div class="result-title">ACE Score — Risco ${nivel}</div>
+      <div class="result-sub">Experiências Adversas na Infância · Felitti et al., 1998</div>
+    </div>
+    <div class="risk-box" style="background:${riskBg[nivel]};border-left:4px solid ${riskColor[nivel]}">
+      <strong style="color:${riskColor[nivel]}">${nivel}</strong><br>
+      <span style="color:#4a4a5a">${riskTexts[nivel]}</span>
+    </div>
+    <div class="result-card">
+      <div class="card-title">Categorias identificadas</div>
+      ${catsHtml}
+    </div>
+    <div class="result-card" style="text-align:center;color:#8b3a3a;font-size:13px">✓ Resultado enviado à tua terapeuta</div>`;
+}
+
+if(NOME) iniciar();
+</script>
+</body>
+</html>
