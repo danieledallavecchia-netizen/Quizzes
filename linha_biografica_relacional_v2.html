@@ -709,8 +709,9 @@ function enviarFicha() {
 
   const payload = {
     quiz: 'linha_biografica_relacional',
-    nome: NOME || CLIENT_ID,
-    id:   URL_ID || CLIENT_ID,
+    nome:        NOME       || '',
+    id_cliente:  URL_ID     || '',
+    timestamp:   new Date().toISOString(),
     resumo: buildResumo(data),
     dados: data
   };
