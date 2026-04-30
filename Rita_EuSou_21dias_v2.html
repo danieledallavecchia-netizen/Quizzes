@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eu Sou — 21 Dias · Rita</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --gold:#C9A84C;
+  --gold-light:#E8D5A0;
+  --gold-pale:#FBF5E6;
+  --deep:#1A1208;
+  --mid:#3D2C10;
+  --soft:#7A6040;
+  --white:#FEFCF7;
+}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--deep);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px 16px;
+}
+
+.card{
+  background:var(--white);
+  border-radius:20px;
+  max-width:480px;
+  width:100%;
+  overflow:hidden;
+  box-shadow:0 24px 80px rgba(0,0,0,.5);
+}
+
+/* HEADER */
+.header{
+  background:linear-gradient(160deg,#1A1208 0%,#3D2C10 50%,#1A1208 100%);
+  padding:36px 32px 28px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.header::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(201,168,76,.18) 0%,transparent 65%);
+}
+.ornament{
+  font-size:11px;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  color:var(--gold);
+  opacity:.8;
+  margin-bottom:12px;
+  display:block;
+  position:relative;
+}
+.ornament::before,.ornament::after{
+  content:'—';
+  margin:0 8px;
+  opacity:.5;
+}
+.header h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:38px;
+  font-weight:300;
+  color:var(--gold-light);
+  letter-spacing:.04em;
+  line-height:1;
+  position:relative;
+}
+.header h1 em{
+  display:block;
+  font-size:15px;
+  font-style:normal;
+  font-family:'DM Sans',sans-serif;
+  font-weight:300;
+  color:rgba(232,213,160,.55);
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  margin-top:6px;
+}
+
+/* DIAS BADGE */
+.days-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(201,168,76,.15);
+  border:1px solid rgba(201,168,76,.3);
+  border-radius:99px;
+  padding:5px 14px;
+  margin-top:16px;
+  position:relative;
+}
+.days-badge span{
+  font-size:11.5px;
+  color:var(--gold);
+  letter-spacing:.08em;
+}
+.days-badge strong{
+  font-weight:600;
+  color:var(--gold-light);
+}
+
+/* BODY */
+.body{
+  padding:28px 28px 8px;
+}
+
+/* AFIRMAÇÃO */
+.afirmacao{
+  border-left:2.5px solid var(--gold-light);
+  padding:16px 0 16px 18px;
+  margin-bottom:4px;
+  position:relative;
+}
+.afirmacao::before{
+  content:attr(data-num);
+  position:absolute;
+  left:-11px;
+  top:18px;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  background:var(--gold);
+  color:var(--deep);
+  font-size:10px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'DM Sans',sans-serif;
+}
+
+/* linha de quando + botão */
+.afirmacao-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:7px;
+}
+.afirmacao-texto{
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px;
+  font-weight:400;
+  color:var(--deep);
+  line-height:1.3;
+}
+.afirmacao-texto em{
+  font-style:italic;
+  color:var(--mid);
+}
+.afirmacao-quando{
+  font-size:13px;
+  color:var(--soft);
+  letter-spacing:.04em;
+  font-weight:400;
+}
+
+/* Botão significado */
+.btn-sig{
+  flex-shrink:0;
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  border:1.5px solid var(--gold);
+  background:transparent;
+  cursor:pointer;
+  font-size:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--gold);
+  transition:all .2s;
+}
+.btn-sig:hover{opacity:.75;}
+.btn-sig.active{
+  background:var(--gold);
+  color:var(--white);
+}
+
+/* Painel de significado */
+.sig-panel{
+  display:none;
+  margin-top:10px;
+  padding:12px 14px;
+  border-left:3px solid var(--gold-light);
+  border-radius:0 8px 8px 0;
+  font-size:13px;
+  line-height:1.75;
+  color:var(--mid);
+  background:rgba(201,168,76,.06);
+  font-style:italic;
+}
+.sig-panel.open{display:block;}
+
+.divider{
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold-light),transparent);
+  margin:4px 0;
+  opacity:.35;
+}
+
+/* PROTOCOLO */
+.protocolo{
+  background:var(--gold-pale);
+  border-radius:12px;
+  padding:18px 20px;
+  margin:20px 28px 0;
+}
+.protocolo h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:15px;
+  font-weight:600;
+  color:var(--mid);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  margin-bottom:12px;
+}
+.prow{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  margin-bottom:9px;
+  font-size:12.5px;
+  color:var(--mid);
+  line-height:1.5;
+}
+.prow:last-child{margin-bottom:0;}
+.prow .momento{
+  flex-shrink:0;
+  font-weight:600;
+  color:var(--gold);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  padding-top:1px;
+  min-width:68px;
+}
+.prow .acao{color:var(--soft);}
+.prow .acao strong{color:var(--mid);font-weight:600;}
+
+/* ESPELHO */
+.espelho{
+  margin:16px 28px 0;
+  background:linear-gradient(135deg,#f7f0e3,#fefcf7);
+  border:1px solid rgba(201,168,76,.3);
+  border-radius:12px;
+  padding:16px 18px;
+}
+.espelho h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:14px;
+  font-weight:600;
+  color:var(--mid);
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+.espelho p{font-size:12.5px;color:var(--soft);line-height:1.65;}
+.espelho .frase-espelho{
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px;
+  font-style:italic;
+  color:var(--mid);
+  margin:8px 0 6px;
+  padding:8px 12px;
+  background:rgba(201,168,76,.08);
+  border-radius:7px;
+  line-height:1.4;
+}
+
+/* FOOTER */
+.footer{padding:20px 28px 28px;text-align:center;}
+.footer p{font-size:11px;color:#B09878;line-height:1.6;font-style:italic;}
+.footer .source{
+  font-size:10.5px;
+  color:#C9A84C;
+  letter-spacing:.06em;
+  margin-top:8px;
+  display:block;
+  opacity:.7;
+}
+
+@media print{
+  body{background:#fff;padding:0;}
+  .card{box-shadow:none;border-radius:0;max-width:100%;}
+  .btn-sig{display:none;}
+  .sig-panel{display:block!important;}
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <!-- HEADER -->
+  <div class="header">
+    <span class="ornament">Protocolo Pessoal</span>
+    <h1>Eu Sou
+      <em>21 Dias de Ancoragem Interior</em>
+    </h1>
+    <div class="days-badge">
+      <span>durante <strong>21 dias</strong></span>
+    </div>
+  </div>
+
+  <!-- AFIRMAÇÕES -->
+  <div class="body">
+
+    <div class="afirmacao" data-num="1">
+      <div class="afirmacao-texto">Eu Sou a Presença de Deus em Ação</div>
+      <div class="afirmacao-bottom">
+        <div class="afirmacao-quando">🌅 Manhã — ao acordar, antes do telemóvel</div>
+        <button class="btn-sig" onclick="toggleSig(this,'sig1')" title="Ver significado">ℹ</button>
+      </div>
+      <div class="sig-panel" id="sig1">Quando dizes estas palavras ao acordar, estás a reconhecer que antes de qualquer papel — mãe, profissional, parceira — a tua essência mais profunda é divina e está em movimento. Não precisas de fazer nada para merecer este estado. Ele já existe em ti.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="afirmacao" data-num="2">
+      <div class="afirmacao-texto">Eu Sou Vida, Opulência e Verdade, <em>já manifestadas em Mim</em></div>
+      <div class="afirmacao-bottom">
+        <div class="afirmacao-quando">🪞 Espelho — ao lavar o rosto, olhando nos próprios olhos</div>
+        <button class="btn-sig" onclick="toggleSig(this,'sig2')" title="Ver significado">ℹ</button>
+      </div>
+      <div class="sig-panel" id="sig2">O espelho não é apenas vidro — é o primeiro encontro do dia com a tua própria presença. "Já manifestadas em Mim" significa que a vida plena, a abundância e a verdade não são algo a conquistar. Estão dentro, esperando ser reconhecidas. Este momento é de reconhecimento, não de avaliação.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="afirmacao" data-num="3">
+      <div class="afirmacao-texto">Eu Sou a plena alegria e gratidão <em>que sinto neste instante</em></div>
+      <div class="afirmacao-bottom">
+        <div class="afirmacao-quando">☀️ Meio-dia — numa pausa de silêncio</div>
+        <button class="btn-sig" onclick="toggleSig(this,'sig3')" title="Ver significado">ℹ</button>
+      </div>
+      <div class="sig-panel" id="sig3">A meio do dia, quando a mente está ocupada com o mundo exterior, esta afirmação traz-te de volta a ti. A alegria não depende do que o outro fez ou não fez. Existe agora, neste instante, independentemente de qualquer circunstância exterior. Respirar fundo antes de dizer ajuda a sentir.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="afirmacao" data-num="4">
+      <div class="afirmacao-texto">Eu Sou a Perfeição do meu mundo, <em>auto-sustentada</em></div>
+      <div class="afirmacao-bottom">
+        <div class="afirmacao-quando">🌙 Noite — antes de dormir</div>
+        <button class="btn-sig" onclick="toggleSig(this,'sig4')" title="Ver significado">ℹ</button>
+      </div>
+      <div class="sig-panel" id="sig4">Encerrar o dia com esta afirmação é um acto de gentileza contigo mesma. "Auto-sustentada" é a palavra-chave: o teu equilíbrio, o teu valor e a tua paz não dependem de nenhuma pessoa exterior para se manterem. Levas esta verdade para o sono — e o inconsciente continua a integrá-la.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="afirmacao" data-num="5">
+      <div class="afirmacao-texto">Eu Sou a Ressurreição e a Vida</div>
+      <div class="afirmacao-bottom">
+        <div class="afirmacao-quando">✨ Sempre que surgir comparação ou dúvida — 3× em silêncio</div>
+        <button class="btn-sig" onclick="toggleSig(this,'sig5')" title="Ver significado">ℹ</button>
+      </div>
+      <div class="sig-panel" id="sig5">Quando o pensamento "não sou suficiente" ou "o outro pode encontrar alguém melhor" surgir — não te censures. Simplesmente diz estas palavras três vezes, em silêncio. A Ressurreição não é algo que acontece depois da morte. Acontece no instante em que escolhes regressar a ti, em vez de te perderes no pensamento.</div>
+    </div>
+
+  </div>
+
+  <!-- PROTOCOLO -->
+  <div class="protocolo">
+    <h3>Como fazer</h3>
+    <div class="prow">
+      <span class="momento">🌅 Manhã</span>
+      <span class="acao">Afirmação <strong>1</strong> — 3 vezes em voz alta</span>
+    </div>
+    <div class="prow">
+      <span class="momento">🪞 Espelho</span>
+      <span class="acao">Afirmação <strong>2</strong> — uma vez, olhando nos próprios olhos</span>
+    </div>
+    <div class="prow">
+      <span class="momento">☀️ Meio-dia</span>
+      <span class="acao">Afirmação <strong>3</strong> — 3 vezes em silêncio</span>
+    </div>
+    <div class="prow">
+      <span class="momento">🌙 Noite</span>
+      <span class="acao">Afirmação <strong>4</strong> — 3 vezes em voz alta</span>
+    </div>
+    <div class="prow">
+      <span class="momento">✨ Antídoto</span>
+      <span class="acao">Afirmação <strong>5</strong> — sempre que surgir dúvida ou comparação</span>
+    </div>
+  </div>
+
+  <!-- ESPELHO -->
+  <div class="espelho">
+    <h3>Exercício do Espelho — 21 dias</h3>
+    <p>Todos os dias, ao mesmo momento. Olhar nos próprios olhos. Dizer com voz audível:</p>
+    <div class="frase-espelho">"Eu Sou Vida, Opulência e Verdade, já manifestadas em Mim."</div>
+    <p>Se não conseguires dizer — fica só a olhar. Sem pressão. Uma vez dita com presença vale mais do que dez vezes mecânicas.</p>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>Estas palavras não são apenas afirmações.<br>São o reconhecimento de que o que procuras fora já existe dentro.</p>
+    <span class="source">Baseado no Livro de Ouro de Saint Germain</span>
+  </div>
+
+</div>
+
+<script>
+function toggleSig(btn, id){
+  var panel = document.getElementById(id);
+  var open = panel.classList.toggle('open');
+  btn.classList.toggle('active', open);
+}
+</script>
+
+</body>
+</html>
