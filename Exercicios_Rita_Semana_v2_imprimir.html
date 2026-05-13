@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exercícios da semana · Ana Rita (versão para imprimir)</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ec; --surface: #fff; --surface2: #f0ece4; --border: #ddd8cc;
+    --ink: #1a1710; --muted: #6a6050;
+    --accent: #5a3a80; --rita: #b58c5b; --sage: #4a7058; --rust: #8a3018; --gold: #c8960a;
+    --linha: #c8b48c;
+    --shadow: 0 2px 6px rgba(0,0,0,0.06);
+  }
+  [data-theme="dark"] {
+    --bg: #1a1710; --surface: #252018; --surface2: #2f2920; --border: #3d3528;
+    --ink: #f0ece4; --muted: #a89878;
+    --accent: #b090d8; --rita: #d4a878; --sage: #6a9078; --rust: #c85838; --gold: #e0b840;
+    --linha: #6a5538;
+    --shadow: 0 2px 6px rgba(0,0,0,0.4);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: 'IBM Plex Sans', sans-serif; font-size: 16px; line-height: 1.7; transition: background .25s, color .25s; min-height: 100vh; }
+  .page { max-width: 920px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  header.cover { text-align: center; border-bottom: 3px solid var(--accent); padding-bottom: 1.5rem; margin-bottom: 2rem; position: relative; }
+  header.cover .badge { display: inline-block; background: var(--rita); color: #fff; padding: .35rem 1rem; border-radius: 4px; font-size: .85rem; font-weight: 600; letter-spacing: .1em; margin-bottom: .8rem; }
+  header.cover h1 { font-family: 'Lora', serif; font-size: 2rem; font-weight: 600; margin-bottom: .4rem; }
+  header.cover .subtitle { color: var(--muted); font-size: 1rem; font-style: italic; }
+  header.cover .nota-versao { display: inline-block; background: var(--surface2); color: var(--muted); padding: .25rem .8rem; border-radius: 4px; font-size: .82rem; margin-top: .6rem; }
+  .theme-toggle { position: absolute; top: 0; right: 0; background: var(--surface); border: 1px solid var(--border); color: var(--ink); padding: .5rem .8rem; border-radius: 6px; cursor: pointer; font-size: .88rem; box-shadow: var(--shadow); }
+
+  .intro { background: var(--surface); border-left: 4px solid var(--sage); padding: 1.3rem 1.6rem; border-radius: 0 8px 8px 0; margin-bottom: 2.2rem; box-shadow: var(--shadow); }
+  .intro p { margin-bottom: .7rem; }
+  .intro p:last-child { margin-bottom: 0; }
+
+  .toolbar { display: flex; gap: .6rem; flex-wrap: wrap; margin-bottom: 1.8rem; justify-content: center; }
+  .btn { background: var(--surface); border: 1px solid var(--border); color: var(--ink); padding: .55rem 1rem; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: .92rem; box-shadow: var(--shadow); }
+  .btn:hover { background: var(--surface2); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  details.exercicio { background: var(--surface); border: 1px solid var(--border); border-left: 6px solid var(--accent); border-radius: 8px; margin-bottom: 1.5rem; box-shadow: var(--shadow); overflow: hidden; }
+  details.exercicio > summary { padding: 1.2rem 1.6rem; cursor: pointer; font-family: 'Lora', serif; font-size: 1.3rem; font-weight: 600; color: var(--accent); text-align: center; position: relative; list-style: none; }
+  details.exercicio > summary::-webkit-details-marker { display: none; }
+  details.exercicio > summary::before { content: '▸'; display: inline-block; margin-right: .8rem; color: var(--muted); font-size: .85em; transition: transform .2s; }
+  details.exercicio[open] > summary::before { transform: rotate(90deg); }
+  details.exercicio > .body { padding: 0 1.6rem 1.6rem; }
+  details.exercicio.rust { border-left-color: var(--rust); }
+  details.exercicio.rust > summary { color: var(--rust); }
+  details.exercicio.sage { border-left-color: var(--sage); }
+  details.exercicio.sage > summary { color: var(--sage); }
+
+  h3 { font-family: 'Lora', serif; font-size: 1.15rem; color: var(--accent); margin: 1.5rem 0 .6rem; text-align: center; }
+  h3:first-child { margin-top: 0; }
+  h4 { font-family: 'Lora', serif; font-size: 1rem; color: var(--rita); margin: 1.2rem 0 .4rem; }
+  p { margin-bottom: .8rem; }
+  ul, ol { margin-left: 1.5rem; margin-bottom: .9rem; }
+  li { margin-bottom: .35rem; }
+  strong { color: var(--ink); }
+
+  .passo { display: grid; grid-template-columns: 36px 1fr; gap: .8rem; align-items: flex-start; background: var(--surface2); padding: .8rem 1rem; border-radius: 6px; margin-bottom: .7rem; }
+  .passo-num { background: var(--accent); color: #fff; width: 28px; height: 28px; border-radius: 50%; text-align: center; line-height: 28px; font-weight: 600; font-size: .85rem; margin-top: 2px; }
+  .passo.rust .passo-num { background: var(--rust); }
+  .passo.sage .passo-num { background: var(--sage); }
+
+  .destaque { background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%); padding: 1rem 1.3rem; border-radius: 8px; border-left: 4px solid var(--rita); margin: 1rem 0; }
+  .frase { text-align: center; font-family: 'Lora', serif; font-style: italic; font-size: 1.08rem; color: var(--accent); padding: 1rem 1.5rem; margin: 1rem 0; background: var(--surface2); border-radius: 8px; line-height: 1.7; }
+  .sugestao { font-size: .92rem; color: var(--muted); font-style: italic; margin: .2rem 0 .6rem; padding: 0 .4rem; }
+
+  .svg-wrap { background: #fffdf6; padding: 1rem; border-radius: 8px; border: 1px solid var(--border); overflow-x: auto; text-align: center; }
+  svg.arvore { max-width: 100%; height: auto; }
+  svg.arvore text { font-family: 'IBM Plex Sans', sans-serif; }
+
+  /* === PESSOA-CARD (para escrever à mão) === */
+  .pessoa-card { background: var(--surface); border: 1px solid var(--border); border-left: 5px solid var(--accent); border-radius: 8px; padding: 1.1rem 1.3rem; margin: 1.2rem 0; box-shadow: var(--shadow); display: grid; grid-template-columns: 130px 1fr; gap: 1.2rem; align-items: flex-start; page-break-inside: avoid; }
+  .pessoa-card .figura { text-align: center; }
+  .pessoa-card .figura svg { width: 90px; height: 110px; }
+  .pessoa-card .figura .nome-pessoa { display: block; font-family: 'Lora', serif; font-size: 1.05rem; color: var(--accent); font-weight: 600; margin-top: .35rem; }
+  .pessoa-card .figura .nome-pessoa-sub { display: block; font-size: .78rem; color: var(--muted); font-style: italic; margin-top: .25rem; }
+  .pessoa-card .campos { flex: 1; }
+  .pessoa-card .campo { margin-bottom: .9rem; }
+  .pessoa-card .campo:last-child { margin-bottom: 0; }
+  .pessoa-card .campo-label { font-family: 'Lora', serif; font-size: .95rem; font-weight: 600; color: var(--rita); margin-bottom: .25rem; letter-spacing: .03em; }
+  .pessoa-card.azul { border-left-color: var(--accent); }
+  .pessoa-card.azul .campo-label { color: var(--accent); }
+  .pessoa-card.terra { border-left-color: var(--rita); }
+  .pessoa-card.terra .campo-label { color: var(--rita); }
+  .pessoa-card.sage { border-left-color: var(--sage); }
+  .pessoa-card.sage .campo-label { color: var(--sage); }
+  .pessoa-card.gold { border-left-color: var(--gold); }
+  .pessoa-card.gold .campo-label { color: var(--gold); }
+
+  /* === ESPAÇO EM BRANCO PARA ESCREVER À MÃO (sem linhas) === */
+  .espaco { background: transparent; border-bottom: 1px dashed var(--border); margin-bottom: 1rem; padding-bottom: .3rem; }
+  .espaco-2 { min-height: 3.2em; }
+  .espaco-3 { min-height: 4.8em; }
+  .espaco-4 { min-height: 6.4em; }
+  .espaco-5 { min-height: 8em; }
+  /* Caixa em branco — espaço para a cliente desenhar o bonequinho dela */
+  .caixa-desenho { width: 96px; height: 120px; border: 1px dashed var(--border); border-radius: 8px; margin: 0 auto .35rem; background: transparent; position: relative; }
+  .caixa-desenho::after { content: '✎ desenhe aqui'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: .72rem; color: var(--muted); font-style: italic; opacity: .55; pointer-events: none; }
+
+  /* Bonequinhos com cabelo (silhuetas humanas) — só usados no esquema do topo */
+  .bonequinho { width: 100px; height: 130px; }
+  .bonequinho line, .bonequinho path, .bonequinho circle { fill: #fff; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .bonequinho .preencher { fill: #fef6e3; }
+
+  .secao-tema { text-align: center; font-family: 'Lora', serif; font-size: 1.1rem; color: var(--rita); margin: 2rem 0 1rem; padding-bottom: .4rem; border-bottom: 1px dashed var(--border); }
+
+  footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); text-align: center; color: var(--muted); font-size: .88rem; font-style: italic; }
+
+  @media print {
+    body { background: #fff; color: #000; font-size: 11pt; }
+    .toolbar, .theme-toggle { display: none !important; }
+    details.exercicio { page-break-inside: auto; border-color: #999; box-shadow: none; }
+    details > .body { display: block !important; }
+    details > summary::before { display: none; }
+    .svg-wrap { background: #fff; }
+    .pessoa-card { box-shadow: none; }
+    .linhas { background-image: repeating-linear-gradient(transparent, transparent calc(1.6em - 1px), #999 calc(1.6em - 1px), #999 1.6em); }
+  }
+  @media (max-width: 700px) {
+    header.cover h1 { font-size: 1.5rem; }
+    .theme-toggle { position: static; margin-top: 1rem; }
+    .page { padding: 1.2rem 1rem 3rem; }
+    .pessoa-card { grid-template-columns: 1fr; }
+    .pessoa-card .figura svg { width: 70px; height: 85px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="cover">
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Modo escuro</button>
+    <span class="badge">EXERCÍCIOS DA SEMANA</span>
+    <h1>Três ferramentas de libertação</h1>
+    <p class="subtitle">Para fazer ao seu ritmo, entre hoje e a próxima sessão</p>
+    <span class="nota-versao">Versão para imprimir e escrever à mão</span>
+  </header>
+
+  <div class="intro">
+    <p><strong>Ana Rita,</strong></p>
+    <p>Estes três exercícios complementam-se. Não há ordem certa nem prazo — faça-os quando o corpo pedir. Pode demorar uma hora ou uma semana, está bem assim.</p>
+    <p>O primeiro é mais largo (a sua história), o segundo é mais profundo (o que ficou guardado) e o terceiro é mais quotidiano (o que está a acontecer agora). Cada um trabalha numa camada diferente.</p>
+    <p>Não se preocupe se algum exercício mexer com bastante coisa — é exactamente para isso que servem. Estarei consigo na próxima sessão para acolher o que emergir.</p>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn" onclick="abrirTodas()">📂 Abrir todos</button>
+    <button class="btn" onclick="fecharTodas()">📁 Fechar todos</button>
+    <button class="btn primary" onclick="window.print()">🖨️ Imprimir</button>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- EXERCÍCIO 1 — ÁRVORE GENEALÓGICA PSÍQUICA -->
+  <!-- ============================================== -->
+  <details class="exercicio" open>
+    <summary>1 · Árvore genealógica psíquica</summary>
+    <div class="body">
+
+      <h3>O que vai fazer</h3>
+      <p>Desenhar a sua árvore genealógica até onde a memória chegar — não a árvore biológica formal, mas a <strong>psíquica</strong>: o que cada pessoa lhe trouxe (qualidades), o que cada uma carregava (defeitos), e uma breve história de quem foram. O objectivo é começar a ver como os padrões emocionais vêm de longe — e isso, por si só, alivia.</p>
+
+      <h3>Como fazer</h3>
+
+      <div class="passo">
+        <div class="passo-num">1</div>
+        <div>Pegue numa folha A4 ou maior (pode juntar duas). Use lápis ou caneta suave — vai escrever bastante.</div>
+      </div>
+
+      <div class="passo">
+        <div class="passo-num">2</div>
+        <div>Desenhe um <strong>bonequinho que a represente</strong> em baixo, ao centro. Pode ser uma silhueta simples, um traço, ou um símbolo que sinta seu. Escreva o seu nome ao lado.</div>
+      </div>
+
+      <div class="passo">
+        <div class="passo-num">3</div>
+        <div>Puxe um traço para cima. À esquerda desenhe o seu <strong>pai</strong>, à direita a sua <strong>mãe</strong>. Ao lado de cada um, anote: <em>qualidades · defeitos · breve biografia</em>.</div>
+      </div>
+
+      <div class="passo">
+        <div class="passo-num">4</div>
+        <div>Faça o mesmo para os <strong>avós</strong> (subindo a partir do pai e da mãe). E continue até <strong>onde a memória conseguir chegar</strong> — bisavós, se se lembrar de algum.</div>
+      </div>
+
+      <div class="passo">
+        <div class="passo-num">5</div>
+        <div>Não tem de saber tudo. Onde não souber, escreva: <em>"não sei"</em>. Esse <em>"não sei"</em> também é informação. Pode até reparar nos silêncios que existem na família — quem não se fala de, quem nunca foi mencionado.</div>
+      </div>
+
+      <h3>Esquema visual para visualizar antes de começar</h3>
+
+      <div class="svg-wrap">
+        <svg class="arvore" viewBox="0 0 820 600" xmlns="http://www.w3.org/2000/svg" aria-label="Esquema da árvore genealógica psíquica">
+          <defs>
+            <style>
+              .figura { stroke: #5a3a80; stroke-width: 1.8; fill: #fff; }
+              .ligacao { stroke: #b58c5b; stroke-width: 1.6; fill: none; stroke-linecap: round; }
+              .caixa { fill: #fffdf6; stroke: #ddd8cc; stroke-width: 1; }
+              .label { font-size: 13px; fill: #1a1710; font-weight: 600; }
+              .sub { font-size: 11px; fill: #6a6050; font-style: italic; }
+              .geracao { font-size: 11px; fill: #b58c5b; font-weight: 600; letter-spacing: .08em; }
+            </style>
+          </defs>
+
+          <text class="geracao" x="20" y="90">AVÓS</text>
+          <text class="geracao" x="20" y="280">PAIS</text>
+          <text class="geracao" x="20" y="470">EU</text>
+
+          <g transform="translate(110,80)">
+            <circle class="figura" cx="0" cy="0" r="14"/>
+            <path class="figura" d="M -14 14 L -14 40 L 14 40 L 14 14 Z"/>
+            <rect class="caixa" x="-50" y="50" width="100" height="35" rx="4"/>
+            <text class="label" x="0" y="65" text-anchor="middle">Avô paterno</text>
+            <text class="sub" x="0" y="79" text-anchor="middle">(nome)</text>
+          </g>
+          <g transform="translate(260,80)">
+            <circle class="figura" cx="0" cy="0" r="14"/>
+            <path class="figura" d="M -14 14 L -14 40 L 14 40 L 14 14 Z"/>
+            <rect class="caixa" x="-50" y="50" width="100" height="35" rx="4"/>
+            <text class="label" x="0" y="65" text-anchor="middle">Avó paterna</text>
+            <text class="sub" x="0" y="79" text-anchor="middle">(nome)</text>
+          </g>
+          <g transform="translate(560,80)">
+            <circle class="figura" cx="0" cy="0" r="14"/>
+            <path class="figura" d="M -14 14 L -14 40 L 14 40 L 14 14 Z"/>
+            <rect class="caixa" x="-50" y="50" width="100" height="35" rx="4"/>
+            <text class="label" x="0" y="65" text-anchor="middle">Avô materno</text>
+            <text class="sub" x="0" y="79" text-anchor="middle">(nome)</text>
+          </g>
+          <g transform="translate(710,80)">
+            <circle class="figura" cx="0" cy="0" r="14"/>
+            <path class="figura" d="M -14 14 L -14 40 L 14 40 L 14 14 Z"/>
+            <rect class="caixa" x="-50" y="50" width="100" height="35" rx="4"/>
+            <text class="label" x="0" y="65" text-anchor="middle">Avó materna</text>
+            <text class="sub" x="0" y="79" text-anchor="middle">(nome)</text>
+          </g>
+
+          <path class="ligacao" d="M 110 170 L 110 200 L 185 200 L 185 235"/>
+          <path class="ligacao" d="M 260 170 L 260 200 L 185 200 L 185 235"/>
+          <path class="ligacao" d="M 560 170 L 560 200 L 635 200 L 635 235"/>
+          <path class="ligacao" d="M 710 170 L 710 200 L 635 200 L 635 235"/>
+
+          <g transform="translate(185,265)">
+            <circle class="figura" cx="0" cy="0" r="16"/>
+            <path class="figura" d="M -16 16 L -16 48 L 16 48 L 16 16 Z"/>
+            <rect class="caixa" x="-60" y="58" width="120" height="35" rx="4"/>
+            <text class="label" x="0" y="73" text-anchor="middle">Pai</text>
+            <text class="sub" x="0" y="87" text-anchor="middle">(nome)</text>
+          </g>
+          <g transform="translate(635,265)">
+            <circle class="figura" cx="0" cy="0" r="16"/>
+            <path class="figura" d="M -16 16 L -16 48 L 16 48 L 16 16 Z"/>
+            <rect class="caixa" x="-60" y="58" width="120" height="35" rx="4"/>
+            <text class="label" x="0" y="73" text-anchor="middle">Mãe</text>
+            <text class="sub" x="0" y="87" text-anchor="middle">(nome)</text>
+          </g>
+
+          <path class="ligacao" d="M 185 365 L 185 410 L 410 410 L 410 435"/>
+          <path class="ligacao" d="M 635 365 L 635 410 L 410 410 L 410 435"/>
+
+          <g transform="translate(410,470)">
+            <circle class="figura" cx="0" cy="0" r="20" fill="#fef6e3"/>
+            <path class="figura" d="M -20 20 L -20 60 L 20 60 L 20 20 Z" fill="#fef6e3"/>
+            <rect class="caixa" x="-70" y="70" width="140" height="40" rx="4" fill="#fef6e3"/>
+            <text class="label" x="0" y="87" text-anchor="middle" style="fill:#5a3a80">EU · Ana Rita</text>
+            <text class="sub" x="0" y="103" text-anchor="middle">(qualidades · forças)</text>
+          </g>
+        </svg>
+      </div>
+
+      <p style="text-align:center; color:var(--muted); font-size:.9rem; font-style:italic; margin-top:.5rem;">
+        Esquema visual para orientação. Faça a sua à mão, em papel, com o seu jeito.
+      </p>
+
+      <h3 class="secao-tema">Para cada pessoa, escreva ao lado do bonequinho</h3>
+
+      <p class="sugestao" style="text-align:center;">Cada card tem o bonequinho dessa pessoa e 3 zonas para escrever à mão. Em cada zona, há uma sugestão de pistas — não é obrigatório seguir, é só inspiração.</p>
+
+      <!-- ========== EU · Ana Rita ========== -->
+      <div class="pessoa-card gold">
+        <div class="figura">
+          <div class="caixa-desenho" aria-label="Espaço para desenhar o bonequinho"></div>
+          <span class="nome-pessoa">EU · Ana Rita</span>
+          
+        </div>
+        <div class="campos">
+          <div class="campo">
+            <div class="campo-label">Qualidades</div>
+            <div class="sugestao">Pistas: o que reconheço de bom em mim · dons · capacidades · o que outros já me elogiaram</div>
+            <div class="espaco espaco-3"></div>
+          </div>
+          <div class="campo">
+            <div class="campo-label">Defeitos / Onde sinto que posso crescer</div>
+            <div class="sugestao">Pistas: o que ainda me custa · padrões que se repetem · onde costumo travar</div>
+            <div class="espaco espaco-3"></div>
+          </div>
+          <div class="campo">
+            <div class="campo-label">Breve biografia</div>
+            <div class="sugestao">Pistas: pontos centrais da minha vida · momentos que me formaram</div>
+            <div class="espaco espaco-4"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== PAI ========== -->
+      <div class="pessoa-card azul">
+        <div class="figura">
+          <div class="caixa-desenho" aria-label="Espaço para desenhar o bonequinho"></div>
+          <span class="nome-pessoa">Pai</span>
+          <span class="nome-pessoa-sub">(nome)</span>
+        </div>
+        <div class="campos">
+          <div class="campo">
+            <div class="campo-label">Qualidades</div>
+            <div class="sugestao">Pistas: o que admiro · o que herdei de bom · o que ele tem de luz</div>
+            <div class="espaco espaco-3"></div>
+          </div>
+          <div class="campo">
+            <div class="campo-label">Defeitos</div>
+            <div class="sugestao">Pistas: o que me custou nele · feridas que ele carrega · sombras</div>
+            <div class="espaco espaco-3"></div>
+          </div>
+          <div class="campo">
+            <div class="campo-label">Breve biografia</div>
+            <div class="sugestao">Pistas: de onde veio · que vida teve · o que viveu na infância</div>
+            <div class="espaco espaco-4"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== MÃE ========== -->
+      <div class="pessoa-card terra">
+        <div class="figura">
+          <div class="caixa-desenho" aria-label="Espaço para desenhar o bonequinho"></div>
+          <span class="nome-pessoa">Mãe</span>
+          <span class="nome-pessoa-sub">(nome)</span>
+        </div>
+        <div class="campos">
+          <div class="campo">
+            <div class="campo-label">Qualidades</div>
+            <div class="sugestao">Pistas: o que admiro · o que herdei de bom · o que ela tem de luz</div>
+            <div class="espaco espaco-3"></div>
+          </div>
+          <div class="campo">
+            <div class="campo-label">Defeitos</div>
+            <div class="sugestao">Pistas: o que me custou nela · feridas que ela carrega · sombras</div>
+            <div class="espaco espaco-3"></div>
+          </div>
+          <div class="campo">
+            <div class="campo-label">Breve biografia</div>
+            <div class="sugestao">Pistas: de onde veio · que vida teve · o que viveu na infância</div>
+            <div class="espaco espaco-4"></div>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="secao-tema">Avós</h3>
+
+      <!-- ========== AVÔ PATERNO ========== -->
+      <div class="pessoa-card sage">
+        <div class="figura">
+          <div class="caixa-desenho" aria-label="Espaço para desenhar o bonequinho"></div>
+          <span class="nome-pessoa">Avô paterno</span>
+          <span class="nome-pessoa-sub">(nome)</span>
+        </div>
+        <div class="campos">
+          <div class="campo">
+            <div class="campo-label">Qualidades</div>
+            <div class="espaco espaco-2"></div>
+          </div>
+          <div class="campo">
+            <div class="campo-label">Defeitos</div>
+            <div class="espaco espaco-2"></div>
+          </div>
+          <div class="campo">
+            <div class="campo-label">Breve biografia</div>
+            <div class="espaco espaco-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== AVÓ PATERNA ========== -->
+      <div class="pessoa-card sage">
+        <div class="figura">
+          <div class="caixa-desenho" aria-label="Espaço para desenhar o bonequinho"></div>
+          <span class="nome-pessoa">Avó paterna</span>
+          <span class="nome-pessoa-sub">(nome)</span>
+        </div>
+        <div class="campos">
+          <div class="campo">
+            <div class="campo-label">Qualidades</div>
+            <div class="espaco espaco-2"></div>
+          </div>
+          <div class="campo">
+            <div class="campo-label">Defeitos</div>
+            <div class="espaco espaco-2"></div>
+          </div>
+          <div class="campo">
+            <div class="campo-label">Breve biografia</div>
+            <div class="espaco espaco-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== AVÔ MATERNO ========== -->
+      <div class="pessoa-card sage">
+        <div class="figura">
+          <div class="caixa-desenho" aria-label="Espaço para desenhar o bonequinho"></div>
+          <span class="nome-pessoa">Avô materno</span>
+          <span class="nome-pessoa-sub">(nome)</span>
+        </div>
+        <div class="campos">
+          <div class="campo">
+            <div class="campo-label">Qualidades</div>
+            <div class="espaco espaco-2"></div>
+          </div>
+          <div class="campo">
+            <div class="campo-label">Defeitos</div>
+            <div class="espaco espaco-2"></div>
+          </div>
+          <div class="campo">
+            <div class="campo-label">Breve biografia</div>
+            <div class="espaco espaco-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== AVÓ MATERNA ========== -->
+      <div class="pessoa-card sage">
+        <div class="figura">
+          <div class="caixa-desenho" aria-label="Espaço para desenhar o bonequinho"></div>
+          <span class="nome-pessoa">Avó materna</span>
+          <span class="nome-pessoa-sub">(nome)</span>
+        </div>
+        <div class="campos">
+          <div class="campo">
+            <div class="campo-label">Qualidades</div>
+            <div class="espaco espaco-2"></div>
+          </div>
+          <div class="campo">
+            <div class="campo-label">Defeitos</div>
+            <div class="espaco espaco-2"></div>
+          </div>
+          <div class="campo">
+            <div class="campo-label">Breve biografia</div>
+            <div class="espaco espaco-3"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== BISAVÓS ========== -->
+      <div class="pessoa-card">
+        <div class="figura">
+          <div class="caixa-desenho" aria-label="Espaço para desenhar o bonequinho"></div>
+          <span class="nome-pessoa" style="color:var(--muted);">Bisavós / antepassados</span>
+          <span class="nome-pessoa-sub">(se se lembrar)</span>
+        </div>
+        <div class="campos">
+          <div class="campo">
+            <div class="campo-label">Quem foram · o que ficou na família</div>
+            <div class="sugestao">Pistas: histórias que se contam · silêncios · profissões · pertenças</div>
+            <div class="espaco espaco-5"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="destaque">
+        <h4>Depois de preencher</h4>
+        <p>Olhe para a árvore inteira sem julgar. Repare nos <strong>padrões que se repetem</strong> — alguma qualidade ou dificuldade que aparece em várias gerações. <em>Não tem de explicar a si mesma o que vê.</em> Apenas reparar já é trabalho.</p>
+        <p class="campo-label" style="margin-top:.8rem;">O que reparei (uma frase curta, ou deixar em branco)</p>
+        <div class="espaco espaco-3"></div>
+      </div>
+
+    </div>
+  </details>
+
+  <!-- ============================================== -->
+  <!-- EXERCÍCIO 2 — CARTAS SEM FILTRO -->
+  <!-- ============================================== -->
+  <details class="exercicio rust" open>
+    <summary>2 · Cartas sem filtro (e queima)</summary>
+    <div class="body">
+
+      <h3>O que vai fazer</h3>
+      <p>Escrever cartas — uma para o pai, outra para a mãe (e, se sentir, para outras pessoas que estejam a incomodar). Não são cartas para enviar. São cartas para <strong>libertar</strong>. Por isso podem (e devem) ser <strong>sem filtro</strong> — escrever o que está aí, mesmo o que normalmente não diria.</p>
+
+      <h3>Estrutura sugerida</h3>
+
+      <div class="passo rust">
+        <div class="passo-num">1</div>
+        <div><strong>Saudação ou primeira linha.</strong> Pode ser "Pai," / "Mãe," / "X," ou outra forma — o que sair primeiro.</div>
+      </div>
+
+      <div class="passo rust">
+        <div class="passo-num">2</div>
+        <div><strong>O que fizeste.</strong> Conte os factos, as atitudes que magoaram. <em>"Naquele dia... lembro-me que..."</em></div>
+      </div>
+
+      <div class="passo rust">
+        <div class="passo-num">3</div>
+        <div><strong>Como me senti.</strong> Como se sentiu na altura — e como ainda se sente hoje quando se lembra. Use palavras concretas: <em>sozinha, invisível, com medo, com raiva, com vergonha, pequena...</em></div>
+      </div>
+
+      <div class="passo rust">
+        <div class="passo-num">4</div>
+        <div><strong>O que penso, sem filtro.</strong> Aqui não pense em ser boa filha, não pense no que estaria certo dizer. Escreva o que está aí. Pode ser feio, pode ser injusto. Pode haver raiva, decepção, mágoa, saudade. Tudo pode entrar.</div>
+      </div>
+
+      <div class="passo rust">
+        <div class="passo-num">5</div>
+        <div><strong>O que liberto / o que não levo comigo.</strong> Termine com uma frase de libertação. Pode ser: <em>"Já não levo isto comigo"</em> · <em>"Deixo aqui o que nunca foi para eu carregar"</em> · <em>"Adeus a este peso"</em>.</div>
+      </div>
+
+      <h3>Ritual de queima</h3>
+
+      <div class="destaque">
+        <ol>
+          <li><strong>Escolha um momento tranquilo</strong> — fim do dia, com calma, sozinha.</li>
+          <li><strong>Acenda um incenso</strong> (ou uma vela aromática) e deixe o aroma entrar no espaço.</li>
+          <li><strong>Leia a carta em voz alta, se sentir vontade</strong> — sozinha. O som faz parte do trabalho e amplifica a libertação. Pode demorar o tempo que precisar. Pode chorar. Se preferir ler em silêncio, também é válido.</li>
+          <li><strong>Queime a carta</strong> num recipiente seguro (lavatório vazio, panela velha, pia metálica). Use um fósforo ou isqueiro. Veja-a transformar-se em fumo.</li>
+          <li><strong>Diga em voz alta:</strong></li>
+        </ol>
+        <div class="frase">
+          "Devolvo o que não é meu.<br>
+          Fico leve.<br>
+          Liberta."
+        </div>
+        <ol start="6">
+          <li><strong>Lave as mãos</strong> em água corrente — gesto simbólico simples para fechar.</li>
+          <li>Pode <strong>beber um chá quente</strong>, deitar-se um pouco, ou ir directamente dormir. Não tente continuar o dia como se nada tivesse sido.</li>
+        </ol>
+      </div>
+
+      <h3>Espaço de reflexão (depois)</h3>
+      <p class="campo-label">Como me sinto depois de queimar (uma palavra ou uma frase chega)</p>
+      <p class="sugestao">Pistas: mais leve · cansada mas em paz · ainda tem mais para sair...</p>
+      <div class="espaco espaco-3"></div>
+
+      <p style="margin-top:1rem; color:var(--muted); font-size:.92rem;"><em>Pode fazer mais que uma carta para a mesma pessoa, se sentir que ficou coisa por dizer. Não há limite.</em></p>
+
+    </div>
+  </details>
+
+  <!-- ============================================== -->
+  <!-- EXERCÍCIO 3 — CORDÃO DE NÓS -->
+  <!-- ============================================== -->
+  <details class="exercicio sage" open>
+    <summary>3 · Cordão de nós</summary>
+    <div class="body">
+
+      <h3>O que vai fazer</h3>
+      <p>Pegar numa fita ou cordinha. Cada vez que se sentir mal por causa dele (o atual), <strong>fazer um nó na fita</strong> e dizer uma frase em voz alta. No fim da semana, vai poder olhar para os nós todos e <em>ver</em> — não imaginar, ver mesmo — quantas vezes foi.</p>
+
+      <h3>Porquê este exercício</h3>
+      <p>Quando estamos dentro de uma relação que oscila (alguém que aparece e desaparece), perdemos a conta. Cada episódio sente-se isolado, e o cérebro tende a desvalorizar o todo. Os nós tornam visível o invisível: <strong>quantas vezes este afecto te custou esta semana.</strong></p>
+
+      <h3>O que precisa</h3>
+      <ul>
+        <li>Uma fita, cordinha, lã, ou cordel — comprimento aproximado de 50-80 cm</li>
+        <li>Um sítio onde a guardar (à mão, mas discreta)</li>
+      </ul>
+
+      <h3>Como fazer cada nó</h3>
+
+      <div class="passo sage">
+        <div class="passo-num">1</div>
+        <div>Quando notar que <strong>se sentiu mal</strong> por causa dele (silêncio, mensagem fria, esperar e nada, dúvida sobre se vai aparecer), pegue na fita.</div>
+      </div>
+
+      <div class="passo sage">
+        <div class="passo-num">2</div>
+        <div>Faça um <strong>nó simples</strong> na fita. Não precisa ser apertado.</div>
+      </div>
+
+      <div class="passo sage">
+        <div class="passo-num">3</div>
+        <div>Diga em voz alta uma frase de libertação. Escolha uma das opções abaixo, ou crie a sua.</div>
+      </div>
+
+      <h3>Frases de libertação — escolha uma (ou alterne)</h3>
+
+      <div class="variante" style="background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); padding:.85rem 1.1rem; border-radius:0 6px 6px 0; margin:.65rem 0;">
+        <span style="display:block; font-size:.82rem; color:var(--muted); font-style:italic; margin-bottom:.35rem; letter-spacing:.03em; text-transform:uppercase;">Versão completa</span>
+        <div class="frase" style="margin:0; background:transparent; padding:0">
+          "Senti-me ____ (sozinha · triste · ignorada · pequena) porque ____ (o que aconteceu).<br>
+          Eu não aceito mais isto. Liberto este sentimento neste nó."
+        </div>
+      </div>
+
+      <div class="variante" style="background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); padding:.85rem 1.1rem; border-radius:0 6px 6px 0; margin:.65rem 0;">
+        <span style="display:block; font-size:.82rem; color:var(--muted); font-style:italic; margin-bottom:.35rem; letter-spacing:.03em; text-transform:uppercase;">Versão de auto-afirmação</span>
+        <div class="frase" style="margin:0; background:transparent; padding:0">
+          "Mereço presença, não promessa.<br>
+          Este nó guarda o peso desta vez. Eu fico leve."
+        </div>
+      </div>
+
+      <div class="variante" style="background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); padding:.85rem 1.1rem; border-radius:0 6px 6px 0; margin:.65rem 0;">
+        <span style="display:block; font-size:.82rem; color:var(--muted); font-style:italic; margin-bottom:.35rem; letter-spacing:.03em; text-transform:uppercase;">Versão curta e ritualística</span>
+        <div class="frase" style="margin:0; background:transparent; padding:0">
+          "Aqui pousa o que doeu. Eu sigo inteira."
+        </div>
+      </div>
+
+      <div class="variante" style="background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--accent); padding:.85rem 1.1rem; border-radius:0 6px 6px 0; margin:.65rem 0;">
+        <span style="display:block; font-size:.82rem; color:var(--muted); font-style:italic; margin-bottom:.35rem; letter-spacing:.03em; text-transform:uppercase;">Versão para repetir como mantra</span>
+        <div class="frase" style="margin:0; background:transparent; padding:0">
+          "Cada nó é uma vez que escolhi não levar este peso comigo.<br>
+          Aqui fica. Eu sigo."
+        </div>
+      </div>
+
+      <h3>Diário simples do cordão (opcional)</h3>
+      <p class="sugestao">Se quiser anotar, ajuda a reler na próxima sessão. Não é obrigatório.</p>
+
+      <div style="background:var(--surface2); border-radius:6px; padding:1rem; margin-top:.5rem;">
+        <p class="campo-label">Dia · O que aconteceu · Como me senti · Nº do nó</p>
+        <div class="espaco espaco-5"></div>
+        <div class="espaco espaco-5" style="margin-top:.8rem;"></div>
+      </div>
+
+    </div>
+  </details>
+
+<footer>
+    Três exercícios para a semana · Daniele Dallavecchia · Maio 2026 · versão para imprimir
+  </footer>
+</div>
+
+<script>
+  const STORAGE_THEME = 'rita_ex2_theme';
+
+  function aplicarTema(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️ Modo claro' : '🌙 Modo escuro';
+    localStorage.setItem(STORAGE_THEME, t);
+  }
+  function toggleTheme() {
+    const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    aplicarTema(t);
+  }
+  aplicarTema(localStorage.getItem(STORAGE_THEME) || 'light');
+
+  function abrirTodas() { document.querySelectorAll('details.exercicio').forEach(d => d.open = true); }
+  function fecharTodas() { document.querySelectorAll('details.exercicio').forEach(d => d.open = false); }
+</script>
+
+</body>
+</html>
