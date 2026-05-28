@@ -1,0 +1,3212 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f7f4ef">
+<title>Anamnese · Daniele Dallavecchia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&family=Cinzel:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════════════════════════════
+   TOKENS · Design System Daniele Dallavecchia
+   ════════════════════════════════════════════════════════════════ */
+:root {
+  --bg: #f7f4ef; --surface: #ffffff; --surface-2: #faf8f5; --surface-3: #f1eae0;
+  --text: #1f1f1f; --text-2: #4d4942; --text-3: #7a766e; --text-on-primary: #ffffff;
+  --primary: #2d0a5a; --primary-hover: #3a1570; --primary-soft: #e3dcef; --primary-pressed: #1a052e;
+  --border: #e6dfd7; --border-2: #ebe5de; --border-strong: #c8c0b6;
+  --success: #4f8a6a; --success-soft: #e3eee7;
+  --warning: #b88a2a; --warning-soft: #f6ecd2;
+  --danger: #a85460; --danger-soft: #f1dde0;
+  --info: #5c7a98; --info-soft: #e3eaf0;
+  --ff-text: 'Inter', system-ui, sans-serif;
+  --ff-display: 'Poppins', 'Inter', sans-serif;
+  --ff-brand: 'Cinzel', serif;
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 20px; --sp-6: 24px; --sp-7: 32px; --sp-8: 40px;
+  --sp-9: 56px; --sp-10: 72px;
+  --r-1: 6px; --r-2: 10px; --r-3: 14px; --r-4: 20px; --r-pill: 999px;
+  --sh-1: 0 1px 2px rgba(43,43,43,.04);
+  --sh-2: 0 4px 14px rgba(43,43,43,.06);
+  --sh-3: 0 12px 32px rgba(43,43,43,.10);
+  --sh-focus: 0 0 0 3px var(--primary-soft);
+  --t-fast: 120ms ease; --t-base: 180ms ease;
+  --topbar-h: 78px; --sidebar-w: 280px;
+  --base-fz: 16px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: var(--base-fz); background: var(--bg); }
+body {
+  font-family: var(--ff-text);
+  font-size: 1rem; line-height: 1.6;
+  color: var(--text); background: var(--bg);
+  min-height: 100vh;
+}
+h1, h2, h3, h4 { font-family: var(--ff-display); line-height: 1.3; }
+button { font-family: inherit; cursor: pointer; }
+input, textarea, select { font-family: inherit; }
+
+/* ════════════════════════════════════════════════════════════════
+   TOPBAR · Variante A · sem título
+   ════════════════════════════════════════════════════════════════ */
+.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  height: var(--topbar-h);
+  padding: 0 24px;
+  background: rgba(247,244,239,.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.topbar__brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.topbar__brand-logo { width: 48px; height: 48px; flex-shrink: 0; }
+.topbar__brand-logo svg { width: 100%; height: 100%; display: block; }
+.topbar__brand-text { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.topbar__brand-name {
+  font-family: var(--ff-brand); font-weight: 500;
+  font-size: 1.0625rem; color: var(--text);
+  letter-spacing: .02em; line-height: 1.1; white-space: nowrap;
+}
+.topbar__brand-sub {
+  font-family: var(--ff-text); font-size: 9px; font-weight: 500;
+  letter-spacing: .22em; color: #8a7fa8; margin-top: 4px;
+  text-transform: uppercase; white-space: nowrap;
+}
+.topbar__actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.topbar__divider { width: 1px; height: 24px; background: var(--border); flex-shrink: 0; }
+.topbar__icons { display: flex; align-items: center; gap: 4px; }
+.icon-btn {
+  width: 36px; height: 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; border: 1px solid transparent;
+  border-radius: var(--r-2); color: var(--text-2); cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast), border-color var(--t-fast);
+}
+.icon-btn svg { width: 19px; height: 19px; display: block; }
+.icon-btn:hover { background: var(--surface-3); color: var(--primary); border-color: var(--border); }
+.icon-btn:active { background: var(--primary-soft); }
+.icon-btn--primary { background: var(--primary); color: var(--text-on-primary); border-color: var(--primary); }
+.icon-btn--primary:hover { background: var(--primary-hover); color: #fff; border-color: var(--primary-hover); }
+.zoom-bar {
+  display: inline-flex; align-items: center; gap: 2px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-pill); padding: 3px;
+}
+.zoom-btn {
+  width: 28px; height: 28px; background: transparent; border: none;
+  color: var(--text); font-family: var(--ff-display); font-weight: 600;
+  border-radius: 50%; transition: background var(--t-fast);
+}
+.zoom-btn:hover { background: var(--surface-3); }
+.zoom-btn.is-active { background: var(--primary); color: #fff; }
+.zoom-btn--xs { font-size: 10px; }
+.zoom-btn--sm { font-size: 12px; }
+.zoom-btn--md { font-size: 14px; }
+.zoom-btn--lg { font-size: 16px; font-weight: 700; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .6; } }
+
+/* ════════════════════════════════════════════════════════════════
+   LAYOUT
+   ════════════════════════════════════════════════════════════════ */
+.layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) 1fr;
+  min-height: calc(100vh - var(--topbar-h));
+}
+.sidebar {
+  position: sticky; top: var(--topbar-h);
+  align-self: start;
+  height: calc(100vh - var(--topbar-h));
+  overflow-y: auto;
+  background: var(--surface-2);
+  border-right: 1px solid var(--border);
+  padding: var(--sp-5) 0 var(--sp-9);
+}
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+.sb-cliente {
+  padding: 0 var(--sp-5) var(--sp-4);
+  border-bottom: 1px solid var(--border-2);
+  margin-bottom: var(--sp-3);
+}
+.sb-cliente__label {
+  font-family: var(--ff-display);
+  font-size: 10px; font-weight: 600;
+  color: var(--text-3); letter-spacing: .12em;
+  text-transform: uppercase; margin-bottom: 4px;
+}
+.sb-cliente__nome {
+  font-family: var(--ff-display);
+  font-size: 1.125rem; font-weight: 600;
+  color: var(--text); line-height: 1.25;
+}
+.sb-cliente__meta { font-size: 12px; color: var(--text-2); margin-top: 4px; }
+
+.sb-group { margin-bottom: var(--sp-3); }
+.sb-group__title {
+  padding: var(--sp-2) var(--sp-5) var(--sp-1);
+  font-family: var(--ff-display);
+  font-size: 10.5px; font-weight: 600;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--text-3);
+}
+.sb-item {
+  display: flex; align-items: center; gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-5);
+  color: var(--text); text-decoration: none;
+  font-size: .875rem;
+  border-left: 3px solid transparent;
+  transition: all var(--t-fast);
+  cursor: pointer;
+}
+.sb-item:hover { background: var(--surface-3); border-left-color: var(--primary-soft); }
+.sb-item.is-active {
+  background: var(--primary-soft);
+  border-left-color: var(--primary);
+  color: var(--primary); font-weight: 600;
+}
+.sb-item__count {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-3);
+  font-variant-numeric: tabular-nums;
+}
+.sb-item.is-complete .sb-item__count { color: var(--success); }
+.sb-item.is-active .sb-item__count { color: var(--primary); }
+
+.sb-progress {
+  margin: var(--sp-4) var(--sp-5) 0;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2);
+}
+.sb-progress__label {
+  font-family: var(--ff-display);
+  font-size: 10.5px; font-weight: 600;
+  color: var(--text-2);
+  letter-spacing: .12em; text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.sb-progress__bar {
+  height: 6px; background: var(--surface-3);
+  border-radius: var(--r-pill); overflow: hidden;
+  margin-bottom: 6px;
+}
+.sb-progress__fill {
+  height: 100%; background: var(--primary);
+  border-radius: var(--r-pill); width: 0%;
+  transition: width 350ms ease;
+}
+.sb-progress__num {
+  font-family: var(--ff-display);
+  font-size: 12px; font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MAIN
+   ════════════════════════════════════════════════════════════════ */
+.main {
+  padding: var(--sp-6) var(--sp-7) var(--sp-10);
+  max-width: 980px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.cliente-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: var(--sp-5); padding-bottom: var(--sp-4);
+  border-bottom: 2px solid var(--primary);
+}
+.cliente-header h2 {
+  font-family: var(--ff-display);
+  font-size: 1.5rem; font-weight: 600;
+  color: var(--text); margin-bottom: 4px;
+}
+.cliente-header__meta { font-size: 13px; color: var(--text-2); }
+.cliente-header__data { font-size: 12px; color: var(--text-3); }
+
+/* ════════════════════════════════════════════════════════════════
+   BLOCOS COLAPSÁVEIS
+   ════════════════════════════════════════════════════════════════ */
+.bloco {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-3);
+  overflow: hidden;
+  margin-bottom: var(--sp-3);
+  scroll-margin-top: calc(var(--topbar-h) + 16px);
+  transition: box-shadow var(--t-base);
+}
+.bloco.is-open { box-shadow: var(--sh-2); }
+.bloco__head {
+  display: flex; align-items: center; gap: var(--sp-3);
+  width: 100%;
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--surface);
+  border: none; text-align: left;
+  transition: background var(--t-fast);
+}
+.bloco__head:hover { background: var(--surface-2); }
+.bloco__chevron {
+  width: 16px; height: 16px;
+  color: var(--text-2); flex-shrink: 0;
+  transition: transform var(--t-base);
+}
+.bloco.is-open .bloco__chevron { transform: rotate(90deg); }
+.bloco__title {
+  font-family: var(--ff-display);
+  font-size: 1.25rem; font-weight: 600;
+  color: var(--text); margin: 0;
+}
+.bloco__chip {
+  font-family: var(--ff-display);
+  font-size: 10px; font-weight: 600;
+  letter-spacing: .08em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: var(--r-pill);
+  margin-left: var(--sp-2);
+}
+.bloco__chip--forms { background: var(--info-soft); color: var(--info); }
+.bloco__chip--sessao { background: var(--primary-soft); color: var(--primary); }
+.bloco__chip--corpo { background: var(--success-soft); color: var(--success); }
+.bloco__chip--despiste { background: var(--danger-soft); color: var(--danger); }
+.bloco__chip--timeline { background: var(--warning-soft); color: var(--warning); }
+.bloco__chip--mapa { background: var(--primary-soft); color: var(--primary); }
+.bloco__chip--pnl { background: var(--info-soft); color: var(--info); }
+.bloco__chip--importado { background: var(--info-soft); color: var(--info); }
+
+/* Banner · dados vindos do Google Forms */
+.banner-importado {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--sp-3);
+  background: var(--info-soft);
+  border-left: 3px solid var(--info);
+  border-radius: 0 var(--r-2) var(--r-2) 0;
+  padding: 10px 14px;
+  margin: var(--sp-3) 0 var(--sp-4);
+  font-size: 12.5px;
+  color: var(--text);
+  flex-wrap: wrap;
+}
+.banner-importado__label {
+  display: flex; align-items: center; gap: 8px;
+  line-height: 1.4;
+}
+.banner-importado__label svg {
+  flex-shrink: 0;
+  color: var(--info);
+}
+.banner-importado__data {
+  font-family: var(--ff-display);
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--info);
+  white-space: nowrap;
+}
+.btn-corrigir {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 24px; padding: 0 9px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-2);
+  font-size: 10.5px;
+  font-weight: 500;
+  font-family: var(--ff-text);
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: all var(--t-fast);
+  white-space: nowrap;
+  margin-left: var(--sp-2);
+}
+.btn-corrigir:hover { border-color: var(--primary); color: var(--primary); }
+.btn-corrigir.is-on { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* Modo importado (sem is-editavel) · esconde tudo o que é editável · mostra apenas .leitura-block */
+.bloco--importado:not(.is-editavel) .q-block,
+.bloco--importado:not(.is-editavel) .field-row,
+.bloco--importado:not(.is-editavel) .field { display: none; }
+.bloco--importado:not(.is-editavel) .leitura-block { display: block; }
+.bloco--importado.is-editavel .leitura-block { display: none; }
+
+.leitura-block {
+  display: none;
+  padding: var(--sp-3) 0 var(--sp-1);
+}
+.leitura-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: var(--sp-3);
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border-2);
+  font-size: 14px;
+  align-items: baseline;
+}
+.leitura-row:last-child { border-bottom: none; }
+.leitura-row__label {
+  font-family: var(--ff-display);
+  font-weight: 600;
+  color: var(--text-2);
+  font-size: 12.5px;
+  letter-spacing: .02em;
+}
+.leitura-row__valor {
+  color: var(--text);
+  line-height: 1.5;
+}
+.leitura-row__valor--vazio { color: var(--text-3); }
+.leitura-row__valor strong { font-weight: 600; }
+@media (max-width: 600px) {
+  .leitura-row { grid-template-columns: 1fr; gap: 2px; }
+}
+
+/* Botão Sincronizar Forms no topo da Parte 1 */
+.parte1-header {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--info);
+  border-radius: var(--r-2);
+  padding: 14px 18px;
+  margin-bottom: var(--sp-4);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: var(--sp-3);
+}
+.parte1-header__txt {
+  flex: 1; min-width: 220px;
+}
+.parte1-header__titulo {
+  font-family: var(--ff-display);
+  font-size: 12px; font-weight: 600;
+  color: var(--info); letter-spacing: .08em;
+  text-transform: uppercase; margin-bottom: 4px;
+}
+.parte1-header__sub {
+  font-size: 13px; color: var(--text-2);
+  line-height: 1.5;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Modo embebido · esconde Parte 1 (quando linkado pela ficha clínica)
+   URL: ?embed=1
+   ────────────────────────────────────────────────────────────── */
+body.is-embedded [data-parte="1"] { display: none !important; }
+
+/* ──────────────────────────────────────────────────────────────
+   Exemplos clicáveis (PNL4 meta-modelo · pistas oculares)
+   Clica → insere texto numa textarea destino
+   ────────────────────────────────────────────────────────────── */
+.exemplos-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: var(--sp-2);
+}
+@media (max-width: 700px) {
+  .exemplos-row { grid-template-columns: 1fr; }
+}
+.exemplo-btn {
+  display: flex; align-items: center; justify-content: flex-start;
+  text-align: left;
+  min-height: 32px;
+  padding: 5px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2);
+  font-family: var(--ff-text);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  transition: all var(--t-fast);
+  line-height: 1.3;
+}
+.exemplo-btn:hover {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.exemplo-btn.is-used {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.exemplo-btn::before {
+  content: '+';
+  font-family: var(--ff-display);
+  font-weight: 700;
+  color: var(--primary);
+  margin-right: 8px;
+  font-size: 14px;
+}
+.exemplo-btn.is-used::before { content: '✓'; }
+
+.exemplos-grupo-titulo {
+  font-family: var(--ff-display);
+  font-size: 11px; font-weight: 600;
+  color: var(--text-2);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin: 12px 0 6px;
+}
+.exemplos-grupo-titulo:first-child { margin-top: 0; }
+
+/* PNL4 · meta-modelo · 3 dropdowns lado a lado (modelo PNL5) */
+.pnl-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--sp-3);
+}
+@media (max-width: 700px) { .pnl-meta { grid-template-columns: 1fr; } }
+.pnl-meta__col { display: flex; flex-direction: column; gap: 4px; }
+.pnl-meta__label {
+  font-family: var(--ff-display);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: .04em; text-transform: uppercase;
+  color: var(--text-2);
+}
+
+/* Pistas oculares · 3 linhas × 2 colunas · botões clicáveis */
+.pnl-eyes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: var(--sp-3) 0;
+}
+.pnl-eye {
+  display: block; text-align: left; width: 100%;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2);
+  font-family: var(--ff-text);
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--text);
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+.pnl-eye:hover {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+.pnl-eye.is-used {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+.pnl-eye strong {
+  display: block;
+  font-family: var(--ff-display);
+  font-size: 12px;
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.pnl-eye small {
+  display: block;
+  color: var(--text-3);
+  font-size: 11px;
+  margin-top: 3px;
+  font-style: normal;
+}
+.pnl-eye.is-used::before {
+  content: '✓ ';
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Dropdown multi-select (componente único · aplicado a tudo)
+   ────────────────────────────────────────────────────────────── */
+.dd-wrap { position: relative; margin: var(--sp-2) 0; }
+.dd-wrap--evette { --dd-cor: var(--danger); --dd-cor-soft: var(--danger-soft); }
+.dd-wrap { --dd-cor: var(--primary); --dd-cor-soft: var(--primary-soft); }
+.dd-label {
+  display: block;
+  font-family: var(--ff-display);
+  font-size: 11px; font-weight: 600;
+  color: var(--text-2);
+  letter-spacing: .04em; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.dd-wrap--evette .dd-label { color: var(--dd-cor); }
+.dd-trigger {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%;
+  height: 36px; padding: 0 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2);
+  font-family: var(--ff-text); font-size: 13.5px;
+  color: var(--text);
+  cursor: pointer; text-align: left;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.dd-trigger:hover { border-color: var(--border-strong); }
+.dd-trigger.is-open { border-color: var(--dd-cor); box-shadow: var(--sh-focus); }
+.dd-trigger__txt {
+  flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.dd-trigger__txt--vazio { color: var(--text-3); }
+.dd-trigger__chevron {
+  width: 14px; height: 14px;
+  color: var(--text-2);
+  transition: transform var(--t-fast);
+  flex-shrink: 0;
+}
+.dd-trigger.is-open .dd-trigger__chevron { transform: rotate(180deg); }
+.dd-painel {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  z-index: 20;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2);
+  box-shadow: var(--sh-3);
+  max-height: 340px; overflow-y: auto;
+  padding: 6px;
+  display: none;
+}
+.dd-trigger.is-open + .dd-painel { display: block; }
+.dd-opc {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  border-radius: var(--r-1);
+  cursor: pointer;
+  font-size: 13.5px;
+  color: var(--text);
+  transition: background var(--t-fast);
+}
+.dd-opc:hover { background: var(--surface-2); }
+.dd-opc__check {
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+  background: var(--surface);
+}
+.dd-opc.is-on .dd-opc__check {
+  background: var(--dd-cor);
+  border-color: var(--dd-cor);
+  color: #fff;
+}
+.dd-opc.is-on .dd-opc__check::after { content: '✓'; }
+.dd-resumo {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  margin-top: 8px;
+}
+.dd-resumo:empty { margin-top: 0; }
+.dd-resumo__chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 4px 3px 12px;
+  background: var(--dd-cor-soft);
+  border-radius: var(--r-pill);
+  font-size: 12px;
+  color: var(--dd-cor);
+  font-weight: 500;
+}
+.dd-resumo__chip button {
+  background: none; border: none;
+  font-size: 14px; color: var(--dd-cor);
+  cursor: pointer; padding: 0 4px; line-height: 1;
+  font-weight: 700;
+}
+.dd-add {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px;
+  margin-top: 6px;
+}
+.dd-add input {
+  height: 36px; padding: 0 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2);
+  font-family: var(--ff-text);
+  font-size: 13.5px;
+  color: var(--text);
+}
+.dd-add input:focus { outline: none; border-color: var(--dd-cor); box-shadow: var(--sh-focus); }
+.dd-add button {
+  height: 36px; padding: 0 16px;
+  background: var(--dd-cor); color: #fff;
+  border: 1px solid var(--dd-cor);
+  border-radius: var(--r-2);
+  font-family: var(--ff-text);
+  font-size: 12.5px; font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Sub-colapsável (R1-R4 · quadrantes do Mapa Quântico · PNL) */
+.sub-bloco {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2);
+  overflow: hidden;
+  margin-bottom: var(--sp-2);
+  transition: box-shadow var(--t-base);
+}
+.sub-bloco.is-open { box-shadow: var(--sh-1); }
+.sub-bloco__head {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+.sub-bloco__head:hover { background: var(--surface-3); }
+.sub-bloco__chevron {
+  width: 14px; height: 14px;
+  color: var(--text-2);
+  flex-shrink: 0;
+  transition: transform var(--t-base);
+}
+.sub-bloco.is-open .sub-bloco__chevron { transform: rotate(90deg); }
+.sub-bloco__titulo {
+  font-family: var(--ff-display);
+  font-size: 1.125rem; font-weight: 600;
+  color: var(--text);
+}
+.sub-bloco__num {
+  display: inline-flex; align-items: center;
+  font-family: var(--ff-display);
+  font-size: 11px; font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-soft);
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  margin-right: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.sub-bloco__hint {
+  margin-left: auto;
+  font-size: 11.5px;
+  color: var(--text-3);
+}
+.sub-bloco__body {
+  max-height: 0; opacity: 0; overflow: hidden;
+  transition: max-height var(--t-base), opacity var(--t-base), padding var(--t-base);
+  padding: 0 16px;
+}
+.sub-bloco.is-open .sub-bloco__body {
+  max-height: 6000px; opacity: 1;
+  padding: 0 16px 16px;
+  border-top: 1px solid var(--border-2);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Catálogo clínico (Relacionamentos · estilo v71)
+   ────────────────────────────────────────────────────────────── */
+.catalogo {
+  margin: var(--sp-3) 0;
+  padding: var(--sp-4);
+  background: var(--surface-2);
+  border-radius: var(--r-2);
+  border: 1px dashed var(--border-2);
+}
+.catalogo + .catalogo { margin-top: var(--sp-2); }
+.catalogo--evette {
+  background: rgba(184,84,96,.06);
+  border-color: rgba(184,84,96,.30);
+}
+.catalogo__head {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: var(--sp-2);
+}
+.catalogo__head__dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+.catalogo--evette .catalogo__head__dot { background: var(--danger); }
+.catalogo__titulo {
+  font-family: var(--ff-display);
+  font-size: 10.5px; font-weight: 600;
+  color: var(--text-2);
+  letter-spacing: .08em; text-transform: uppercase;
+}
+.catalogo--evette .catalogo__titulo { color: var(--danger); }
+.catalogo__sub {
+  font-size: 11px; color: var(--text-3);
+  font-style: normal;
+  margin-left: 4px;
+}
+.catalogo__chips {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin-bottom: var(--sp-2);
+}
+@media (max-width: 700px) {
+  .catalogo__chips { grid-template-columns: 1fr; }
+}
+.catalogo__chip {
+  padding: 6px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  font-family: var(--ff-text);
+  font-size: 12px;
+  color: var(--text-2);
+  cursor: pointer;
+  text-align: center;
+  line-height: 1.3;
+  transition: all var(--t-fast);
+}
+.catalogo__chip:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-soft);
+}
+.catalogo__chip.is-on {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+.catalogo--evette .catalogo__chip:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+.catalogo--evette .catalogo__chip.is-on {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
+.catalogo__resumo {
+  display: flex; align-items: baseline; gap: 6px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-radius: var(--r-1);
+  font-size: 12px;
+  color: var(--text-2);
+  line-height: 1.5;
+  margin-top: 6px;
+}
+.catalogo__resumo__label {
+  font-family: var(--ff-display);
+  font-weight: 600;
+  color: var(--text);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  flex-shrink: 0;
+}
+.catalogo__resumo__lista {
+  color: var(--primary);
+  font-weight: 500;
+}
+.catalogo--evette .catalogo__resumo__lista { color: var(--danger); }
+.catalogo__add {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px;
+  margin-top: 6px;
+}
+.catalogo__add input {
+  height: 32px; padding: 0 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2);
+  font-family: var(--ff-text);
+  font-size: 12.5px;
+  color: var(--text);
+}
+.catalogo__add input:focus {
+  outline: none; border-color: var(--primary);
+  box-shadow: var(--sh-focus);
+}
+.catalogo__add button {
+  height: 32px; padding: 0 14px;
+  background: var(--primary); color: #fff;
+  border: 1px solid var(--primary);
+  border-radius: var(--r-2);
+  font-family: var(--ff-text);
+  font-size: 12px; font-weight: 500;
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+.catalogo__add button:hover { background: var(--primary-hover); }
+.catalogo--evette .catalogo__add button { background: var(--danger); border-color: var(--danger); }
+
+/* PNL · pistas oculares · grid 3×2 */
+.pnl-eyes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-2);
+  margin: var(--sp-3) 0;
+  background: var(--surface-2);
+  padding: var(--sp-3);
+  border-radius: var(--r-2);
+  border: 1px solid var(--border);
+}
+.pnl-eye {
+  padding: 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-1);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+.pnl-eye strong {
+  display: block;
+  font-family: var(--ff-display);
+  font-size: 12px;
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.pnl-eye span {
+  color: var(--text-3);
+  font-size: 11px;
+}
+.pnl-legenda {
+  font-size: 11px;
+  color: var(--text-3);
+  text-align: center;
+  margin-top: 6px;
+  font-family: var(--ff-display);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.bloco__count {
+  margin-left: auto;
+  font-size: 12px; color: var(--text-3);
+  font-weight: 500;
+}
+/* Cabeçalho dos blocos importados · contém também o botão Corrigir como elemento separado */
+.bloco--importado .bloco__head {
+  position: relative;
+}
+.bloco--importado .bloco__head .btn-corrigir {
+  margin-left: 0;
+  margin-right: var(--sp-3);
+  order: 99;
+}
+.bloco__body {
+  max-height: 0; opacity: 0; overflow: hidden;
+  transition: max-height var(--t-base), opacity var(--t-base), padding var(--t-base);
+  padding: 0 var(--sp-5);
+}
+.bloco.is-open .bloco__body {
+  max-height: 8000px; opacity: 1;
+  padding: 0 var(--sp-5) var(--sp-5);
+  border-top: 1px solid var(--border-2);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   CAMPOS
+   ════════════════════════════════════════════════════════════════ */
+.q-block { padding-top: var(--sp-4); }
+.q-block + .q-block { border-top: 1px dashed var(--border-2); margin-top: var(--sp-3); }
+.q-pergunta {
+  font-family: var(--ff-text);
+  font-size: 1rem; font-weight: 500;
+  color: var(--text);
+  margin-bottom: var(--sp-2);
+  line-height: 1.45;
+}
+.q-pergunta__num {
+  display: inline-block;
+  font-family: var(--ff-display);
+  font-size: 11px; font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-soft);
+  padding: 2px 8px; border-radius: var(--r-pill);
+  margin-right: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.q-hint {
+  font-size: 12px; color: var(--text-3);
+  margin-bottom: var(--sp-2);
+  font-style: normal;
+}
+
+.field { margin-bottom: var(--sp-3); }
+.field__label {
+  display: block;
+  font-family: var(--ff-display);
+  font-size: 12px; font-weight: 500;
+  color: var(--text-2);
+  letter-spacing: .04em; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.field-row { display: grid; gap: var(--sp-3); }
+.field-row--2col { grid-template-columns: 1fr 1fr; }
+.field-row--3col { grid-template-columns: repeat(3, 1fr); }
+
+.input, .textarea, .select {
+  display: block; width: 100%;
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2);
+  font-family: var(--ff-text);
+  font-size: 1rem; color: var(--text);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.input { height: 40px; }
+.select {
+  height: 40px;
+  appearance: none; -webkit-appearance: none; -moz-appearance: none;
+  padding-right: 38px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 16 16' fill='none' stroke='%232d0a5a' stroke-width='2'><path d='m4 6 4 4 4-4'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  cursor: pointer;
+}
+.textarea { min-height: 80px; resize: vertical; line-height: 1.55; }
+
+/* Campo catálogo · select nativo + caixa de notas (resolve bug do painel + seleção→notas) */
+.campo-catalogo {
+  margin: var(--sp-3) 0;
+  --cc-cor: var(--primary);
+  --cc-cor-soft: var(--primary-soft);
+}
+.campo-catalogo--evette {
+  --cc-cor: var(--danger);
+  --cc-cor-soft: var(--danger-soft);
+}
+.campo-catalogo__label {
+  display: block;
+  font-family: var(--ff-display);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: .04em; text-transform: uppercase;
+  color: var(--cc-cor);
+  margin-bottom: 6px;
+}
+.campo-catalogo .select-catalogo {
+  border-color: var(--border);
+}
+.campo-catalogo .select-catalogo:focus {
+  border-color: var(--cc-cor);
+  box-shadow: 0 0 0 3px var(--cc-cor-soft);
+}
+.textarea--notas {
+  margin-top: 6px;
+  min-height: 56px;
+}
+.input:focus, .textarea:focus, .select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: var(--sh-focus);
+}
+.input::placeholder, .textarea::placeholder { color: var(--text-3); }
+
+/* Wrapper textarea com microfone */
+.textarea-mic {
+  position: relative;
+}
+.textarea-mic .textarea { padding-right: 52px; }
+.btn-mic {
+  position: absolute; top: 6px; right: 6px;
+  width: 36px; height: 36px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text-2);
+  transition: all var(--t-fast);
+}
+.btn-mic:hover { background: var(--surface-3); color: var(--primary); }
+.btn-mic.is-recording {
+  background: var(--danger);
+  color: #fff;
+  border-color: var(--danger);
+  animation: pulse-mic 1.2s ease-in-out infinite;
+}
+@keyframes pulse-mic {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(168,84,96,.4); }
+  50% { box-shadow: 0 0 0 8px rgba(168,84,96,0); }
+}
+.btn-mic svg { width: 16px; height: 16px; }
+.mic-hint {
+  font-size: 11px; color: var(--text-3);
+  margin-top: 4px;
+  font-family: var(--ff-text);
+}
+
+/* Escala 0-10 */
+.escala-row {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.escala-btn {
+  flex: 1; min-width: 36px; height: 40px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-1);
+  font-family: var(--ff-display);
+  font-weight: 600; font-size: 14px;
+  color: var(--text-2);
+  transition: all var(--t-fast);
+}
+.escala-btn:hover { background: var(--surface-3); border-color: var(--border-strong); }
+.escala-btn.is-on {
+  background: var(--primary); color: #fff;
+  border-color: var(--primary);
+}
+
+/* Chips multi-seleção · grid 2 colunas (evita espaço sobrando na última linha) */
+.chips-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.chips-row--3col { grid-template-columns: 1fr 1fr 1fr; }
+.chips-row--auto { display: flex; flex-wrap: wrap; }
+.chip {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 36px; padding: 6px 14px;
+  background: var(--surface-3);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-pill);
+  font-family: var(--ff-text);
+  font-size: 13px; font-weight: 500;
+  color: var(--text-2);
+  transition: all var(--t-fast);
+  cursor: pointer;
+  text-align: center;
+  line-height: 1.3;
+}
+@media (max-width: 700px) {
+  .chips-row, .chips-row--3col { grid-template-columns: 1fr; }
+}
+.chip:hover {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.chip.is-on {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+.chip--danger.is-on {
+  background: var(--danger); border-color: var(--danger);
+}
+.chip--warning.is-on {
+  background: var(--warning); border-color: var(--warning);
+}
+
+/* AAI · adjetivo (dropdown) + memória + apagar */
+.aai-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 210px) minmax(0, 1fr) auto;
+  gap: var(--sp-3);
+  align-items: center;
+  margin-bottom: var(--sp-2);
+}
+.aai-del {
+  width: 30px; height: 30px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--r-1);
+  color: var(--text-3);
+  font-size: 18px; line-height: 1;
+  cursor: pointer;
+  transition: all var(--t-fast);
+  flex-shrink: 0;
+}
+.aai-del:hover { border-color: var(--danger); color: var(--danger); background: var(--danger-soft); }
+.aai-add {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px;
+  margin-top: var(--sp-1);
+  background: transparent;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--r-1);
+  color: var(--primary);
+  font-family: var(--ff-display);
+  font-size: 18px; font-weight: 700; line-height: 1;
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+.aai-add:hover { background: var(--primary-soft); border-color: var(--primary); border-style: solid; }
+@media (max-width: 700px) {
+  .aai-grid { grid-template-columns: 1fr auto; }
+  .aai-grid .aai-adj { grid-column: 1 / -1; }
+}
+
+/* Trauma timeline lista dinâmica */
+.timeline-add {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  gap: var(--sp-2);
+  align-items: center;
+  margin-top: var(--sp-3);
+}
+.timeline-add .btn { padding: 0 18px; }
+.timeline-lista { margin-top: var(--sp-3); }
+.timeline-item {
+  display: grid;
+  grid-template-columns: 80px 1fr 32px;
+  gap: var(--sp-3);
+  align-items: center;
+  padding: 10px 14px;
+  margin-bottom: 6px;
+  background: var(--surface-2);
+  border-left: 3px solid var(--warning);
+  border-radius: 0 var(--r-2) var(--r-2) 0;
+}
+.timeline-item__idade {
+  font-family: var(--ff-display);
+  font-weight: 700;
+  color: var(--warning);
+  font-size: 13px;
+}
+.timeline-item__desc {
+  font-size: 14px;
+  color: var(--text);
+}
+.timeline-item__del {
+  background: none; border: none;
+  color: var(--text-3);
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  font-size: 16px;
+  transition: all var(--t-fast);
+}
+.timeline-item__del:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+/* Despiste · dois dropdowns (condição + resposta) → lista com alerta */
+.despiste-add {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: var(--sp-3);
+  align-items: end;
+  margin-bottom: var(--sp-3);
+}
+@media (max-width: 600px) {
+  .despiste-add { grid-template-columns: 1fr; }
+}
+.despiste-add__campo { display: flex; flex-direction: column; gap: 4px; }
+.despiste-add__label {
+  font-family: var(--ff-display);
+  font-size: 11px; font-weight: 600;
+  letter-spacing: .04em; text-transform: uppercase;
+  color: var(--text-2);
+}
+.despiste-add .btn { height: 40px; }
+.despiste-lista {
+  display: grid; gap: 6px;
+  margin-bottom: var(--sp-3);
+}
+.despiste-linha {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: var(--sp-3);
+  align-items: center;
+  padding: 10px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2);
+}
+.despiste-linha.is-alerta {
+  background: var(--danger-soft);
+  border-color: var(--danger);
+}
+.despiste-linha__cond {
+  font-family: var(--ff-text);
+  font-size: 14px;
+  color: var(--text);
+}
+.despiste-linha__resp {
+  font-family: var(--ff-display);
+  font-size: 12px; font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.despiste-linha.is-alerta .despiste-linha__resp {
+  background: var(--danger); color: #fff;
+}
+.despiste-linha__del {
+  background: none; border: none;
+  font-size: 18px; line-height: 1;
+  color: var(--text-3);
+  cursor: pointer; padding: 0 4px;
+}
+.despiste-linha__del:hover { color: var(--danger); }
+.despiste-vazio {
+  font-size: 12.5px; color: var(--text-3);
+  padding: 6px 0 var(--sp-2);
+}
+.despiste-alerta-banner {
+  display: none;
+  align-items: center; gap: 8px;
+  padding: 10px 14px;
+  background: var(--danger-soft);
+  border-left: 3px solid var(--danger);
+  border-radius: 0 var(--r-2) var(--r-2) 0;
+  font-size: 12.5px;
+  color: var(--danger);
+  font-weight: 500;
+  margin-bottom: var(--sp-3);
+  line-height: 1.45;
+}
+.despiste-alerta-banner.is-on { display: flex; }
+
+/* Campo duplo · dois selects lado a lado (C7 · Dor) */
+.campo-duplo { margin: var(--sp-2) 0; }
+.campo-duplo__selects {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+}
+@media (max-width: 600px) {
+  .campo-duplo__selects { grid-template-columns: 1fr; }
+}
+
+/* Mapa Quântico · 12 áreas */
+.mq-area {
+  padding: var(--sp-3) 0;
+  border-bottom: 1px dashed var(--border-2);
+}
+.mq-area:last-child { border-bottom: none; }
+.mq-area__head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--sp-3);
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+.mq-area__label {
+  font-family: var(--ff-display);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  color: var(--text);
+}
+.mq-area__hint {
+  font-size: 11px;
+  color: var(--text-3);
+}
+.mq-area__nota {
+  font-family: var(--ff-display);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--primary);
+  min-width: 40px; text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.mq-quadrante {
+  margin-top: var(--sp-4);
+  padding: var(--sp-3);
+  background: var(--surface-2);
+  border-radius: var(--r-2);
+  border-left: 3px solid var(--primary);
+}
+.mq-quadrante:first-child { margin-top: 0; }
+.mq-quadrante__titulo {
+  font-family: var(--ff-display);
+  font-size: 11px; font-weight: 600;
+  color: var(--primary);
+  letter-spacing: .08em; text-transform: uppercase;
+  margin-bottom: var(--sp-2);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   AÇÕES E TOAST
+   ════════════════════════════════════════════════════════════════ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  height: 40px; padding: 0 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2);
+  font-family: var(--ff-text);
+  font-size: 14px; font-weight: 500;
+  color: var(--text);
+  transition: all var(--t-fast);
+  white-space: nowrap;
+}
+.btn:hover { background: var(--surface-3); border-color: var(--border-strong); }
+.btn--primary {
+  background: var(--primary); color: var(--text-on-primary);
+  border-color: var(--primary);
+}
+.btn--primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.btn--ghost { background: transparent; border-color: transparent; color: var(--text-2); }
+.btn--ghost:hover { background: var(--surface-3); color: var(--text); border-color: transparent; }
+.btn--sm { height: 30px; padding: 0 12px; font-size: 12px; }
+.btn--icon { width: 36px; padding: 0; }
+.btn--full { width: 100%; }
+
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  z-index: 300;
+  background: var(--text); color: #fff;
+  padding: 12px 18px;
+  border-radius: var(--r-2);
+  font-size: 14px;
+  box-shadow: var(--sh-3);
+  border-left: 3px solid var(--success);
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--t-base), transform var(--t-base);
+  transform: translateY(8px);
+  max-width: 360px;
+}
+.toast.is-on { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.toast--warning { border-left-color: var(--warning); }
+.toast--danger { border-left-color: var(--danger); }
+
+/* ════════════════════════════════════════════════════════════════
+   RESPONSIVE & PRINT
+   ════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar {
+    position: relative; top: 0; height: auto;
+    border-right: none; border-bottom: 1px solid var(--border);
+  }
+  .main { padding: var(--sp-4); }
+  .aai-grid { grid-template-columns: 1fr; }
+  .field-row--2col, .field-row--3col { grid-template-columns: 1fr; }
+}
+@media print {
+  .topbar, .actions-bar, .sidebar, .btn-mic { display: none !important; }
+  body { background: #fff; }
+  .main { max-width: 100%; padding: 0; }
+  .bloco { break-inside: avoid; box-shadow: none; border-color: #ccc; }
+  .bloco__body {
+    max-height: none !important; opacity: 1 !important;
+    padding: 0 var(--sp-5) var(--sp-5) !important;
+    border-top: 1px solid #ccc !important;
+  }
+  .bloco__chevron { display: none; }
+}
+</style>
+</head>
+<body>
+
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  TOPBAR · Variante A                                           -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<header class="topbar" role="banner">
+  <div class="topbar__brand">
+    <div class="topbar__brand-logo" aria-hidden="true">
+      <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <defs>
+          <radialGradient id="tbBg" cx="50%" cy="48%" r="55%">
+            <stop offset="0%" stop-color="#2d0a5a" stop-opacity=".95"/>
+            <stop offset="100%" stop-color="#060114"/>
+          </radialGradient>
+          <linearGradient id="tbGold" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#b8922c"/><stop offset="50%" stop-color="#f5e090"/><stop offset="100%" stop-color="#c9a84c"/>
+          </linearGradient>
+          <linearGradient id="tbSilver" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#a098c8"/><stop offset="100%" stop-color="#e8e0ff"/>
+          </linearGradient>
+          <linearGradient id="tbViolet" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#6020b0"/><stop offset="100%" stop-color="#9040e0"/>
+          </linearGradient>
+        </defs>
+        <circle cx="30" cy="30" r="27.5" fill="url(#tbBg)"/>
+        <circle cx="30" cy="30" r="27.5" fill="none" stroke="url(#tbGold)" stroke-width=".6" opacity=".8"/>
+        <g stroke="#c9a84c" stroke-width=".5" opacity=".5">
+          <line x1="30" y1="3.5" x2="30" y2="6.5"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(30 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(60 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(90 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(120 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(150 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(180 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(210 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(240 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(270 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(300 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(330 30 30)"/>
+        </g>
+        <circle cx="30" cy="30" r="22" fill="none" stroke="url(#tbGold)" stroke-width=".25" stroke-dasharray="1 2" opacity=".35"/>
+        <line x1="30" y1="44" x2="30" y2="13" stroke="url(#tbSilver)" stroke-width="1" stroke-linecap="round"/>
+        <path d="M30 35 Q23 32 17 30" stroke="url(#tbSilver)" stroke-width=".95" fill="none" stroke-linecap="round"/>
+        <path d="M30 35 Q37 32 43 30" stroke="url(#tbSilver)" stroke-width=".95" fill="none" stroke-linecap="round"/>
+        <path d="M30 28 Q24 25 19 22" stroke="url(#tbGold)" stroke-width=".75" fill="none" stroke-linecap="round"/>
+        <path d="M30 28 Q36 25 41 22" stroke="url(#tbGold)" stroke-width=".75" fill="none" stroke-linecap="round"/>
+        <path d="M30 22 Q26 19 22 17" stroke="url(#tbSilver)" stroke-width=".6" fill="none" stroke-linecap="round"/>
+        <path d="M30 22 Q34 19 38 17" stroke="url(#tbSilver)" stroke-width=".6" fill="none" stroke-linecap="round"/>
+        <path d="M30 17 Q27.5 15 25 13.5" stroke="url(#tbGold)" stroke-width=".45" fill="none" stroke-linecap="round"/>
+        <path d="M30 17 Q32.5 15 35 13.5" stroke="url(#tbGold)" stroke-width=".45" fill="none" stroke-linecap="round"/>
+        <circle cx="17" cy="30" r="1.5" fill="url(#tbViolet)"/>
+        <circle cx="43" cy="30" r="1.5" fill="url(#tbViolet)"/>
+        <circle cx="19" cy="22" r="1.2" fill="url(#tbGold)"/>
+        <circle cx="41" cy="22" r="1.2" fill="url(#tbGold)"/>
+        <circle cx="22" cy="17" r=".95" fill="url(#tbSilver)"/>
+        <circle cx="38" cy="17" r=".95" fill="url(#tbSilver)"/>
+        <circle cx="25" cy="13.5" r=".8" fill="url(#tbViolet)"/>
+        <circle cx="35" cy="13.5" r=".8" fill="url(#tbViolet)"/>
+        <circle cx="30" cy="11" r="1.7" fill="url(#tbGold)" style="animation:pulse 4s ease-in-out infinite"/>
+        <path d="M30 44 Q26 47 21 49" stroke="url(#tbGold)" stroke-width=".6" fill="none" stroke-linecap="round"/>
+        <path d="M30 44 Q34 47 39 49" stroke="url(#tbGold)" stroke-width=".6" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="topbar__brand-text">
+      <div class="topbar__brand-name">Daniele Dallavecchia</div>
+      <div class="topbar__brand-sub">Psicanálise Integrativa &amp; Hipnose Clínica</div>
+    </div>
+  </div>
+
+  <div class="topbar__actions">
+    <div class="zoom-bar">
+      <button class="zoom-btn zoom-btn--xs" data-size="14" title="14 px">A</button>
+      <button class="zoom-btn zoom-btn--sm is-active" data-size="16" title="16 px">A</button>
+      <button class="zoom-btn zoom-btn--md" data-size="18" title="18 px">A</button>
+      <button class="zoom-btn zoom-btn--lg" data-size="20" title="20 px">A</button>
+    </div>
+    <span class="topbar__divider"></span>
+    <div class="topbar__icons">
+      <button class="icon-btn" type="button" id="btnExportar" title="Exportar JSON" aria-label="Exportar JSON">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z" stroke-linecap="round"/><path d="M14 2v6h6" stroke-linecap="round"/><text x="12" y="18" font-family="Inter, sans-serif" font-size="5" font-weight="700" fill="currentColor" stroke="none" text-anchor="middle">JSON</text></svg>
+      </button>
+      <button class="icon-btn" type="button" id="btnImprimir" title="Imprimir" aria-label="Imprimir">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+      </button>
+      <button class="icon-btn icon-btn--primary" type="button" id="btnGuardar" title="Guardar" aria-label="Guardar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  LAYOUT                                                         -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" aria-label="Índice da anamnese">
+    <div class="sb-cliente">
+      <div class="sb-cliente__label">Cliente</div>
+      <div class="sb-cliente__nome" id="sbNome">— sem cliente —</div>
+      <div class="sb-cliente__meta" id="sbMeta">Carrega ?id=&lt;clienteId&gt;</div>
+    </div>
+
+    <div class="sb-group">
+      <div class="sb-group__title">Anamnese inicial · formulário</div>
+      <a class="sb-item" href="#b-dados">Dados pessoais <span class="sb-item__count" data-count="b-dados">0/6</span></a>
+      <a class="sb-item" href="#b-trouxe">O que trouxe <span class="sb-item__count" data-count="b-trouxe">0/4</span></a>
+      <a class="sb-item" href="#b-saude-forms">Saúde inicial <span class="sb-item__count" data-count="b-saude-forms">0/3</span></a>
+      <a class="sb-item" href="#b-experiencia">Experiência anterior <span class="sb-item__count" data-count="b-experiencia">0/3</span></a>
+      <a class="sb-item" href="#b-disponibilidade">Disponibilidade <span class="sb-item__count" data-count="b-disponibilidade">0/2</span></a>
+    </div>
+
+    <div class="sb-group">
+      <div class="sb-group__title">1.ª sessão investigativa</div>
+      <a class="sb-item" href="#b-acolhimento">Acolhimento <span class="sb-item__count" data-count="b-acolhimento">0/2</span></a>
+      <a class="sb-item" href="#b-queixa">Queixa estrutural <span class="sb-item__count" data-count="b-queixa">0/5</span></a>
+      <a class="sb-item" href="#b-memoria">Memória inaugural <span class="sb-item__count" data-count="b-memoria">0/2</span></a>
+      <a class="sb-item" href="#b-vinculacao">Vinculação · AAI <span class="sb-item__count" data-count="b-vinculacao">0/3</span></a>
+      <a class="sb-item" href="#b-relacionamentos">Relacionamentos <span class="sb-item__count" data-count="b-relacionamentos">0/4</span></a>
+      <a class="sb-item" href="#b-recursos">Recursos <span class="sb-item__count" data-count="b-recursos">0/2</span></a>
+      <a class="sb-item" href="#b-objetivo">Objetivo &amp; futuro <span class="sb-item__count" data-count="b-objetivo">0/2</span></a>
+      <a class="sb-item" href="#b-pnl">PNL · análise estrutural <span class="sb-item__count" data-count="b-pnl">0/6</span></a>
+    </div>
+
+    <div class="sb-group">
+      <div class="sb-group__title">Corpo · saúde · segurança</div>
+      <a class="sb-item" href="#b-corpo">Corpo &amp; saúde <span class="sb-item__count" data-count="b-corpo">0/10</span></a>
+      <a class="sb-item" href="#b-despiste">Despiste hipnose <span class="sb-item__count" data-count="b-despiste">0/5</span></a>
+    </div>
+
+    <div class="sb-group">
+      <div class="sb-group__title">Mapa Quântico</div>
+      <a class="sb-item" href="#b-mapa">12 áreas <span class="sb-item__count" data-count="b-mapa">0/12</span></a>
+    </div>
+
+    <div class="sb-progress">
+      <div class="sb-progress__label">Progresso global</div>
+      <div class="sb-progress__bar"><div class="sb-progress__fill" id="progressFill"></div></div>
+      <div class="sb-progress__num" id="progressNum">0 %</div>
+    </div>
+  </aside>
+
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="cliente-header">
+      <div>
+        <h2 id="hdrNome">Anamnese · sem cliente carregado</h2>
+        <div class="cliente-header__meta" id="hdrMeta">Use o parâmetro <code>?id=&lt;clienteId&gt;</code> na URL para carregar uma ficha</div>
+      </div>
+      <div class="cliente-header__data" id="hdrData">—</div>
+    </div>
+
+
+    <!-- ═══════════════ CABEÇALHO PARTE 1 · IMPORTADO DO GOOGLE FORMS ═══════════════ -->
+    <div class="parte1-header" data-parte="1">
+      <div class="parte1-header__txt">
+        <div class="parte1-header__titulo">📥 Parte 1 · importada do Google Forms</div>
+        <div class="parte1-header__sub">Os 5 blocos abaixo são preenchidos pelo cliente no formulário inicial. Aparecem aqui apenas para consulta. Clica «✎ Editar» em qualquer bloco se precisares de emendar.</div>
+      </div>
+      <button class="btn btn--primary" type="button" id="btnSincForms">↻ Sincronizar Forms</button>
+    </div>
+
+
+    <!-- ═══════════════ BLOCO A1 · Dados pessoais ═══════════════ -->
+    <section class="bloco bloco--importado is-open" id="b-dados" data-parte="1">
+      <button class="bloco__head" type="button" data-toggle>
+        <svg class="bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h2 class="bloco__title">Dados pessoais</h2>
+        <span class="bloco__chip bloco__chip--importado">Google Forms</span>
+        <span class="btn-corrigir" data-btn-corrigir>✎ Editar</span>
+        <span class="bloco__count" data-count-text="b-dados">0/6</span>
+      </button>
+      <div class="bloco__body">
+        <div class="field-row field-row--2col">
+          <div class="field"><label class="field__label">Nome completo</label><input class="input" type="text" data-key="f_nome"></div>
+          <div class="field"><label class="field__label">Data de nascimento</label><input class="input" type="text" placeholder="dd/mm/aaaa" data-key="f_nasc"></div>
+          <div class="field"><label class="field__label">Género</label>
+            <select class="select" data-key="f_genero">
+              <option value="">—</option><option>Feminino</option><option>Masculino</option><option>Não-binário</option><option>Prefiro não dizer</option>
+            </select>
+          </div>
+          <div class="field"><label class="field__label">Telefone</label><input class="input" type="text" data-key="f_tel"></div>
+          <div class="field"><label class="field__label">Profissão atual</label><input class="input" type="text" data-key="f_profissao"></div>
+          <div class="field"><label class="field__label">Estado civil</label>
+            <select class="select" data-key="f_estado_civil">
+              <option value="">—</option><option>Solteiro(a)</option><option>União de facto</option><option>Casado(a)</option><option>Separado(a)</option><option>Divorciado(a)</option><option>Viúvo(a)</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label class="field__label">Como soube de mim</label><input class="input" type="text" data-key="f_origem" placeholder="Redes sociais, indicação, evento…"></div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════ BLOCO A2 · O que trouxe ═══════════════ -->
+    <section class="bloco bloco--importado" id="b-trouxe" data-parte="1">
+      <button class="bloco__head" type="button" data-toggle>
+        <svg class="bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h2 class="bloco__title">O que a trouxe</h2>
+        <span class="bloco__chip bloco__chip--importado">Google Forms</span>
+        <span class="btn-corrigir" data-btn-corrigir>✎ Editar</span>
+        <span class="bloco__count" data-count-text="b-trouxe">0/4</span>
+      </button>
+      <div class="bloco__body">
+
+        <div class="q-block">
+          <div class="q-pergunta">Motivo principal da procura</div>
+          <div class="q-hint">Pode escolher mais que um</div>
+          <div class="chips-row" data-multi="f_motivos">
+            <span class="chip">Ansiedade</span><span class="chip">Depressão</span><span class="chip">Insónia</span>
+            <span class="chip">Stress · burnout</span><span class="chip">Luto</span><span class="chip">Separação</span>
+            <span class="chip">Relações</span><span class="chip">Trauma</span><span class="chip">Compulsões</span>
+            <span class="chip">Fobia</span><span class="chip">Tabagismo</span><span class="chip">Autoestima</span>
+            <span class="chip">Falta de sentido</span><span class="chip">Dor crónica</span><span class="chip">Saúde física</span>
+            <span class="chip">Sexualidade</span><span class="chip">Sonhos · espiritual</span><span class="chip">Outro</span>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta">Em uma ou duas frases, o que a trouxe aqui</div>
+          <div class="textarea-mic">
+            <textarea class="textarea" data-key="f_queixa" data-mic="1" placeholder="Nas palavras do cliente…"></textarea>
+            <button class="btn-mic" type="button" data-mic-btn aria-label="Gravar voz">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+            </button>
+          </div>
+          <div class="mic-hint">Clica no microfone para ditar (Web Speech API · funciona em Chrome/Edge · pt-PT)</div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta">Há quanto tempo sente isto</div>
+          <select class="select" data-key="f_tempo">
+            <option value="">—</option>
+            <option>Há menos de 1 mês</option>
+            <option>Entre 1 e 6 meses</option>
+            <option>Entre 6 meses e 1 ano</option>
+            <option>Entre 1 e 3 anos</option>
+            <option>Mais de 3 anos</option>
+            <option>Desde sempre / não sei precisar</option>
+          </select>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta">Quanto isto afeta o dia-a-dia (0–10)</div>
+          <div class="escala-row" data-escala="f_impacto">
+            <button class="escala-btn" data-v="0">0</button><button class="escala-btn" data-v="1">1</button><button class="escala-btn" data-v="2">2</button><button class="escala-btn" data-v="3">3</button><button class="escala-btn" data-v="4">4</button><button class="escala-btn" data-v="5">5</button><button class="escala-btn" data-v="6">6</button><button class="escala-btn" data-v="7">7</button><button class="escala-btn" data-v="8">8</button><button class="escala-btn" data-v="9">9</button><button class="escala-btn" data-v="10">10</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ═══════════════ BLOCO A3 · Saúde inicial ═══════════════ -->
+    <section class="bloco bloco--importado" id="b-saude-forms" data-parte="1">
+      <button class="bloco__head" type="button" data-toggle>
+        <svg class="bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h2 class="bloco__title">Saúde inicial</h2>
+        <span class="bloco__chip bloco__chip--importado">Google Forms</span>
+        <span class="btn-corrigir" data-btn-corrigir>✎ Editar</span>
+        <span class="bloco__count" data-count-text="b-saude-forms">0/3</span>
+      </button>
+      <div class="bloco__body">
+
+        <div class="q-block">
+          <div class="q-pergunta">Já recebeu algum destes diagnósticos</div>
+          <div class="chips-row" data-multi="f_diagnosticos">
+            <span class="chip">Ansiedade · pânico</span><span class="chip">Depressão</span><span class="chip">PTSD</span>
+            <span class="chip">Bipolar</span><span class="chip">Esquemas · personalidade</span><span class="chip">TOC</span>
+            <span class="chip">TDAH</span><span class="chip">Espectro autista</span><span class="chip">Fobia específica</span>
+            <span class="chip">Anorexia · bulimia</span><span class="chip">Adição</span><span class="chip">Nenhum</span>
+            <span class="chip">Prefiro falar em sessão</span>
+          </div>
+        </div>
+        <div class="q-block">
+          <div class="q-pergunta">Toma algum medicamento atualmente</div>
+          <select class="select" data-key="f_medicacao">
+            <option value="">—</option><option>Não</option><option>Sim</option><option>Esporadicamente</option>
+          </select>
+        </div>
+        <div class="q-block">
+          <div class="q-pergunta">Se sim, quais</div>
+          <textarea class="textarea" data-key="f_medicacao_quais" placeholder="Nome · dosagem · há quanto tempo"></textarea>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════ BLOCO A4 · Experiência anterior ═══════════════ -->
+    <section class="bloco bloco--importado" id="b-experiencia" data-parte="1">
+      <button class="bloco__head" type="button" data-toggle>
+        <svg class="bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h2 class="bloco__title">Experiência anterior</h2>
+        <span class="bloco__chip bloco__chip--importado">Google Forms</span>
+        <span class="btn-corrigir" data-btn-corrigir>✎ Editar</span>
+        <span class="bloco__count" data-count-text="b-experiencia">0/3</span>
+      </button>
+      <div class="bloco__body">
+
+        <div class="q-block">
+          <div class="q-pergunta">Já fez acompanhamento terapêutico antes</div>
+          <select class="select" data-key="f_acomp_antes">
+            <option value="">—</option><option>Sim, e ajudou</option><option>Sim, mas não ajudou</option><option>Sim, ficou inacabado</option><option>Nunca</option>
+          </select>
+        </div>
+        <div class="q-block">
+          <div class="q-pergunta">Já fez hipnose</div>
+          <select class="select" data-key="f_hipnose_antes">
+            <option value="">—</option><option>Nunca</option><option>Sim, gostei</option><option>Sim, não funcionou</option><option>Não sei o que é</option>
+          </select>
+        </div>
+        <div class="q-block">
+          <div class="q-pergunta">O que espera obter deste acompanhamento</div>
+          <textarea class="textarea" data-key="f_expectativas" placeholder="Objetivo livre…"></textarea>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════ BLOCO A5 · Disponibilidade ═══════════════ -->
+    <section class="bloco bloco--importado" id="b-disponibilidade" data-parte="1">
+      <button class="bloco__head" type="button" data-toggle>
+        <svg class="bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h2 class="bloco__title">Disponibilidade</h2>
+        <span class="bloco__chip bloco__chip--importado">Google Forms</span>
+        <span class="btn-corrigir" data-btn-corrigir>✎ Editar</span>
+        <span class="bloco__count" data-count-text="b-disponibilidade">0/2</span>
+      </button>
+      <div class="bloco__body">
+
+        <div class="q-block">
+          <div class="q-pergunta">Horários que funcionam melhor</div>
+          <div class="q-hint">Pode escolher mais que um</div>
+          <div class="chips-row" data-multi="f_horarios">
+            <span class="chip">Manhã (9h–12h)</span><span class="chip">Início tarde (13h–16h)</span><span class="chip">Fim tarde (16h–19h)</span>
+            <span class="chip">Noite (19h–21h)</span><span class="chip">Sábado</span><span class="chip">Online</span><span class="chip">Presencial</span>
+          </div>
+        </div>
+        <div class="q-block">
+          <div class="q-pergunta">Frequência preferida</div>
+          <select class="select" data-key="f_frequencia">
+            <option value="">—</option><option>Semanal</option><option>Quinzenal</option><option>Mensal</option><option>Pontual</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════ BLOCO B1 · Acolhimento ═══════════════ -->
+    <section class="bloco" id="b-acolhimento">
+      <button class="bloco__head" type="button" data-toggle>
+        <svg class="bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h2 class="bloco__title">Acolhimento &amp; calibração V/A/C</h2>
+        <span class="bloco__chip bloco__chip--sessao">1.ª sessão</span>
+        <span class="bloco__count" data-count-text="b-acolhimento">0/2</span>
+      </button>
+      <div class="bloco__body">
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">Q1</span>«Como te sentes neste momento — corpo e emoção?»</div>
+          <div class="q-hint">Calibrar estado de chegada · postura · respiração · primeiro sistema representacional. Útil online e em consultório.</div>
+          <textarea class="textarea" data-key="i_q1" placeholder="Estado de chegada · postura · sistema representacional detetado…"></textarea>
+        </div>
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">Q2</span>«Quando pensas no que te trouxe aqui, surge primeiro — uma imagem, uma sensação, ou uma voz interna?»</div>
+          <div class="q-hint">Calibração do sistema líder · observar movimento ocular</div>
+          <textarea class="textarea" data-key="i_q2" placeholder="Sistema líder · pistas oculares · congruência…"></textarea>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════ BLOCO B2 · Queixa estrutural ═══════════════ -->
+    <section class="bloco" id="b-queixa">
+      <button class="bloco__head" type="button" data-toggle>
+        <svg class="bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h2 class="bloco__title">Queixa estrutural · meta-modelo</h2>
+        <span class="bloco__chip bloco__chip--sessao">1.ª sessão</span>
+        <span class="bloco__count" data-count-text="b-queixa">0/5</span>
+      </button>
+      <div class="bloco__body">
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">Q3</span>Queixa central · nas palavras do cliente (sensorial)</div>
+          <div class="textarea-mic">
+            <textarea class="textarea" data-key="i_q3" data-mic="1" placeholder="Repor a fala do cliente com fidelidade · predicados V/A/C…"></textarea>
+            <button class="btn-mic" type="button" data-mic-btn aria-label="Gravar voz">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">Q4</span>Localização somática + intensidade</div>
+          <div class="q-hint">Escolhe uma <strong>pergunta-sondadora</strong> no dropdown para a registar na nota · escreve a resposta do cliente a seguir.</div>
+
+          <div data-catalogo="perguntas" data-catalogo-key="q4_perguntas"></div>
+
+          <textarea class="textarea" data-key="i_q4" placeholder="Notas das respostas do cliente · onde · forma · estabilidade · respiração…" style="margin-top: var(--sp-3); min-height: 120px;"></textarea>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">Q5</span>Diálogo interno (Ai)</div>
+          <div class="q-hint">Escolhe uma pergunta no dropdown para extrair o <strong>diálogo interno</strong> (Bandler &amp; Grinder · auditivo interno) · escreve a resposta abaixo.</div>
+
+          <div data-catalogo="perguntas" data-catalogo-key="q5_perguntas"></div>
+
+          <textarea class="textarea" data-key="i_q5" placeholder="Notas das respostas do cliente · frases exatas · padrões do meta-modelo identificados…" style="margin-top: var(--sp-3); min-height: 120px;"></textarea>
+        </div>
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">Q6</span>Gatilho · situação que ativa</div>
+          <textarea class="textarea" data-key="i_q6" placeholder="Específico · difuso · interpessoal · físico…"></textarea>
+        </div>
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">Q7</span>Intensidade ao falar do tema (0–10)</div>
+          <div class="escala-row" data-escala="i_q7">
+            <button class="escala-btn" data-v="0">0</button><button class="escala-btn" data-v="1">1</button><button class="escala-btn" data-v="2">2</button><button class="escala-btn" data-v="3">3</button><button class="escala-btn" data-v="4">4</button><button class="escala-btn" data-v="5">5</button><button class="escala-btn" data-v="6">6</button><button class="escala-btn" data-v="7">7</button><button class="escala-btn" data-v="8">8</button><button class="escala-btn" data-v="9">9</button><button class="escala-btn" data-v="10">10</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════ BLOCO B3 · Memória inaugural + trauma timeline ═══════════════ -->
+    <section class="bloco" id="b-memoria">
+      <button class="bloco__head" type="button" data-toggle>
+        <svg class="bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h2 class="bloco__title">Memória inaugural &amp; trauma timeline</h2>
+        <span class="bloco__chip bloco__chip--sessao">1.ª sessão</span>
+        <span class="bloco__count" data-count-text="b-memoria">0/2</span>
+      </button>
+      <div class="bloco__body">
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">Q8</span>«Quando notaste isto pela primeira vez? Que idade tinhas?»</div>
+          <textarea class="textarea" data-key="i_q8" placeholder="Idade aproximada · evento · contexto…"></textarea>
+        </div>
+
+        <!-- TRAUMA TIMELINE · integrada entre Q8 e Q9 -->
+        <div class="q-block">
+          <div class="q-pergunta">Linha temporal · eventos marcantes por idade</div>
+          <div class="q-hint">Registe eventos marcantes com a idade aproximada em que ocorreram. Ex: «3 anos — pais divorciam · 7 anos — abuso · 15 anos — mãe agride.» Pacing trauma-informed · cronograma completo na página <strong>Infância e Família de Origem</strong>.</div>
+
+          <div class="timeline-add">
+            <input class="input" type="number" id="trauma-idade" placeholder="Idade" min="0" max="99">
+            <input class="input" type="text" id="trauma-desc" placeholder="Descrição do evento…">
+            <button class="btn btn--primary" type="button" id="btnAddTrauma">+ Adicionar</button>
+          </div>
+          <div class="timeline-lista" id="timelineLista"></div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">Q9</span>Quem estava presente · havia figura protetora</div>
+          <textarea class="textarea" data-key="i_q9" placeholder="Disponibilidade emocional · resposta recebida…"></textarea>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════ BLOCO B4 · Vinculação AAI ═══════════════ -->
+    <section class="bloco" id="b-vinculacao">
+      <button class="bloco__head" type="button" data-toggle>
+        <svg class="bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h2 class="bloco__title">Vinculação · AAI breve</h2>
+        <span class="bloco__chip bloco__chip--sessao">1.ª sessão</span>
+        <span class="bloco__count" data-count-text="b-vinculacao">0/3</span>
+      </button>
+      <div class="bloco__body">
+
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">Q10</span>Três adjetivos para a relação com a mãe (infância) + memória que sustente cada um</div>
+          <div class="q-hint">Escolhe adjetivos no dropdown (preenchem o próximo campo vazio) ou escreve livremente. Usa «+ acrescentar» se houver mais que três.</div>
+          <div data-aai="mae"></div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">Q11</span>Três adjetivos para o pai (ou figura masculina equivalente) + memória</div>
+          <div class="q-hint">Escolhe adjetivos no dropdown ou escreve livremente. Usa «+ acrescentar» se houver mais que três.</div>
+          <div data-aai="pai"></div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">Q12</span>Quando eras criança e sofrias — a quem recorrias? O que acontecia?</div>
+          <div class="q-hint">Resposta ao sofrimento — critério-chave de vinculação (Bowlby)</div>
+          <textarea class="textarea" data-key="i_q12" placeholder="Recorria a: ___ · Resposta: ___ · Estratégia de auto-consolação: ___ · Padrão inferido: ___"></textarea>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════ BLOCO B5 · Relacionamentos ═══════════════ -->
+    <section class="bloco" id="b-relacionamentos">
+      <button class="bloco__head" type="button" data-toggle>
+        <svg class="bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h2 class="bloco__title">Relacionamentos</h2>
+        <span class="bloco__chip bloco__chip--sessao">1.ª sessão</span>
+        <span class="bloco__count" data-count-text="b-relacionamentos">0/4</span>
+      </button>
+      <div class="bloco__body">
+        <div class="q-hint" style="padding-top: var(--sp-3); margin-bottom: var(--sp-3);">
+          Campos abertos · mesmo que não anotes na 1.ª sessão, ficam aqui para sessões seguintes. <strong>O padrão vincular adulto frequentemente repete o de infância</strong> (Bowlby) — ler em paralelo com Q10-Q12.
+        </div>
+
+        <div class="sub-bloco is-open">
+          <button class="sub-bloco__head" type="button" data-sub-toggle>
+            <svg class="sub-bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            <span class="sub-bloco__num">R1</span>
+            <span class="sub-bloco__titulo">Relacionamento amoroso atual</span>
+            <span class="sub-bloco__hint">Há quanto tempo · qualidade · padrão</span>
+          </button>
+          <div class="sub-bloco__body">
+            <textarea class="textarea" data-key="r_atual" placeholder="Sem parceiro · solteiro · casado há X anos · em conflito · estável…"></textarea>
+            <div data-catalogo="padroes" data-catalogo-key="r1_padroes"></div>
+            <div data-catalogo="evette" data-catalogo-key="r1_evette"></div>
+          </div>
+        </div>
+
+        <div class="sub-bloco">
+          <button class="sub-bloco__head" type="button" data-sub-toggle>
+            <svg class="sub-bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            <span class="sub-bloco__num">R2</span>
+            <span class="sub-bloco__titulo">Relacionamentos anteriores significativos</span>
+            <span class="sub-bloco__hint">Padrões repetidos · razão do fim</span>
+          </button>
+          <div class="sub-bloco__body">
+            <textarea class="textarea" data-key="r_anteriores" placeholder="Casamentos · relações longas · fim recente · padrão de escolha do parceiro…"></textarea>
+            <div data-catalogo="padroes" data-catalogo-key="r2_padroes"></div>
+            <div data-catalogo="evette" data-catalogo-key="r2_evette"></div>
+          </div>
+        </div>
+
+        <div class="sub-bloco">
+          <button class="sub-bloco__head" type="button" data-sub-toggle>
+            <svg class="sub-bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            <span class="sub-bloco__num">R3</span>
+            <span class="sub-bloco__titulo">Filhos</span>
+            <span class="sub-bloco__hint">Transmissão transgeracional</span>
+          </button>
+          <div class="sub-bloco__body">
+            <textarea class="textarea" data-key="r_filhos" placeholder="Não tem · quer ter · número de filhos · idades · qualidade da relação · padrão parental observado…"></textarea>
+            <div data-catalogo="padroes" data-catalogo-key="r3_padroes"></div>
+            <div data-catalogo="evette" data-catalogo-key="r3_evette"></div>
+          </div>
+        </div>
+
+        <div class="sub-bloco">
+          <button class="sub-bloco__head" type="button" data-sub-toggle>
+            <svg class="sub-bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            <span class="sub-bloco__num">R4</span>
+            <span class="sub-bloco__titulo">Outras relações significativas</span>
+            <span class="sub-bloco__hint">Tutor de resiliência · Cyrulnik</span>
+          </button>
+          <div class="sub-bloco__body">
+            <textarea class="textarea" data-key="r_outras" placeholder="Amigo(a) íntimo(a) · mentor · figura espiritual · grupo de pertença · animal…"></textarea>
+            <div data-catalogo="padroes" data-catalogo-key="r4_padroes"></div>
+            <div data-catalogo="evette" data-catalogo-key="r4_evette"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════ BLOCO B7 · Recursos ═══════════════ -->
+    <section class="bloco" id="b-recursos">
+      <button class="bloco__head" type="button" data-toggle>
+        <svg class="bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h2 class="bloco__title">Recursos &amp; resiliência</h2>
+        <span class="bloco__chip bloco__chip--sessao">1.ª sessão</span>
+        <span class="bloco__count" data-count-text="b-recursos">0/2</span>
+      </button>
+      <div class="bloco__body">
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">Q13</span>Quem · o quê · que práticas sustentam a pessoa hoje</div>
+          <div class="q-hint">Tutor de resiliência (Cyrulnik) · figuras · animais · natureza · espiritualidade</div>
+          <textarea class="textarea" data-key="i_q13" placeholder="Pessoas significativas · práticas · momentos de bem-estar…"></textarea>
+        </div>
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">Q14</span>Memória de competência · um momento em que se sentiu capaz</div>
+          <textarea class="textarea" data-key="i_q14" placeholder="Idade · contexto · sensação corporal de competência…"></textarea>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════ BLOCO B6 · Objetivo ═══════════════ -->
+    <section class="bloco" id="b-objetivo">
+      <button class="bloco__head" type="button" data-toggle>
+        <svg class="bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h2 class="bloco__title">Objetivo &amp; futuro</h2>
+        <span class="bloco__chip bloco__chip--sessao">1.ª sessão</span>
+        <span class="bloco__count" data-count-text="b-objetivo">0/2</span>
+      </button>
+      <div class="bloco__body">
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">Q15</span>Se o acompanhamento correr bem, o que terá mudado</div>
+          <div class="q-hint">Objetivo SMART · critério sensorial de sucesso</div>
+          <textarea class="textarea" data-key="i_q15" placeholder="Vou notar que…"></textarea>
+        </div>
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">Q16</span>Future pace · imagina-te daqui a 6 meses · o que vês, ouves, sentes</div>
+          <textarea class="textarea" data-key="i_q16" placeholder="Cena vívida no futuro…"></textarea>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════ BLOCO B7 · PNL · análise estrutural ═══════════════ -->
+    <section class="bloco" id="b-pnl">
+      <button class="bloco__head" type="button" data-toggle>
+        <svg class="bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h2 class="bloco__title">PNL · análise estrutural</h2>
+        <span class="bloco__chip bloco__chip--pnl">Bandler &amp; Grinder</span>
+        <span class="bloco__count" data-count-text="b-pnl">0/6</span>
+      </button>
+      <div class="bloco__body">
+
+        <div class="q-hint" style="padding-top: var(--sp-3); margin-bottom: var(--sp-3);">
+          Síntese estrutural de toda a 1.ª sessão à luz do meta-modelo (Bandler &amp; Grinder, 1975) e dos sistemas representacionais (Bandler &amp; Grinder, 1979 · «Sapos em Príncipes»). Vai alimentar a leitura clínica na página Diagnóstico.
+        </div>
+
+        <!-- PNL1 · Sistema representacional dominante -->
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">PNL1</span>Sistema representacional dominante</div>
+          <div class="q-hint">Calibrado por predicados + pistas oculares + respiração</div>
+          <div class="chips-row" data-multi="pnl_sr">
+            <span class="chip">Visual (V)</span>
+            <span class="chip">Auditivo (A)</span>
+            <span class="chip">Cinestésico (K)</span>
+            <span class="chip">Auditivo interno (Ai)</span>
+            <span class="chip">Olfativo · gustativo (O/G)</span>
+            <span class="chip">Misto · a calibrar</span>
+          </div>
+        </div>
+
+        <!-- PNL2 · Predicados-tipo do cliente -->
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">PNL2</span>Predicados-tipo (5 palavras mais frequentes)</div>
+          <div class="q-hint">A «impressão digital» do modo de processar — verbos, advérbios, adjetivos sensoriais. <em>Ver/mostrar/claro</em> (V) · <em>ouvir/soar/ressoar</em> (A) · <em>sentir/pegar/peso</em> (K).</div>
+          <textarea class="textarea" data-key="pnl_predicados" placeholder="Ex: «não vejo saída», «peso no peito», «ressoa em mim»…"></textarea>
+        </div>
+
+        <!-- PNL3 · Pistas oculares observadas -->
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">PNL3</span>Pistas oculares observadas (calibração pessoal)</div>
+          <div class="q-hint">Antes de generalizar, calibrar com 5–6 perguntas-teste. Padrão clássico para ~70 % dos destros:</div>
+
+          <div class="pnl-eyes">
+            <button class="pnl-eye" type="button" data-exemplo="↖ Vc · Imagens visuais construídas — «Imagina-te de cabelo verde»" data-exemplos-target="pnl_pistas"><strong>↖ Cima-esquerda · Vc</strong>Imagens visuais construídas<small>«Imagina-te de cabelo verde»</small></button>
+            <button class="pnl-eye" type="button" data-exemplo="↗ Vr · Imagens visuais recordadas — «De que cor era o sofá da tua mãe?»" data-exemplos-target="pnl_pistas"><strong>↗ Cima-direita · Vr</strong>Imagens visuais recordadas<small>«De que cor era o sofá da tua mãe?»</small></button>
+            <button class="pnl-eye" type="button" data-exemplo="← Ac · Sons construídos — «Como soaria num megafone?»" data-exemplos-target="pnl_pistas"><strong>← Lado-esquerdo · Ac</strong>Sons construídos<small>«Como soaria num megafone?»</small></button>
+            <button class="pnl-eye" type="button" data-exemplo="→ Ar · Sons recordados — «Lembras-te da voz do teu pai?»" data-exemplos-target="pnl_pistas"><strong>→ Lado-direito · Ar</strong>Sons recordados<small>«Lembras-te da voz do teu pai?»</small></button>
+            <button class="pnl-eye" type="button" data-exemplo="↙ Ai · Diálogo interno — «O que dizes a ti agora?»" data-exemplos-target="pnl_pistas"><strong>↙ Baixo-esquerda · Ai</strong>Diálogo interno<small>«O que dizes a ti agora?»</small></button>
+            <button class="pnl-eye" type="button" data-exemplo="↘ K · Sensações cinestésicas — «Como te sentes quando ouves isso?»" data-exemplos-target="pnl_pistas"><strong>↘ Baixo-direita · K</strong>Sensações cinestésicas<small>«Como te sentes quando ouves isso?»</small></button>
+          </div>
+          <div class="pnl-legenda">visão frontal do cliente · perspetiva do terapeuta</div>
+
+          <textarea class="textarea" data-key="pnl_pistas" placeholder="Padrão observado neste cliente · congruência entre fala e busca ocular · particularidades (canhoto, lateralidade atípica)…"></textarea>
+        </div>
+
+        <!-- PNL4 · Padrões do meta-modelo detetados (3 dropdowns · inserem no textarea · modelo PNL5) -->
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">PNL4</span>Padrões do meta-modelo detetados</div>
+          <div class="q-hint">Escolhe o padrão em cada categoria para o inserir na nota abaixo. Acrescenta a frase exata que o cliente disse a seguir ao «→».</div>
+
+          <div class="pnl-meta" data-pnl-meta="pnl_meta_notas">
+            <div class="pnl-meta__col">
+              <label class="pnl-meta__label">A · Apagamentos</label>
+              <select class="select pnl-meta__select">
+                <option value="">—</option>
+                <option value="Apagamento simples · «estou perdido» → ">Apagamento simples · «estou perdido»</option>
+                <option value="Verbo não-específico · «rejeitou-me» → ">Verbo não-específico · «rejeitou-me»</option>
+                <option value="Substantivo não-específico · «as pessoas» → ">Substantivo não-específico · «as pessoas»</option>
+                <option value="Comparativo apagado · «sou melhor» → ">Comparativo apagado · «sou melhor»</option>
+                <option value="Performativo perdido · «é errado» → ">Performativo perdido · «é errado»</option>
+                <option value="Índice referencial em falta · «isso magoa» → ">Índice referencial em falta · «isso magoa»</option>
+              </select>
+            </div>
+            <div class="pnl-meta__col">
+              <label class="pnl-meta__label">B · Generalizações</label>
+              <select class="select pnl-meta__select">
+                <option value="">—</option>
+                <option value="Quantificador universal · «sempre, nunca» → ">Quantificador universal · «sempre, nunca»</option>
+                <option value="Operador modal de necessidade · «tenho de» → ">Operador modal de necessidade · «tenho de»</option>
+                <option value="Operador modal de possibilidade · «não posso» → ">Operador modal de possibilidade · «não posso»</option>
+                <option value="Pressuposição · «quando vais melhorar?» → ">Pressuposição · «quando vais melhorar?»</option>
+              </select>
+            </div>
+            <div class="pnl-meta__col">
+              <label class="pnl-meta__label">C · Distorções</label>
+              <select class="select pnl-meta__select">
+                <option value="">—</option>
+                <option value="Nominalização · «falta-me confiança» → ">Nominalização · «falta-me confiança»</option>
+                <option value="Causa-efeito · «faz-me sentir mal» → ">Causa-efeito · «faz-me sentir mal»</option>
+                <option value="Leitura mental · «acha que sou» → ">Leitura mental · «acha que sou»</option>
+                <option value="Equivalência complexa · «se X, então Y» → ">Equivalência complexa · «se X, então Y»</option>
+              </select>
+            </div>
+          </div>
+
+          <textarea class="textarea" data-key="pnl_meta_notas" placeholder="Os padrões escolhidos aparecem aqui · acrescenta a frase exata do cliente após o «→»…" style="margin-top: var(--sp-3); min-height: 140px;"></textarea>
+        </div>
+
+        <!-- PNL5 · Estratégia interna -->
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">PNL5</span>Estratégia interna · líder → representacional → referencial</div>
+          <div class="q-hint">Para uma queixa central específica (ex: ciúme, ansiedade, autocrítica). A pergunta-matriz: <em>«Como é que sabes?»</em></div>
+
+          <div class="field-row field-row--3col">
+            <div class="field">
+              <label class="field__label">1. Sistema líder · vai buscar</label>
+              <select class="select" data-key="pnl_estr_lider">
+                <option value="">—</option>
+                <option>Vc · Visual construído</option>
+                <option>Vr · Visual recordado</option>
+                <option>Ac · Auditivo construído</option>
+                <option>Ar · Auditivo recordado</option>
+                <option>Ai · Diálogo interno</option>
+                <option>K · Cinestésico</option>
+                <option>O/G · Olfativo · gustativo</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="field__label">2. Representacional · consciência</label>
+              <select class="select" data-key="pnl_estr_rep">
+                <option value="">—</option>
+                <option>V · Visual</option>
+                <option>A · Auditivo</option>
+                <option>K · Cinestésico</option>
+                <option>Ai · Auditivo interno</option>
+              </select>
+            </div>
+            <div class="field">
+              <label class="field__label">3. Referencial · verifica</label>
+              <select class="select" data-key="pnl_estr_ref">
+                <option value="">—</option>
+                <option>V · Visual</option>
+                <option>A · Auditivo</option>
+                <option>K · Cinestésico</option>
+                <option>Ai · Auditivo interno</option>
+              </select>
+            </div>
+          </div>
+          <textarea class="textarea" data-key="pnl_estr_notas" placeholder="Queixa específica analisada · sequência observada · onde intervir prioritariamente…" style="margin-top: 8px;"></textarea>
+        </div>
+
+        <!-- PNL6 · Tradução entre sistemas (Satir) -->
+        <div class="q-block">
+          <div class="q-pergunta"><span class="q-pergunta__num">PNL6</span>Tradução entre sistemas · oportunidade clínica</div>
+          <div class="q-hint">Quando o sistema do cliente é rígido (só V, só K), preparar reformulações para alargar acesso (técnica de Virginia Satir).</div>
+          <textarea class="textarea" data-key="pnl_traducao" placeholder="Sistema dominante a abrir para… · frases de tradução a preparar…"></textarea>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ═══════════════ BLOCO C · Corpo & saúde ═══════════════ -->
+    <section class="bloco" id="b-corpo">
+      <button class="bloco__head" type="button" data-toggle>
+        <svg class="bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h2 class="bloco__title">Corpo &amp; saúde</h2>
+        <span class="bloco__chip bloco__chip--corpo">Novo</span>
+        <span class="bloco__count" data-count-text="b-corpo">0/10</span>
+      </button>
+      <div class="bloco__body">
+
+        <div class="q-block">
+          <div class="q-pergunta">C1 · Sintomas físicos atuais</div>
+          <div class="chips-row" data-multi="c_sintomas"></div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta">C2 · Doenças diagnosticadas (por sistema)</div>
+          <div class="chips-row" data-multi="c_doencas">
+            <span class="chip">Autoimune</span><span class="chip">Hormonal · tiroide</span><span class="chip">Diabetes</span>
+            <span class="chip">Hipertensão · cardio</span><span class="chip">Respiratória · asma</span><span class="chip">Digestiva · SII</span>
+            <span class="chip">Dor crónica</span><span class="chip">Fibromialgia</span><span class="chip">Enxaqueca</span>
+            <span class="chip">Pele · psoríase · eczema</span><span class="chip">Ginecológica · endometriose</span><span class="chip">Oncológica</span>
+            <span class="chip">Neurológica</span><span class="chip">Urinária</span><span class="chip">Sentidos · audição · visão</span>
+            <span class="chip">Nenhuma</span>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta">C3 · Padrões somáticos observados (Levine · van der Kolk)</div>
+          <div class="chips-row" data-multi="c_padroes">
+            <span class="chip">Hipervigilância</span><span class="chip">Tensão cervical · ombros</span><span class="chip">Tensão mandíbula · bruxismo</span>
+            <span class="chip">Respiração superficial · peito</span><span class="chip">Freeze · paralisia</span><span class="chip">Fuga</span>
+            <span class="chip">Luta · agitação</span><span class="chip">Colapso · exaustão</span><span class="chip">Dissociação</span>
+            <span class="chip">Sobressalto fácil</span><span class="chip">Nó na garganta</span><span class="chip">Aperto no peito</span>
+            <span class="chip">«Frio»</span><span class="chip">Tremores</span>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta">C4 · Sono</div>
+          <div class="field-row field-row--3col">
+            <div class="field"><label class="field__label">Qualidade</label>
+              <select class="select" data-key="c_sono_qual"><option value="">—</option><option>Reparador</option><option>Razoável</option><option>Perturbado</option><option>Muito mau</option></select>
+            </div>
+            <div class="field"><label class="field__label">Latência</label>
+              <select class="select" data-key="c_sono_latencia"><option value="">—</option><option>&lt; 15 min</option><option>15–30 min</option><option>30 min–1h</option><option>&gt; 1h</option></select>
+            </div>
+            <div class="field"><label class="field__label">Despertares</label>
+              <select class="select" data-key="c_sono_despertares"><option value="">—</option><option>Não</option><option>1–2 vezes</option><option>3+ vezes</option><option>Cedo · não volta</option></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta">C5 · Padrão alimentar</div>
+          <div class="chips-row" data-multi="c_alimentacao"></div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta">C6 · Energia / fadiga (0 muito cansada · 10 com energia)</div>
+          <div class="escala-row" data-escala="c_energia">
+            <button class="escala-btn" data-v="0">0</button><button class="escala-btn" data-v="1">1</button><button class="escala-btn" data-v="2">2</button><button class="escala-btn" data-v="3">3</button><button class="escala-btn" data-v="4">4</button><button class="escala-btn" data-v="5">5</button><button class="escala-btn" data-v="6">6</button><button class="escala-btn" data-v="7">7</button><button class="escala-btn" data-v="8">8</button><button class="escala-btn" data-v="9">9</button><button class="escala-btn" data-v="10">10</button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta">C7 · Dor — localização e intensidade</div>
+          <div class="campo-duplo" data-duplo="c_dor">
+            <div class="campo-duplo__selects">
+              <select class="select" data-duplo-loc>
+                <option value="">— Localização anatómica —</option>
+                <option>Cabeça</option>
+                <option>Face · têmporas</option>
+                <option>Mandíbula · ATM</option>
+                <option>Pescoço · cervical</option>
+                <option>Ombros</option>
+                <option>Peito · torácica</option>
+                <option>Costas · dorsal</option>
+                <option>Lombar</option>
+                <option>Abdómen · estômago</option>
+                <option>Pélvis · baixo-ventre</option>
+                <option>Membros superiores · braços</option>
+                <option>Mãos · punhos</option>
+                <option>Membros inferiores · pernas</option>
+                <option>Joelhos</option>
+                <option>Pés · tornozelos</option>
+                <option>Articulações (generalizada)</option>
+                <option>Dor difusa · todo o corpo</option>
+              </select>
+              <select class="select" data-duplo-int>
+                <option value="">— Nível de intensidade —</option>
+                <option>Leve (1–3)</option>
+                <option>Moderada (4–6)</option>
+                <option>Forte (7–8)</option>
+                <option>Muito forte (9–10)</option>
+              </select>
+            </div>
+            <textarea class="textarea textarea--notas" data-key="c_dor" placeholder="As seleções aparecem aqui · há quanto tempo · o que alivia · o que agrava…"></textarea>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta">C8 · Uso de substâncias</div>
+          <div class="chips-row" data-multi="c_substancias">
+            <span class="chip">Álcool ocasional</span><span class="chip">Álcool regular</span><span class="chip">Tabaco</span>
+            <span class="chip">Café · &gt; 3/dia</span><span class="chip">Ansiolíticos sem prescrição</span><span class="chip">Canábis</span>
+            <span class="chip">Outras drogas</span><span class="chip">Nenhuma</span>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta">C9 · Exercício físico</div>
+          <select class="select" data-key="c_exercicio">
+            <option value="">—</option><option>Nenhum</option><option>Ocasional</option><option>1–2× por semana</option><option>3–4× por semana</option><option>Diário</option>
+          </select>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta">C10 · Dia-a-dia · rotinas (livre)</div>
+          <textarea class="textarea" data-key="c_rotinas" placeholder="Como é um dia típico…"></textarea>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ═══════════════ BLOCO D · Despiste hipnose ═══════════════ -->
+    <section class="bloco" id="b-despiste">
+      <button class="bloco__head" type="button" data-toggle>
+        <svg class="bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h2 class="bloco__title">Despiste clínico para hipnose</h2>
+        <span class="bloco__chip bloco__chip--despiste">Segurança</span>
+        <span class="bloco__count" data-count-text="b-despiste">0/5</span>
+      </button>
+      <div class="bloco__body">
+        <div class="q-hint" style="padding-top: var(--sp-3); margin-bottom: var(--sp-3);">
+          Escolhe a condição e a resposta, depois «+ Registar». Respostas de contraindicação (Sim · Suspeita · Não medicada · Recente) ativam o aviso e reformulam o plano de hipnose na página Diagnóstico.
+        </div>
+
+        <div class="despiste-alerta-banner" id="despisteAlerta">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span id="despisteAlertaTxt">Contraindicação assinalada — rever plano de hipnose.</span>
+        </div>
+
+        <div class="despiste-add">
+          <div class="despiste-add__campo">
+            <label class="despiste-add__label">Condição / antecedente</label>
+            <select class="select" id="despisteCondicao">
+              <option value="">— Selecionar condição —</option>
+              <option>Esquizofrenia · psicose ativa</option>
+              <option>Perturbação dissociativa de identidade</option>
+              <option>Epilepsia</option>
+              <option>Internamentos psiquiátricos</option>
+              <option>Ideação suicida atual</option>
+              <option>Episódio maníaco · bipolar</option>
+              <option>Perturbação de personalidade grave</option>
+              <option>Perturbação por uso de substâncias</option>
+              <option>Medicação psiquiátrica atual</option>
+              <option>Doença cardíaca grave</option>
+              <option>Gravidez de risco</option>
+            </select>
+          </div>
+          <div class="despiste-add__campo">
+            <label class="despiste-add__label">Resposta</label>
+            <select class="select" id="despisteResposta">
+              <option value="">— Selecionar resposta —</option>
+              <option value="Não">Não</option>
+              <option value="Sim" data-alerta="1">Sim</option>
+              <option value="Suspeita" data-alerta="1">Suspeita</option>
+              <option value="No passado">No passado</option>
+              <option value="Recente (< 1 ano)" data-alerta="1">Recente (&lt; 1 ano)</option>
+              <option value="Controlada · medicada">Controlada · medicada</option>
+              <option value="Não medicada" data-alerta="1">Não medicada</option>
+              <option value="A acompanhar">A acompanhar</option>
+            </select>
+          </div>
+          <button class="btn btn--primary" type="button" id="despisteAdd">+ Registar</button>
+        </div>
+
+        <div class="despiste-lista" id="despisteLista"></div>
+
+        <div class="q-block">
+          <div class="q-pergunta">D5 · Notas de despiste (livre)</div>
+          <textarea class="textarea" data-key="d_notas" placeholder="Contexto · medicação atual · acompanhamento psiquiátrico…"></textarea>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════ BLOCO F · Mapa Quântico ═══════════════ -->
+    <section class="bloco" id="b-mapa">
+      <button class="bloco__head" type="button" data-toggle>
+        <svg class="bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h2 class="bloco__title">Mapa Quântico · 12 áreas em 4 quadrantes</h2>
+        <span class="bloco__chip bloco__chip--mapa">Novo</span>
+        <span class="bloco__count" data-count-text="b-mapa">0/12</span>
+      </button>
+      <div class="bloco__body">
+        <div class="q-hint" style="padding-top: var(--sp-3); margin-bottom: var(--sp-3);">
+          Instrução ao cliente: «De 1 a 10, como avalias cada área da tua vida atualmente? 1 = muito insatisfeito · 10 = totalmente satisfeito.»
+        </div>
+
+        <div class="sub-bloco is-open">
+          <button class="sub-bloco__head" type="button" data-sub-toggle>
+            <svg class="sub-bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            <span class="sub-bloco__titulo">Interior · Self</span>
+            <span class="sub-bloco__hint">Autoestima · Equilíbrio · Saúde</span>
+          </button>
+          <div class="sub-bloco__body">
+          <div class="mq-area">
+            <div class="mq-area__head">
+              <div><div class="mq-area__label">Autoestima</div><div class="mq-area__hint">Relação contigo · valor próprio</div></div>
+              <div class="mq-area__nota" data-mq-nota="mq_autoestima">—</div>
+            </div>
+            <div class="escala-row" data-escala="mq_autoestima"><button class="escala-btn" data-v="1">1</button><button class="escala-btn" data-v="2">2</button><button class="escala-btn" data-v="3">3</button><button class="escala-btn" data-v="4">4</button><button class="escala-btn" data-v="5">5</button><button class="escala-btn" data-v="6">6</button><button class="escala-btn" data-v="7">7</button><button class="escala-btn" data-v="8">8</button><button class="escala-btn" data-v="9">9</button><button class="escala-btn" data-v="10">10</button></div>
+          </div>
+          <div class="mq-area">
+            <div class="mq-area__head">
+              <div><div class="mq-area__label">Equilíbrio emocional</div><div class="mq-area__hint">Gestão das emoções</div></div>
+              <div class="mq-area__nota" data-mq-nota="mq_equilibrio">—</div>
+            </div>
+            <div class="escala-row" data-escala="mq_equilibrio"><button class="escala-btn" data-v="1">1</button><button class="escala-btn" data-v="2">2</button><button class="escala-btn" data-v="3">3</button><button class="escala-btn" data-v="4">4</button><button class="escala-btn" data-v="5">5</button><button class="escala-btn" data-v="6">6</button><button class="escala-btn" data-v="7">7</button><button class="escala-btn" data-v="8">8</button><button class="escala-btn" data-v="9">9</button><button class="escala-btn" data-v="10">10</button></div>
+          </div>
+          <div class="mq-area">
+            <div class="mq-area__head">
+              <div><div class="mq-area__label">Saúde física</div><div class="mq-area__hint">Energia · vitalidade</div></div>
+              <div class="mq-area__nota" data-mq-nota="mq_saude">—</div>
+            </div>
+            <div class="escala-row" data-escala="mq_saude"><button class="escala-btn" data-v="1">1</button><button class="escala-btn" data-v="2">2</button><button class="escala-btn" data-v="3">3</button><button class="escala-btn" data-v="4">4</button><button class="escala-btn" data-v="5">5</button><button class="escala-btn" data-v="6">6</button><button class="escala-btn" data-v="7">7</button><button class="escala-btn" data-v="8">8</button><button class="escala-btn" data-v="9">9</button><button class="escala-btn" data-v="10">10</button></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="sub-bloco">
+          <button class="sub-bloco__head" type="button" data-sub-toggle>
+            <svg class="sub-bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            <span class="sub-bloco__titulo">Relações · Vínculos</span>
+            <span class="sub-bloco__hint">Família · Amoroso · Social</span>
+          </button>
+          <div class="sub-bloco__body">
+          <div class="mq-area">
+            <div class="mq-area__head">
+              <div><div class="mq-area__label">Família</div><div class="mq-area__hint">Pais · filhos · família próxima</div></div>
+              <div class="mq-area__nota" data-mq-nota="mq_familia">—</div>
+            </div>
+            <div class="escala-row" data-escala="mq_familia"><button class="escala-btn" data-v="1">1</button><button class="escala-btn" data-v="2">2</button><button class="escala-btn" data-v="3">3</button><button class="escala-btn" data-v="4">4</button><button class="escala-btn" data-v="5">5</button><button class="escala-btn" data-v="6">6</button><button class="escala-btn" data-v="7">7</button><button class="escala-btn" data-v="8">8</button><button class="escala-btn" data-v="9">9</button><button class="escala-btn" data-v="10">10</button></div>
+          </div>
+          <div class="mq-area">
+            <div class="mq-area__head">
+              <div><div class="mq-area__label">Relacionamento amoroso</div><div class="mq-area__hint">Intimidade · parceria</div></div>
+              <div class="mq-area__nota" data-mq-nota="mq_amoroso">—</div>
+            </div>
+            <div class="escala-row" data-escala="mq_amoroso"><button class="escala-btn" data-v="1">1</button><button class="escala-btn" data-v="2">2</button><button class="escala-btn" data-v="3">3</button><button class="escala-btn" data-v="4">4</button><button class="escala-btn" data-v="5">5</button><button class="escala-btn" data-v="6">6</button><button class="escala-btn" data-v="7">7</button><button class="escala-btn" data-v="8">8</button><button class="escala-btn" data-v="9">9</button><button class="escala-btn" data-v="10">10</button></div>
+          </div>
+          <div class="mq-area">
+            <div class="mq-area__head">
+              <div><div class="mq-area__label">Vida social</div><div class="mq-area__hint">Amizades · convívio</div></div>
+              <div class="mq-area__nota" data-mq-nota="mq_social">—</div>
+            </div>
+            <div class="escala-row" data-escala="mq_social"><button class="escala-btn" data-v="1">1</button><button class="escala-btn" data-v="2">2</button><button class="escala-btn" data-v="3">3</button><button class="escala-btn" data-v="4">4</button><button class="escala-btn" data-v="5">5</button><button class="escala-btn" data-v="6">6</button><button class="escala-btn" data-v="7">7</button><button class="escala-btn" data-v="8">8</button><button class="escala-btn" data-v="9">9</button><button class="escala-btn" data-v="10">10</button></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="sub-bloco">
+          <button class="sub-bloco__head" type="button" data-sub-toggle>
+            <svg class="sub-bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            <span class="sub-bloco__titulo">Ação · Realização</span>
+            <span class="sub-bloco__hint">Carreira · Finanças · Produtividade</span>
+          </button>
+          <div class="sub-bloco__body">
+          <div class="mq-area">
+            <div class="mq-area__head">
+              <div><div class="mq-area__label">Carreira · profissão</div><div class="mq-area__hint">Satisfação profissional</div></div>
+              <div class="mq-area__nota" data-mq-nota="mq_carreira">—</div>
+            </div>
+            <div class="escala-row" data-escala="mq_carreira"><button class="escala-btn" data-v="1">1</button><button class="escala-btn" data-v="2">2</button><button class="escala-btn" data-v="3">3</button><button class="escala-btn" data-v="4">4</button><button class="escala-btn" data-v="5">5</button><button class="escala-btn" data-v="6">6</button><button class="escala-btn" data-v="7">7</button><button class="escala-btn" data-v="8">8</button><button class="escala-btn" data-v="9">9</button><button class="escala-btn" data-v="10">10</button></div>
+          </div>
+          <div class="mq-area">
+            <div class="mq-area__head">
+              <div><div class="mq-area__label">Finanças</div><div class="mq-area__hint">Estabilidade económica</div></div>
+              <div class="mq-area__nota" data-mq-nota="mq_financas">—</div>
+            </div>
+            <div class="escala-row" data-escala="mq_financas"><button class="escala-btn" data-v="1">1</button><button class="escala-btn" data-v="2">2</button><button class="escala-btn" data-v="3">3</button><button class="escala-btn" data-v="4">4</button><button class="escala-btn" data-v="5">5</button><button class="escala-btn" data-v="6">6</button><button class="escala-btn" data-v="7">7</button><button class="escala-btn" data-v="8">8</button><button class="escala-btn" data-v="9">9</button><button class="escala-btn" data-v="10">10</button></div>
+          </div>
+          <div class="mq-area">
+            <div class="mq-area__head">
+              <div><div class="mq-area__label">Produtividade · realização</div><div class="mq-area__hint">Progresso e resultados</div></div>
+              <div class="mq-area__nota" data-mq-nota="mq_produtividade">—</div>
+            </div>
+            <div class="escala-row" data-escala="mq_produtividade"><button class="escala-btn" data-v="1">1</button><button class="escala-btn" data-v="2">2</button><button class="escala-btn" data-v="3">3</button><button class="escala-btn" data-v="4">4</button><button class="escala-btn" data-v="5">5</button><button class="escala-btn" data-v="6">6</button><button class="escala-btn" data-v="7">7</button><button class="escala-btn" data-v="8">8</button><button class="escala-btn" data-v="9">9</button><button class="escala-btn" data-v="10">10</button></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="sub-bloco">
+          <button class="sub-bloco__head" type="button" data-sub-toggle>
+            <svg class="sub-bloco__chevron" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            <span class="sub-bloco__titulo">Sentido · Propósito</span>
+            <span class="sub-bloco__hint">Propósito · Espiritualidade · Sonhos</span>
+          </button>
+          <div class="sub-bloco__body">
+          <div class="mq-area">
+            <div class="mq-area__head">
+              <div><div class="mq-area__label">Propósito de vida</div><div class="mq-area__hint">Sentido existencial</div></div>
+              <div class="mq-area__nota" data-mq-nota="mq_proposito">—</div>
+            </div>
+            <div class="escala-row" data-escala="mq_proposito"><button class="escala-btn" data-v="1">1</button><button class="escala-btn" data-v="2">2</button><button class="escala-btn" data-v="3">3</button><button class="escala-btn" data-v="4">4</button><button class="escala-btn" data-v="5">5</button><button class="escala-btn" data-v="6">6</button><button class="escala-btn" data-v="7">7</button><button class="escala-btn" data-v="8">8</button><button class="escala-btn" data-v="9">9</button><button class="escala-btn" data-v="10">10</button></div>
+          </div>
+          <div class="mq-area">
+            <div class="mq-area__head">
+              <div><div class="mq-area__label">Espiritualidade · valores</div><div class="mq-area__hint">Conexão com algo maior</div></div>
+              <div class="mq-area__nota" data-mq-nota="mq_espiritualidade">—</div>
+            </div>
+            <div class="escala-row" data-escala="mq_espiritualidade"><button class="escala-btn" data-v="1">1</button><button class="escala-btn" data-v="2">2</button><button class="escala-btn" data-v="3">3</button><button class="escala-btn" data-v="4">4</button><button class="escala-btn" data-v="5">5</button><button class="escala-btn" data-v="6">6</button><button class="escala-btn" data-v="7">7</button><button class="escala-btn" data-v="8">8</button><button class="escala-btn" data-v="9">9</button><button class="escala-btn" data-v="10">10</button></div>
+          </div>
+          <div class="mq-area">
+            <div class="mq-area__head">
+              <div><div class="mq-area__label">Sonhos · projetos futuros</div><div class="mq-area__hint">Direção futura</div></div>
+              <div class="mq-area__nota" data-mq-nota="mq_sonhos">—</div>
+            </div>
+            <div class="escala-row" data-escala="mq_sonhos"><button class="escala-btn" data-v="1">1</button><button class="escala-btn" data-v="2">2</button><button class="escala-btn" data-v="3">3</button><button class="escala-btn" data-v="4">4</button><button class="escala-btn" data-v="5">5</button><button class="escala-btn" data-v="6">6</button><button class="escala-btn" data-v="7">7</button><button class="escala-btn" data-v="8">8</button><button class="escala-btn" data-v="9">9</button><button class="escala-btn" data-v="10">10</button></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-pergunta">F13 · Qual destas áreas sentes que mais precisa de atenção neste momento</div>
+          <textarea class="textarea" data-key="mq_foco_consciente" placeholder="Resposta aberta · revela foco consciente"></textarea>
+        </div>
+        <div class="q-block">
+          <div class="q-pergunta">F14 · Se pudesses melhorar apenas uma destas áreas nos próximos meses, qual escolherias</div>
+          <textarea class="textarea" data-key="mq_motivacao_real" placeholder="Resposta aberta · revela motivação real"></textarea>
+        </div>
+
+      </div>
+    </section>
+
+
+  </main>
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+'use strict';
+
+/* ─── Cliente atual via ?id=… · modo embebido via ?embed=1 ───── */
+const params = new URLSearchParams(window.location.search);
+const CLIENT_ID = params.get('id') || 'demo';
+const STORAGE_KEY = 'dd_anamnese_' + CLIENT_ID;
+const EMBEDDED = params.get('embed') === '1';
+if (EMBEDDED) document.body.classList.add('is-embedded');
+
+/* ─── Toast ─── */
+function flash(msg, kind) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast is-on' + (kind ? ' toast--' + kind : '');
+  setTimeout(() => t.classList.remove('is-on'), 2400);
+}
+
+/* ─── Carregar / guardar estado ─── */
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch (e) { return {}; }
+}
+function saveState(state) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+
+let state = loadState();
+
+/* ─── Hidratar campos de texto e selects ─── */
+document.querySelectorAll('[data-key]').forEach(el => {
+  const k = el.dataset.key;
+  if (state[k] !== undefined && state[k] !== null) el.value = state[k];
+  el.addEventListener('input', () => { state[k] = el.value; saveState(state); recountAll(); });
+  el.addEventListener('change', () => { state[k] = el.value; saveState(state); recountAll(); });
+});
+
+/* ─── DROPDOWN MULTI-SELECT · componente único ─── */
+/* Catálogos clínicos (Relacionamentos · estilo v71) · definidos antes de LISTAS_DROPDOWN */
+const PADROES_RELACIONAIS = [
+  'Autossabotagem na intimidade', 'Escolhe parceiros indisponíveis',
+  'Medo de abandono', 'Dependência emocional',
+  'Tolerou abuso · violência', 'Tolerou controlo · manipulação',
+  'Dificuldade de confiar', 'Evita compromisso',
+  'Repete padrão do pai · mãe', 'Ciúme excessivo',
+  'Isolamento após rompimento', 'Culpabilização própria',
+  'Dificuldade em pedir o que precisa', 'Anula as próprias necessidades',
+  'Hipervigilância relacional', 'Atração por figuras de autoridade',
+  'Relação paralela · infidelidade', 'Idealização seguida de desvalorização',
+  'Medo de intimidade real', 'Raiva suprimida no casal',
+  'Comunicação evitante', 'Violência · abuso sofrido',
+  'Sexualidade vivida com culpa', 'Separação · divórcio traumático',
+  'Luto relacional não processado', 'Repetição inconsciente'
+];
+
+const IMPACTO_EVETTE = [
+  'Esquema de abandono ativado', 'Auto-estima dependente do parceiro',
+  'Amor = controlo · punição', 'Corpo dado sem desejo real',
+  'Identidade dissolvida no outro', 'Raiva nunca expressa diretamente',
+  'Repetição do padrão parental', 'Culpa de existir na relação',
+  'Limites nunca estabelecidos', 'Intimidade como ameaça',
+  'Crença «não mereço melhor»', 'Sexualidade associada a vergonha',
+  'Dissociação durante intimidade', 'Trauma de traição não resolvido'
+];
+
+const DROPDOWN_META = {
+  // Bloco A2 · O que trouxe
+  f_motivos: { label: 'Motivos da procura', placeholder: '— Selecionar motivos —', allowManual: true },
+  // Bloco A3 · Saúde inicial
+  f_diagnosticos: { label: 'Diagnósticos prévios', placeholder: '— Selecionar diagnósticos —', allowManual: true },
+  // Bloco A5 · Disponibilidade
+  f_horarios: { label: 'Horários disponíveis', placeholder: '— Selecionar horários —' },
+  // Bloco C · Corpo & saúde
+  c_sintomas: { label: 'Sensações · sentimentos · emoções', placeholder: '— Selecionar sintomas físicos e emocionais —', allowManual: true },
+  c_doencas: { label: 'Doenças diagnosticadas', placeholder: '— Selecionar doenças —', allowManual: true },
+  c_padroes: { label: 'Padrões somáticos observados', placeholder: '— Selecionar padrões —', allowManual: true },
+  c_alimentacao: { label: 'Padrão alimentar', placeholder: '— Selecionar padrões alimentares —', allowManual: true },
+  c_substancias: { label: 'Uso de substâncias', placeholder: '— Selecionar substâncias —' },
+  // Bloco PNL
+  pnl_sr: { label: 'Sistema representacional dominante', placeholder: '— Selecionar —' },
+  // Q4 · Q5 · perguntas-sondadoras (escrevem na textarea existente i_q4 / i_q5)
+  q4_perguntas: { label: 'Perguntas-sondadoras', placeholder: '— Escolher pergunta para registar na nota —', notasKey: 'i_q4' },
+  q5_perguntas: { label: 'Perguntas para o diálogo interno', placeholder: '— Escolher pergunta para registar na nota —', notasKey: 'i_q5' },
+  // Relacionamentos · padrões
+  r1_padroes: { label: 'Padrões identificados', placeholder: '— Selecionar padrões observados —', allowManual: true },
+  r2_padroes: { label: 'Padrões identificados', placeholder: '— Selecionar padrões observados —', allowManual: true },
+  r3_padroes: { label: 'Padrões identificados', placeholder: '— Selecionar padrões observados —', allowManual: true },
+  r4_padroes: { label: 'Padrões identificados', placeholder: '— Selecionar padrões observados —', allowManual: true },
+  // Relacionamentos · Evette
+  r1_evette: { label: 'Impacto emocional · Evette Rose', placeholder: '— Selecionar impactos —', allowManual: true, tema: 'evette' },
+  r2_evette: { label: 'Impacto emocional · Evette Rose', placeholder: '— Selecionar impactos —', allowManual: true, tema: 'evette' },
+  r3_evette: { label: 'Impacto emocional · Evette Rose', placeholder: '— Selecionar impactos —', allowManual: true, tema: 'evette' },
+  r4_evette: { label: 'Impacto emocional · Evette Rose', placeholder: '— Selecionar impactos —', allowManual: true, tema: 'evette' }
+};
+
+const LISTAS_DROPDOWN = {
+  f_motivos: ['Ansiedade', 'Depressão', 'Insónia', 'Stress · burnout', 'Luto', 'Separação', 'Relações', 'Trauma', 'Compulsões', 'Fobia', 'Tabagismo', 'Autoestima', 'Falta de sentido', 'Dor crónica', 'Saúde física', 'Sexualidade', 'Sonhos · espiritual', 'Outro'],
+  f_diagnosticos: ['Ansiedade · pânico', 'Depressão', 'PTSD', 'Bipolar', 'Esquemas · personalidade', 'TOC', 'TDAH', 'Espectro autista', 'Fobia específica', 'Anorexia · bulimia', 'Adição', 'Nenhum', 'Prefiro falar em sessão'],
+  f_horarios: ['Manhã (9h–12h)', 'Início tarde (13h–16h)', 'Fim tarde (16h–19h)', 'Noite (19h–21h)', 'Sábado', 'Online', 'Presencial'],
+  c_sintomas: ['Dor', 'Fadiga · exaustão', 'Palpitações', 'Tensão muscular', 'Aperto no peito', 'Nó na garganta', 'Falta de ar', 'Tontura · vertigem', 'Náusea', 'Formigueiro · dormência', 'Tremores', 'Suores', 'Boca seca', 'Calafrios · «frio»', 'Ondas de calor', 'Pressão na cabeça', 'Tensão abdominal · estômago', 'Zumbido nos ouvidos', 'Ansiedade', 'Angústia', 'Tristeza', 'Irritabilidade · raiva', 'Medo', 'Sensação de vazio', 'Culpa', 'Vergonha', 'Desânimo', 'Hipervigilância', 'Inquietação'],
+  c_doencas: ['Autoimune', 'Hormonal · tiroide', 'Diabetes', 'Hipertensão · cardio', 'Respiratória · asma', 'Digestiva · SII', 'Dor crónica', 'Fibromialgia', 'Enxaqueca', 'Pele · psoríase · eczema', 'Ginecológica · endometriose', 'Oncológica', 'Neurológica', 'Urinária', 'Sentidos · audição · visão', 'Nenhuma'],
+  c_padroes: ['Hipervigilância', 'Tensão cervical · ombros', 'Tensão mandíbula · bruxismo', 'Respiração superficial · peito', 'Freeze · paralisia', 'Fuga', 'Luta · agitação', 'Colapso · exaustão', 'Dissociação', 'Sobressalto fácil', 'Nó na garganta', 'Aperto no peito', '«Frio»', 'Tremores'],
+  c_alimentacao: ['Horários regulares', 'Horários irregulares', 'Salta refeições', 'Jejum prolongado', 'Compulsão alimentar', 'Restrição · dieta', 'Comer emocional', 'Comer noturno', 'Beliscar entre refeições', 'Falta de apetite', 'Apetite aumentado', 'Álcool às refeições', 'Excesso de açúcar', 'Excesso de cafeína', 'Alimentação equilibrada', 'Vegetariana · vegana', 'Intolerâncias · alergias', 'Purga · vómito'],
+  c_substancias: ['Álcool ocasional', 'Álcool regular', 'Tabaco', 'Café · > 3/dia', 'Ansiolíticos sem prescrição', 'Canábis', 'Outras drogas', 'Nenhuma'],
+  pnl_sr: ['Visual (V)', 'Auditivo (A)', 'Cinestésico (K)', 'Auditivo interno (Ai)', 'Olfativo · gustativo (O/G)', 'Misto · a calibrar'],
+  q4_perguntas: ['«Onde sentes isto no corpo?»', '«Que forma · cor · temperatura?»', '«Há quanto tempo está aí?»', '«Em que momentos aparece?»', '«O que a alivia?»', '«O que a agrava?»', '«Move-se ou está estável?»', '«Se a sensação pudesse falar, o que diria?»'],
+  q5_perguntas: ['«Que frases dizes a ti?»', '«O que aparece automaticamente?»', '«De quem é essa voz?»', '«Quando começou a dizer isto?»', '«Que palavras se repetem?»', '«Como soa essa voz?»', '«E se mudasses uma palavra?»', '«O que sentes ao ouvi-la agora?»'],
+  r1_padroes: PADROES_RELACIONAIS, r2_padroes: PADROES_RELACIONAIS,
+  r3_padroes: PADROES_RELACIONAIS, r4_padroes: PADROES_RELACIONAIS,
+  r1_evette: IMPACTO_EVETTE, r2_evette: IMPACTO_EVETTE,
+  r3_evette: IMPACTO_EVETTE, r4_evette: IMPACTO_EVETTE
+};
+
+/* SELECT NATIVO + caixa de notas (substitui o dropdown custom · resolve o bug do painel cortado) */
+function montarSelectCatalogo(slotEl, key) {
+  const meta = DROPDOWN_META[key] || { label: '', placeholder: '— Selecionar —' };
+  const opcoes = LISTAS_DROPDOWN[key] || [];
+  const tema = meta.tema || 'primary';
+  const usaExterna = !!meta.notasKey;            // escrever numa textarea já existente
+  const notasKey = meta.notasKey || (key + '_notas');
+  const corClass = tema === 'evette' ? ' campo-catalogo--evette' : '';
+
+  slotEl.innerHTML = `
+    <div class="campo-catalogo${corClass}" data-cat-key="${key}">
+      ${meta.label ? `<div class="campo-catalogo__label">${meta.label}</div>` : ''}
+      <select class="select select-catalogo">
+        <option value="">${meta.placeholder}</option>
+        ${opcoes.map(o => `<option value="${o.replace(/"/g, '&quot;')}">${o}</option>`).join('')}
+      </select>
+      ${usaExterna ? '' : `<textarea class="textarea textarea--notas" data-key="${notasKey}" placeholder="As seleções aparecem aqui · acrescenta texto livre se precisares…"></textarea>`}
+    </div>
+  `;
+
+  const select = slotEl.querySelector('.select-catalogo');
+  // textarea destino: interna (criada) ou externa (já existente no DOM)
+  const ta = usaExterna
+    ? document.querySelector(`textarea[data-key="${notasKey}"]`)
+    : slotEl.querySelector('textarea');
+
+  if (ta && !usaExterna) {
+    if (state[notasKey] !== undefined && state[notasKey] !== null) ta.value = state[notasKey];
+    ta.addEventListener('input', () => { state[notasKey] = ta.value; saveState(state); recountAll(); });
+  }
+
+  // ao escolher uma opção, acrescenta o texto à caixa de notas (sem balões)
+  select.addEventListener('change', () => {
+    const v = select.value;
+    select.value = '';            // reset imediato
+    if (!v || !ta) return;
+    const atual = ta.value.trim();
+    ta.value = atual ? (atual + ' · ' + v) : v;
+    state[notasKey] = ta.value;
+    saveState(state);
+    ta.dispatchEvent(new Event('input'));
+    recountAll();
+  });
+}
+
+/* Converter cada chips-row[data-multi] em select+notas */
+document.querySelectorAll('[data-multi]').forEach(row => {
+  const k = row.dataset.multi;
+  if (!LISTAS_DROPDOWN[k]) return;
+  const slot = document.createElement('div');
+  row.parentNode.insertBefore(slot, row);
+  row.remove();
+  montarSelectCatalogo(slot, k);
+});
+
+/* Converter cada [data-catalogo] em select+notas */
+document.querySelectorAll('[data-catalogo]').forEach(slot => {
+  const k = slot.dataset.catalogoKey;
+  if (!LISTAS_DROPDOWN[k]) return;
+  montarSelectCatalogo(slot, k);
+});
+
+/* (sem listener de fechar dropdown · select nativo gere-se sozinho) */
+document.addEventListener('click', () => {
+  document.querySelectorAll('.dd-trigger.is-open').forEach(t => t.classList.remove('is-open'));
+});
+
+/* ─── Escala 0-10 ─── */
+document.querySelectorAll('[data-escala]').forEach(row => {
+  const k = row.dataset.escala;
+  if (state[k] !== undefined) {
+    const btn = row.querySelector(`.escala-btn[data-v="${state[k]}"]`);
+    if (btn) btn.classList.add('is-on');
+    const nota = document.querySelector(`[data-mq-nota="${k}"]`);
+    if (nota) nota.textContent = state[k];
+  }
+  row.addEventListener('click', e => {
+    if (!e.target.classList.contains('escala-btn')) return;
+    row.querySelectorAll('.escala-btn').forEach(b => b.classList.remove('is-on'));
+    e.target.classList.add('is-on');
+    state[k] = e.target.dataset.v;
+    saveState(state);
+    const nota = document.querySelector(`[data-mq-nota="${k}"]`);
+    if (nota) nota.textContent = state[k];
+    recountAll();
+  });
+});
+
+/* ─── Despiste · dois dropdowns (condição + resposta) → lista com alerta ─── */
+(function(){
+  const selCond = document.getElementById('despisteCondicao');
+  const selResp = document.getElementById('despisteResposta');
+  const btnAdd  = document.getElementById('despisteAdd');
+  const lista   = document.getElementById('despisteLista');
+  const banner  = document.getElementById('despisteAlerta');
+  if (!selCond || !selResp || !btnAdd || !lista) return;
+
+  function respEhAlerta(v) {
+    const opt = Array.from(selResp.options).find(o => o.value === v);
+    return !!(opt && opt.dataset.alerta === '1');
+  }
+  function render() {
+    const arr = state.despiste_lista || [];
+    lista.innerHTML = '';
+    if (!arr.length) {
+      lista.innerHTML = '<div class="despiste-vazio">Sem condições registadas · sem contraindicações assinaladas.</div>';
+    } else {
+      arr.forEach((it, i) => {
+        const linha = document.createElement('div');
+        linha.className = 'despiste-linha' + (it.alerta ? ' is-alerta' : '');
+        linha.innerHTML =
+          '<span class="despiste-linha__cond">' + it.cond + '</span>' +
+          '<span class="despiste-linha__resp">' + it.resp + '</span>' +
+          '<button class="despiste-linha__del" data-i="' + i + '" aria-label="Remover">×</button>';
+        lista.appendChild(linha);
+      });
+      lista.querySelectorAll('.despiste-linha__del').forEach(b => {
+        b.addEventListener('click', () => {
+          state.despiste_lista.splice(parseInt(b.dataset.i, 10), 1);
+          saveState(state); render(); recountAll();
+        });
+      });
+    }
+    if (banner) banner.classList.toggle('is-on', arr.some(it => it.alerta));
+  }
+  btnAdd.addEventListener('click', () => {
+    const cond = selCond.value, resp = selResp.value;
+    if (!cond || !resp) return flash('Escolhe condição e resposta', 'warning');
+    state.despiste_lista = state.despiste_lista || [];
+    if (state.despiste_lista.some(it => it.cond === cond)) {
+      return flash('Essa condição já está registada', 'warning');
+    }
+    state.despiste_lista.push({ cond, resp, alerta: respEhAlerta(resp) });
+    saveState(state);
+    selCond.value = ''; selResp.value = '';
+    render(); recountAll();
+  });
+  render();
+})();
+
+/* ─── Campo duplo · dois selects → caixa de notas (C7 · Dor) ─── */
+document.querySelectorAll('[data-duplo]').forEach(wrap => {
+  const selLoc = wrap.querySelector('[data-duplo-loc]');
+  const selInt = wrap.querySelector('[data-duplo-int]');
+  const ta = wrap.querySelector('textarea');
+  if (!selLoc || !selInt || !ta) return;
+  function tentarInserir() {
+    const loc = selLoc.value, intn = selInt.value;
+    if (!loc || !intn) return;
+    const linha = loc + ' — ' + intn;
+    const atual = ta.value.trim();
+    ta.value = atual ? (atual + ' · ' + linha) : linha;
+    selLoc.value = ''; selInt.value = '';
+    ta.dispatchEvent(new Event('input'));
+  }
+  selLoc.addEventListener('change', tentarInserir);
+  selInt.addEventListener('change', tentarInserir);
+});
+
+/* ─── Trauma timeline ─── */
+const timelineLista = document.getElementById('timelineLista');
+function renderTimeline() {
+  const lista = state.timeline || [];
+  timelineLista.innerHTML = '';
+  lista.forEach((entrada, i) => {
+    const el = document.createElement('div');
+    el.className = 'timeline-item';
+    el.innerHTML = `<div class="timeline-item__idade">${entrada.idade} anos</div>
+      <div class="timeline-item__desc">${entrada.desc}</div>
+      <button class="timeline-item__del" data-i="${i}" aria-label="Remover">×</button>`;
+    timelineLista.appendChild(el);
+  });
+  timelineLista.querySelectorAll('.timeline-item__del').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const i = parseInt(btn.dataset.i, 10);
+      state.timeline.splice(i, 1); saveState(state); renderTimeline(); recountAll();
+    });
+  });
+}
+renderTimeline();
+document.getElementById('btnAddTrauma').addEventListener('click', () => {
+  const idade = document.getElementById('trauma-idade').value;
+  const desc = document.getElementById('trauma-desc').value.trim();
+  if (!idade || !desc) return flash('Idade e descrição obrigatórias', 'warning');
+  state.timeline = state.timeline || [];
+  state.timeline.push({ idade, desc });
+  saveState(state);
+  document.getElementById('trauma-idade').value = '';
+  document.getElementById('trauma-desc').value = '';
+  renderTimeline(); recountAll();
+});
+
+/* ─── Toggle blocos colapsáveis ─── */
+document.querySelectorAll('[data-toggle]').forEach(btn => {
+  btn.addEventListener('click', () => btn.closest('.bloco').classList.toggle('is-open'));
+});
+
+/* ─── Zoom dinâmico ─── */
+document.querySelectorAll('.zoom-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    const size = parseInt(b.dataset.size, 10);
+    document.documentElement.style.setProperty('--base-fz', size + 'px');
+    document.querySelectorAll('.zoom-btn').forEach(x => x.classList.toggle('is-active', parseInt(x.dataset.size, 10) === size));
+    try { localStorage.setItem('dd_zoom_anamnese', size); } catch (e) {}
+  });
+});
+try {
+  const z = parseInt(localStorage.getItem('dd_zoom_anamnese'), 10);
+  if ([14, 16, 18, 20].includes(z)) {
+    document.documentElement.style.setProperty('--base-fz', z + 'px');
+    document.querySelectorAll('.zoom-btn').forEach(x => x.classList.toggle('is-active', parseInt(x.dataset.size, 10) === z));
+  }
+} catch (e) {}
+
+/* ─── Microfone · Web Speech API ─── */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+document.querySelectorAll('[data-mic-btn]').forEach(btn => {
+  if (!SR) { btn.style.display = 'none'; return; }
+  const wrap = btn.closest('.textarea-mic');
+  const ta = wrap.querySelector('textarea');
+  let rec = null, recording = false;
+  btn.addEventListener('click', () => {
+    if (recording) { rec && rec.stop(); return; }
+    rec = new SR();
+    rec.lang = 'pt-PT'; rec.continuous = true; rec.interimResults = true;
+    let finalText = ta.value;
+    rec.onresult = e => {
+      let interim = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        const t = e.results[i][0].transcript;
+        if (e.results[i].isFinal) finalText += t + ' '; else interim += t;
+      }
+      ta.value = finalText + interim;
+      ta.dispatchEvent(new Event('input'));
+    };
+    rec.onerror = () => { recording = false; btn.classList.remove('is-recording'); flash('Erro no microfone', 'danger'); };
+    rec.onend = () => { recording = false; btn.classList.remove('is-recording'); };
+    rec.start(); recording = true; btn.classList.add('is-recording');
+    flash('A gravar… clica novamente para parar', 'warning');
+  });
+});
+
+/* ─── Contadores de progresso ─── */
+function countBlock(blocoId) {
+  const bloco = document.getElementById(blocoId);
+  if (!bloco) return { feito: 0, total: 0 };
+  // text inputs + textareas + selects (com data-key e valor não vazio)
+  const fields = bloco.querySelectorAll('[data-key]');
+  let feito = 0, total = 0;
+  fields.forEach(f => { total++; if (f.value && f.value.trim()) feito++; });
+  // escalas
+  bloco.querySelectorAll('[data-escala]').forEach(r => {
+    const k = r.dataset.escala;
+    total++;
+    if (state[k] !== undefined && state[k] !== null && state[k] !== '') feito++;
+  });
+  // (catálogos · as caixas de notas já são contadas via [data-key] acima)
+  // despiste · lista de condições registadas
+  if (bloco.querySelector('#despisteLista')) {
+    total++;
+    if ((state.despiste_lista || []).length > 0) feito++;
+  }
+  return { feito, total };
+}
+
+function recountAll() {
+  let gFeito = 0, gTotal = 0;
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const id = el.dataset.count;
+    if (id === 'b-timeline') {
+      const n = (state.timeline || []).length;
+      el.textContent = n + ' entrada' + (n === 1 ? '' : 's');
+      const textEl = document.querySelector(`[data-count-text="${id}"]`);
+      if (textEl) textEl.textContent = n + ' entradas';
+      gTotal += 1; if (n > 0) gFeito += 1;
+      el.closest('.sb-item').classList.toggle('is-complete', n > 0);
+      return;
+    }
+    const { feito, total } = countBlock(id);
+    el.textContent = `${feito}/${total}`;
+    const textEl = document.querySelector(`[data-count-text="${id}"]`);
+    if (textEl) textEl.textContent = `${feito}/${total} preenchidos`;
+    gFeito += feito; gTotal += total;
+    el.closest('.sb-item').classList.toggle('is-complete', total > 0 && feito === total);
+  });
+  const pct = gTotal ? Math.round(100 * gFeito / gTotal) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressNum').textContent = `${gFeito} / ${gTotal} campos · ${pct} %`;
+}
+recountAll();
+
+/* ─── Scroll-spy sidebar ─── */
+const sbItems = document.querySelectorAll('.sb-item[href^="#"]');
+const blocos = document.querySelectorAll('.bloco[id]');
+function spy() {
+  const top = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--topbar-h')) + 24;
+  let cur = blocos[0]?.id || '';
+  blocos.forEach(b => { if (b.getBoundingClientRect().top <= top + 20) cur = b.id; });
+  sbItems.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + cur));
+}
+window.addEventListener('scroll', spy);
+
+sbItems.forEach(it => it.addEventListener('click', () => {
+  const tgt = document.querySelector(it.getAttribute('href'));
+  if (tgt && !tgt.classList.contains('is-open')) tgt.classList.add('is-open');
+}));
+
+/* ─── Cabeçalho cliente ─── */
+function updateClientHeader() {
+  const nome = state.f_nome || '— sem nome —';
+  const meta = [state.f_nasc, state.f_genero, state.f_profissao].filter(Boolean).join(' · ');
+  document.getElementById('sbNome').textContent = nome;
+  document.getElementById('sbMeta').textContent = meta || ('ID: ' + CLIENT_ID);
+  document.getElementById('hdrNome').textContent = 'Anamnese · ' + nome;
+  document.getElementById('hdrMeta').textContent = meta || ('ID: ' + CLIENT_ID);
+  const hoje = new Date().toLocaleDateString('pt-PT');
+  document.getElementById('hdrData').textContent = 'Atualizado · ' + hoje;
+}
+document.querySelectorAll('[data-key="f_nome"], [data-key="f_nasc"], [data-key="f_genero"], [data-key="f_profissao"]').forEach(el => {
+  el.addEventListener('input', updateClientHeader);
+  el.addEventListener('change', updateClientHeader);
+});
+updateClientHeader();
+
+/* ─── Mapa key → label para leitura nos blocos importados ─── */
+const LEITURA_LABELS = {
+  // Bloco A1 · Dados pessoais
+  f_nome: 'Nome completo', f_nasc: 'Data de nascimento', f_genero: 'Género',
+  f_tel: 'Telefone', f_profissao: 'Profissão', f_estado_civil: 'Estado civil',
+  f_origem: 'Como soube de mim',
+  // Bloco A2 · O que trouxe
+  f_motivos: 'Motivo principal',
+  f_queixa: 'Nas palavras do cliente',
+  f_tempo: 'Há quanto tempo sente',
+  f_impacto: 'Impacto (0–10)',
+  // Bloco A3 · Saúde inicial
+  f_diagnosticos: 'Diagnósticos prévios',
+  f_medicacao: 'Toma medicamentos',
+  f_medicacao_quais: 'Quais medicamentos',
+  // Bloco A4 · Experiência anterior
+  f_acomp_antes: 'Acompanhamento anterior',
+  f_hipnose_antes: 'Já fez hipnose',
+  f_expectativas: 'Expectativas',
+  // Bloco A5 · Disponibilidade
+  f_horarios: 'Horários',
+  f_frequencia: 'Frequência preferida'
+};
+
+const BLOCO_KEYS = {
+  'b-dados':         ['f_nome', 'f_nasc', 'f_genero', 'f_tel', 'f_profissao', 'f_estado_civil', 'f_origem'],
+  'b-trouxe':        ['f_motivos', 'f_queixa', 'f_tempo', 'f_impacto'],
+  'b-saude-forms':   ['f_diagnosticos', 'f_medicacao', 'f_medicacao_quais'],
+  'b-experiencia':   ['f_acomp_antes', 'f_hipnose_antes', 'f_expectativas'],
+  'b-disponibilidade': ['f_horarios', 'f_frequencia']
+};
+
+function valorLegivel(v) {
+  if (v === undefined || v === null || v === '') return null;
+  if (Array.isArray(v)) return v.length ? v.join(' · ') : null;
+  return String(v);
+}
+
+function renderLeituraBlocks() {
+  Object.entries(BLOCO_KEYS).forEach(([blocoId, keys]) => {
+    const bloco = document.getElementById(blocoId);
+    if (!bloco) return;
+    let leitura = bloco.querySelector('.leitura-block');
+    if (!leitura) {
+      leitura = document.createElement('div');
+      leitura.className = 'leitura-block';
+      bloco.querySelector('.bloco__body').prepend(leitura);
+    }
+    leitura.innerHTML = keys.map(k => {
+      const v = valorLegivel(state[k]);
+      const label = LEITURA_LABELS[k] || k;
+      return `<div class="leitura-row">
+        <div class="leitura-row__label">${label}</div>
+        <div class="leitura-row__valor ${v ? '' : 'leitura-row__valor--vazio'}">${v || '—'}</div>
+      </div>`;
+    }).join('');
+  });
+}
+renderLeituraBlocks();
+
+/* ─── Exemplos clicáveis (PNL3 pistas oculares · PNL4 meta-modelo · Q4 · Q5) ─── */
+document.querySelectorAll('.exemplo-btn, .pnl-eye[data-exemplo]').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.preventDefault();
+    const exemplo = btn.dataset.exemplo;
+    // descobrir o target · via data-exemplos-target no próprio botão ou no .exemplos-row pai
+    const targetKey = btn.dataset.exemplosTarget
+      || (btn.closest('[data-exemplos-target]') && btn.closest('[data-exemplos-target]').dataset.exemplosTarget);
+    if (!targetKey) return;
+    const ta = document.querySelector(`textarea[data-key="${targetKey}"]`);
+    if (!ta) return;
+    // chave para deteção de duplicação · primeira parte antes de ' → ' ou ' — '
+    const chave = exemplo.split(' → ')[0].split(' — ')[0];
+    const ja = ta.value.includes(chave);
+    if (!ja) {
+      ta.value += (ta.value && !ta.value.endsWith('\n') ? '\n' : '') + exemplo;
+      ta.dispatchEvent(new Event('input'));
+      btn.classList.add('is-used');
+    } else {
+      ta.value = ta.value.split('\n').filter(l => !l.startsWith(chave)).join('\n');
+      ta.dispatchEvent(new Event('input'));
+      btn.classList.remove('is-used');
+    }
+  });
+});
+
+/* ─── PNL4 · meta-modelo · 3 dropdowns → caixa de notas ─── */
+document.querySelectorAll('[data-pnl-meta]').forEach(wrap => {
+  const ta = document.querySelector(`textarea[data-key="${wrap.dataset.pnlMeta}"]`);
+  if (!ta) return;
+  wrap.querySelectorAll('.pnl-meta__select').forEach(sel => {
+    sel.addEventListener('change', () => {
+      const v = sel.value; sel.value = '';
+      if (!v) return;
+      const chave = v.split(' → ')[0];
+      if (ta.value.includes(chave)) return;          // não duplica o padrão
+      ta.value += (ta.value && !ta.value.endsWith('\n') ? '\n' : '') + v;
+      ta.dispatchEvent(new Event('input'));
+    });
+  });
+});
+
+/* ─── Sub-colapsáveis (delegation · suporta nodes dinâmicos) ─── */
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-sub-toggle]');
+  if (!btn) return;
+  const sub = btn.closest('.sub-bloco');
+  if (sub) sub.classList.toggle('is-open');
+});
+
+/* ─── AAI dinâmico · dropdown de adjetivos + pares Adjetivo/Memória acrescentáveis ─── */
+const AAI_ADJ = {
+  mae: ['Amorosa','Presente','Ausente','Imprevisível','Invasiva','Distante','Sufocante','Crítica','Carinhosa','Fria','Calorosa','Controladora','Permissiva','Rígida','Frágil','Forte','Dedicada','Negligente','Ansiosa','Depressiva','Instável','Estável','Sacrificada','Severa','Compreensiva','Manipuladora','Protetora','Hipercrítica','Inacessível','Confidente'],
+  pai: ['Amoroso','Presente','Ausente','Autoritário','Permissivo','Distante','Frio','Caloroso','Severo','Brando','Imprevisível','Rígido','Violento','Pacífico','Trabalhador','Alcoólico','Negligente','Dedicado','Crítico','Apoiante','Indiferente','Protetor','Modelo','Falhado','Ridicularizador','Vergonhoso','Admirado','Temido','Invisível','Cúmplice']
+};
+
+function montarAAI(slot, lado) {
+  const stKey = 'aai_' + lado;
+  if (!Array.isArray(state[stKey]) || state[stKey].length === 0) {
+    state[stKey] = [{ adj: '', mem: '' }, { adj: '', mem: '' }, { adj: '', mem: '' }];
+  }
+  function render() {
+    const pares = state[stKey];
+    const adjOpts = AAI_ADJ[lado] || [];
+    slot.innerHTML = `
+      <div class="aai-pares">
+        ${pares.map((p, i) => {
+          const temCustom = p.adj && !adjOpts.includes(p.adj);
+          return `
+          <div class="aai-grid">
+            <select class="select aai-adj" data-aai-adj="${i}">
+              <option value="">— Adjetivo ${i + 1} —</option>
+              ${adjOpts.map(a => `<option value="${a}"${p.adj === a ? ' selected' : ''}>${a}</option>`).join('')}
+              ${temCustom ? `<option value="${p.adj.replace(/"/g, '&quot;')}" selected>${p.adj}</option>` : ''}
+            </select>
+            <input class="input" type="text" data-aai-mem="${i}" placeholder="Memória que sustenta" value="${(p.mem || '').replace(/"/g, '&quot;')}">
+            <button class="aai-del" type="button" data-aai-del="${i}" title="Apagar" aria-label="Apagar">&times;</button>
+          </div>`;
+        }).join('')}
+      </div>
+      <button class="aai-add" type="button" title="Acrescentar adjetivo + memória" aria-label="Acrescentar">+</button>
+    `;
+    slot.querySelectorAll('[data-aai-adj]').forEach(sel => {
+      sel.addEventListener('change', () => { state[stKey][+sel.dataset.aaiAdj].adj = sel.value; saveState(state); recountAll(); });
+    });
+    slot.querySelectorAll('[data-aai-mem]').forEach(inp => {
+      inp.addEventListener('input', () => { state[stKey][+inp.dataset.aaiMem].mem = inp.value; saveState(state); recountAll(); });
+    });
+    slot.querySelectorAll('[data-aai-del]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state[stKey].splice(+btn.dataset.aaiDel, 1);
+        if (state[stKey].length === 0) state[stKey].push({ adj: '', mem: '' });
+        saveState(state); render(); recountAll();
+      });
+    });
+    slot.querySelector('.aai-add').addEventListener('click', () => {
+      state[stKey].push({ adj: '', mem: '' }); saveState(state); render();
+    });
+  }
+  render();
+}
+document.querySelectorAll('[data-aai]').forEach(slot => montarAAI(slot, slot.dataset.aai));
+
+/* ─── Modo «Corrigir» nos blocos importados ─── */
+document.querySelectorAll('[data-btn-corrigir]').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();  /* não propaga para o bloco__head toggle */
+    e.preventDefault();
+    const bloco = btn.closest('.bloco');
+    const editavel = bloco.classList.toggle('is-editavel');
+    btn.classList.toggle('is-on', editavel);
+    btn.textContent = editavel ? '✓ Concluir' : '✎ Editar';
+  });
+});
+
+/* ─── Data de importação no banner ─── */
+function atualizarDataImport() {
+  const d = state._import_data || '—';
+  document.querySelectorAll('[data-import-data]').forEach(el => el.textContent = d);
+}
+atualizarDataImport();
+
+/* ─── Sincronizar Google Forms (JSONP) ─── */
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzBGhVOM83mSWIxpxvfb64DVIlKB1yyN2XS_pXryI4wuC6Q0o_ntJIufqIPnZjXOrwT/exec';
+document.getElementById('btnSincForms').addEventListener('click', () => {
+  flash('A sincronizar Forms…', 'warning');
+  const cb = 'cb_anamnese_' + Date.now();
+  const url = APPS_SCRIPT_URL + '?action=getAnamneseData&callback=' + cb;
+  window[cb] = function(data) {
+    delete window[cb];
+    if (!data || data.erro) { flash(data && data.erro ? ('Forms: ' + data.erro) : 'Erro na sincronização', 'danger'); return; }
+    if (!Array.isArray(data.clientes) || data.clientes.length === 0) { flash('Ainda não há respostas no Google Forms', 'warning'); return; }
+    // Tentar encontrar o cliente atual pelo nome (state.f_nome) ou pelo ID
+    const nomeAtual = (state.f_nome || '').trim().toLowerCase();
+    let registo = null;
+    if (nomeAtual) {
+      registo = data.clientes.find(c => (c.f_nome || '').trim().toLowerCase() === nomeAtual);
+    }
+    if (!registo && data.clientes.length > 0) {
+      // se não há nome no state, pegar o mais recente
+      registo = data.clientes[data.clientes.length - 1];
+    }
+    if (!registo) { flash('Cliente não encontrado nos Forms', 'warning'); return; }
+    // Aplicar campos
+    Object.keys(registo).forEach(k => {
+      if (k === 'timestamp') {
+        state._import_data = registo[k] || new Date().toLocaleDateString('pt-PT');
+        return;
+      }
+      const val = registo[k];
+      if (val !== undefined && val !== null && val !== '') {
+        // motivos / diagnósticos / horários vêm como string separada por vírgulas → array
+        if (['f_motivos', 'f_diagnosticos', 'f_horarios'].includes(k)) {
+          state[k] = String(val).split(',').map(s => s.trim()).filter(Boolean);
+        } else {
+          state[k] = val;
+        }
+      }
+    });
+    if (!state._import_data) state._import_data = new Date().toLocaleDateString('pt-PT');
+    saveState(state);
+    // Re-hidratar campos
+    hidratarTudo();
+    atualizarDataImport();
+    updateClientHeader();
+    renderLeituraBlocks();
+    recountAll();
+    flash('✓ Importado: ' + (registo.f_nome || 'cliente'), 'success');
+  };
+  const s = document.createElement('script');
+  s.src = url; s.onerror = () => { flash('Falha na ligação ao Apps Script', 'danger'); };
+  document.body.appendChild(s);
+});
+
+function hidratarTudo() {
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const k = el.dataset.key;
+    if (state[k] !== undefined && state[k] !== null) el.value = state[k];
+  });
+  document.querySelectorAll('[data-multi]').forEach(row => {
+    const k = row.dataset.multi;
+    const saved = state[k] || [];
+    row.querySelectorAll('.chip').forEach(c => {
+      c.classList.toggle('is-on', saved.includes(c.textContent.trim()));
+    });
+  });
+  document.querySelectorAll('[data-escala]').forEach(row => {
+    const k = row.dataset.escala;
+    row.querySelectorAll('.escala-btn').forEach(b => {
+      b.classList.toggle('is-on', String(b.dataset.v) === String(state[k]));
+    });
+    const nota = document.querySelector(`[data-mq-nota="${k}"]`);
+    if (nota) nota.textContent = (state[k] !== undefined && state[k] !== '') ? state[k] : '—';
+  });
+}
+
+/* ─── Botões finais · Exportar / Imprimir / Guardar ─── */
+document.getElementById('btnGuardar').addEventListener('click', () => {
+  saveState(state); flash('✓ Anamnese guardada', 'success');
+});
+document.getElementById('btnImprimir').addEventListener('click', () => {
+  document.querySelectorAll('.bloco').forEach(b => b.classList.add('is-open'));
+  setTimeout(() => window.print(), 200);
+});
+document.getElementById('btnExportar').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'anamnese_' + CLIENT_ID + '_' + Date.now() + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  flash('JSON exportado', 'success');
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Eneagrama — Modo Casal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',system-ui,sans-serif;background:linear-gradient(135deg,#1a1a2e 0%,#2d1b4e 100%);min-height:100vh;color:#e0e0f0}
+.cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center}
+.cover-icon{width:80px;height:80px;background:linear-gradient(135deg,#e94560,#9b59b6);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 24px}
+.casal-badge{display:inline-block;padding:6px 18px;background:linear-gradient(135deg,#e94560,#9b59b6);color:white;border-radius:99px;font-size:13px;font-weight:600;margin-bottom:16px}
+.cover-title{font-size:clamp(22px,5vw,30px);font-weight:700;color:#f0e6ff;margin-bottom:8px}
+.cover-sub{font-size:15px;color:#a0a0c0;max-width:440px;line-height:1.7;margin-bottom:10px}
+.cover-time{font-size:13px;color:#8080a0;margin-bottom:32px}
+.cover-start{padding:14px 40px;background:linear-gradient(135deg,#e94560,#9b59b6);color:white;border:none;border-radius:50px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}
+.cover-start:hover{transform:translateY(-2px)}
+.quiz-wrap{max-width:640px;margin:0 auto;padding:24px 20px}
+.parceiro-bar{background:linear-gradient(135deg,#e94560,#9b59b6);border-radius:12px;padding:10px 16px;color:white;font-size:14px;font-weight:600;margin-bottom:16px}
+.progress-bar{background:rgba(255,255,255,.1);border-radius:99px;height:6px;margin-bottom:8px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#e94560,#9b59b6);border-radius:99px;transition:.4s}
+.q-counter{font-size:12px;color:#8080a0;text-align:right;margin-bottom:20px}
+.tipo-badge{display:inline-block;padding:3px 12px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px;background:rgba(233,69,96,.2);color:#e94560}
+.q-text{font-size:clamp(15px,4vw,18px);font-weight:600;line-height:1.5;margin-bottom:24px;color:#f0e6ff}
+.option-btn{width:100%;text-align:left;padding:14px 18px;margin-bottom:10px;background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.1);border-radius:12px;font-size:14px;font-family:inherit;cursor:pointer;transition:.15s;color:#d0d0e8;display:flex;gap:12px;align-items:flex-start}
+.opt-letter{width:28px;height:28px;border-radius:50%;background:rgba(233,69,96,.15);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#e94560;flex-shrink:0}
+.option-btn:hover{border-color:#e94560}
+.option-btn.selected{border-color:#e94560;background:rgba(233,69,96,.1)}
+.option-btn.selected .opt-letter{background:#e94560;color:white}
+.nav-row{display:flex;justify-content:space-between;margin-top:24px}
+.btn-nav{padding:11px 28px;border-radius:99px;border:none;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.btn-back{background:rgba(255,255,255,.08);color:#a0a0c0}
+.btn-next{background:linear-gradient(135deg,#e94560,#9b59b6);color:white}
+.btn-next:disabled{opacity:.35;cursor:default}
+.result-wrap{max-width:640px;margin:0 auto;padding:24px 20px 60px}
+.result-header{background:linear-gradient(135deg,#e94560,#9b59b6);border-radius:20px;padding:28px;color:white;margin-bottom:16px;text-align:center}
+.result-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:22px;margin-bottom:12px}
+.card-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#8080a0;margin-bottom:10px}
+.result-desc{font-size:14px;line-height:1.75;color:#c0c0e0}
+.hidden{display:none}
+.sending{text-align:center;padding:60px 20px}
+.sending-icon{font-size:40px;margin-bottom:16px}
+.sending p{color:#8080a0;font-size:14px}
+.nome-tag{font-size:13px;color:white;opacity:.75;margin-bottom:6px}
+</style>
+</head>
+<body>
+
+<div id="cover" class="cover">
+  <div class="cover-icon">⭕</div>
+  <div class="casal-badge">💑 Modo Casal</div>
+  <h1 class="cover-title">Eneagrama — Casal</h1>
+  <p class="cover-sub">Responde honestamente e de forma independente. Escolhe sempre o que mais te descreve, não o que idealizas.</p>
+  <p class="cover-time">⏱ 8–12 minutos · 18 perguntas</p>
+  <button class="cover-start" onclick="iniciar()">Começar →</button>
+</div>
+
+<div id="quiz" class="quiz-wrap hidden">
+  <div class="parceiro-bar" id="parceiroBar">💑 A carregar…</div>
+  <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+  <div class="q-counter" id="counter"></div>
+  <div class="tipo-badge" id="tipoBadge"></div>
+  <div class="q-text" id="qtext"></div>
+  <div id="options"></div>
+  <div class="nav-row">
+    <button class="btn-nav btn-back" onclick="anterior()">← Anterior</button>
+    <button class="btn-nav btn-next" id="btnNext" onclick="proximo()" disabled>Seguinte →</button>
+  </div>
+</div>
+
+<div id="sending" class="sending hidden">
+  <div class="sending-icon">⭕</div>
+  <p>A enviar o teu resultado…</p>
+</div>
+
+<div id="result" class="result-wrap hidden"></div>
+
+<script>
+const APPS_URL='https://script.google.com/macros/s/AKfycbxW4NiXlsKJMLB3sNGaus2gllggJgY-LnPcbQnOD2T6Cq5DxDAYk-W0lm1nLdvNxifC/exec';
+const params=new URLSearchParams(window.location.search);
+const NOME=params.get('nome')||'Parceiro';
+const CLIENT_ID=params.get('id')||'';
+const CASAL_ID=params.get('casal_id')||'';
+const PARCEIRO=params.get('parceiro')||'1';
+
+const TIPOS={
+  1:{nome:'O Perfeccionista',centro:'Instintivo',emoji:'⚖️',desc:'Padrões elevados, integridade, crítico interno activo. Medo de ser imperfeita ou errar.'},
+  2:{nome:'A Prestativa',centro:'Emocional',emoji:'🤝',desc:'Orientada para o cuidado e as necessidades dos outros. Medo de não ser amada.'},
+  3:{nome:'A Realizadora',centro:'Emocional',emoji:'🏆',desc:'Orientada para o sucesso e a imagem de competência. Medo de ser inútil.'},
+  4:{nome:'A Individualista',centro:'Emocional',emoji:'🎨',desc:'Identidade emocional forte, busca autenticidade. Medo de não ter identidade.'},
+  5:{nome:'A Investigadora',centro:'Mental',emoji:'🔭',desc:'Analítica, observadora, conserva energia. Medo de ser incompetente.'},
+  6:{nome:'A Leal',centro:'Mental',emoji:'🛡️',desc:'Responsável, vigilante, questiona e testa confiança. Medo de ser abandonada.'},
+  7:{nome:'A Entusiasta',centro:'Mental',emoji:'✨',desc:'Espontânea, evita dor, dificuldade em comprometer-se. Medo de sentir dor.'},
+  8:{nome:'A Desafiadora',centro:'Instintivo',emoji:'🦅',desc:'Assertiva, protectora, enfrenta o mundo. Medo de ser controlada.'},
+  9:{nome:'A Pacificadora',centro:'Instintivo',emoji:'🕊️',desc:'Orientada para a harmonia, evita conflito. Medo de separação.'},
+};
+
+const PERGUNTAS=[
+  {tipo:1,texto:'Em relação a como faço as coisas, identifico-me mais com…',opcoes:[{polo:1,texto:'Tenho padrões elevados e noto facilmente o que pode ser melhorado'},{polo:'_',texto:'Aceito as imperfeições com facilidade e raramente sinto necessidade de corrigir'}]},
+  {tipo:2,texto:'Nas minhas relações próximas, o que me descreve mais?',opcoes:[{polo:2,texto:'Estou naturalmente atenta às necessidades dos outros e fico satisfeita quando consigo ajudar'},{polo:'_',texto:'Cuido de mim primeiro e não sinto a necessidade constante de ser útil'}]},
+  {tipo:3,texto:'Quando penso nos meus objectivos, o que ressoa mais?',opcoes:[{polo:3,texto:'O sucesso e a conquista são muito importantes — gosto de ser vista como competente'},{polo:'_',texto:'O processo e as relações importam-me mais do que resultados externos'}]},
+  {tipo:4,texto:'Em relação à minha identidade e emoções, identifico-me com…',opcoes:[{polo:4,texto:'Sinto que sou diferente dos outros e tenho uma vida interior muito rica e intensa'},{polo:'_',texto:'Sinto-me ligada aos outros sem precisar de enfatizar a minha singularidade'}]},
+  {tipo:5,texto:'Em relação ao meu espaço interior e energia, o que é mais verdade?',opcoes:[{polo:5,texto:'Preciso de muito tempo a sós para repor energia e penso muito antes de partilhar'},{polo:'_',texto:'Partilho com facilidade e não sinto que preciso de preservar muito a minha energia'}]},
+  {tipo:6,texto:'Em relação à segurança e confiança, o que ressoa mais?',opcoes:[{polo:6,texto:'Questiono bastante antes de confiar e antecipo cenários negativos para me preparar'},{polo:'_',texto:'Confio facilmente e raramente questiono a lealdade das pessoas'}]},
+  {tipo:7,texto:'Em relação ao prazer e experiências, o que me descreve?',opcoes:[{polo:7,texto:'Tenho muita energia para novas experiências e às vezes fujo de situações negativas'},{polo:'_',texto:'Consigo estar com o desconforto e a monotonia sem precisar de distracção constante'}]},
+  {tipo:8,texto:'Em relação ao poder e controlo nas relações, o que ressoa mais?',opcoes:[{polo:8,texto:'Tomo o controlo naturalmente e não hesito em confrontar quem me pareça injusto'},{polo:'_',texto:'Partilho o controlo facilmente e prefiro colaborar a liderar ou confrontar'}]},
+  {tipo:9,texto:'Em relação ao conflito e à harmonia, o que me descreve melhor?',opcoes:[{polo:9,texto:'Faço muito para evitar conflito e é-me difícil impor as minhas necessidades'},{polo:'_',texto:'Expresso-me com facilidade mesmo quando isso gera tensão'}]},
+  {tipo:1,texto:'Quando algo não está bem feito, a minha reacção habitual é…',opcoes:[{polo:1,texto:'Um desconforto interno que me leva a querer corrigir'},{polo:'_',texto:'Aceito que as coisas nem sempre são perfeitas'}]},
+  {tipo:2,texto:'Quando recebo ajuda ou cuidado dos outros, costumo…',opcoes:[{polo:2,texto:'Ficar desconfortável — prefiro ser eu a dar do que a receber'},{polo:'_',texto:'Receber com facilidade e gratidão sem me sentir em dívida'}]},
+  {tipo:3,texto:'Em relação à minha imagem pública, o que é mais verdade?',opcoes:[{polo:3,texto:'Adapto-me ao que é esperado e preocupo-me com a impressão que deixo'},{polo:'_',texto:'A opinião dos outros não me preocupa muito — sou quem sou'}]},
+  {tipo:4,texto:'Quando olho para as minhas relações, o que reconheço mais?',opcoes:[{polo:4,texto:'Uma tendência para idealizar o que não tenho e sentir que falta algo'},{polo:'_',texto:'Sinto-me geralmente satisfeita com o que tenho'}]},
+  {tipo:5,texto:'Quando estou em situações sociais muito activas, o que sinto?',opcoes:[{polo:5,texto:'Um certo esgotamento — preciso de me retirar para recuperar em silêncio'},{polo:'_',texto:'A interacção social não me esgota — costuma dar-me energia'}]},
+  {tipo:6,texto:'Quando começo uma relação nova, o meu processo é…',opcoes:[{polo:6,texto:'Observo e testo antes de confiar totalmente'},{polo:'_',texto:'Confio rapidamente e raramente sinto necessidade de verificar a lealdade'}]},
+  {tipo:7,texto:'Quando a vida fica mais difícil, a minha tendência é…',opcoes:[{polo:7,texto:'Procurar algo novo ou distrair-me para não ficar presa no negativo'},{polo:'_',texto:'Ficar com o que é difícil — consigo processar emoções pesadas'}]},
+  {tipo:8,texto:'Em relação à vulnerabilidade, o que me descreve melhor?',opcoes:[{polo:8,texto:'Mostrar fraqueza é difícil — raramente deixo ver a minha vulnerabilidade'},{polo:'_',texto:'Consigo mostrar vulnerabilidade com facilidade'}]},
+  {tipo:9,texto:'Em relação às minhas próprias preferências, o que reconheço?',opcoes:[{polo:9,texto:'Às vezes tenho dificuldade em saber o que quero — adquiro as prioridades dos outros'},{polo:'_',texto:'Sei bem o que quero e comunico as minhas preferências sem dificuldade'}]},
+];
+
+let atual=0,respostas={};
+
+function iniciar(){
+  document.getElementById('cover').classList.add('hidden');
+  document.getElementById('quiz').classList.remove('hidden');
+  document.getElementById('parceiroBar').innerHTML=`💑 Parceiro ${PARCEIRO} — <strong>${NOME}</strong> · Casal ID: ${CASAL_ID}`;
+  mostrarPergunta();
+}
+
+function mostrarPergunta(){
+  const p=PERGUNTAS[atual],total=PERGUNTAS.length;
+  document.getElementById('prog').style.width=((atual/total)*100)+'%';
+  document.getElementById('counter').textContent=`Pergunta ${atual+1} de ${total}`;
+  document.getElementById('tipoBadge').textContent=`Tipo ${p.tipo} — ${TIPOS[p.tipo].nome}`;
+  document.getElementById('qtext').textContent=p.texto;
+  const sel=respostas[atual];
+  document.getElementById('btnNext').disabled=sel===undefined;
+  document.getElementById('options').innerHTML=p.opcoes.map((o,i)=>`
+    <button class="option-btn ${sel===i?'selected':''}" onclick="selecionar(${i})">
+      <div class="opt-letter">${['A','B'][i]}</div>
+      <span>${o.texto}</span>
+    </button>`).join('');
+}
+
+function selecionar(i){respostas[atual]=i;mostrarPergunta();}
+function anterior(){if(atual>0){atual--;mostrarPergunta();}}
+function proximo(){if(atual<PERGUNTAS.length-1){atual++;mostrarPergunta();}else{calcular();}}
+
+function calcular(){
+  document.getElementById('quiz').classList.add('hidden');
+  document.getElementById('sending').classList.remove('hidden');
+  const scores={1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
+  PERGUNTAS.forEach((p,i)=>{if(respostas[i]===0&&p.opcoes[0].polo!=='_')scores[p.tipo]++;});
+  const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const primary=parseInt(sorted[0][0]),secondary=parseInt(sorted[1][0]);
+  const resumo=`Tipo ${primary} — ${TIPOS[primary].nome}`;
+  const dados={primary,secondary,...Object.fromEntries(Object.entries(scores).map(([k,v])=>[`T${k}`,v]))};
+  enviar({quiz:'enneagrama',resumo,dados,nome:NOME,id:CLIENT_ID,casal_id:CASAL_ID,parceiro:PARCEIRO},()=>mostrarResultado(primary,secondary));
+}
+
+function enviar(payload,cb){
+  const cbName='cb_'+Date.now();window[cbName]=()=>{cb();};
+  const s=document.createElement('script');
+  s.src=APPS_URL+'?callback='+cbName+'&data='+encodeURIComponent(JSON.stringify(payload));
+  s.onerror=()=>cb();document.head.appendChild(s);setTimeout(cb,6000);
+}
+
+function mostrarResultado(primary,secondary){
+  document.getElementById('sending').classList.add('hidden');
+  const el=document.getElementById('result');el.classList.remove('hidden');
+  const t=TIPOS[primary],s=TIPOS[secondary];
+  el.innerHTML=`
+    <div class="result-header">
+      <div class="nome-tag">💑 Parceiro ${PARCEIRO} — ${NOME}</div>
+      <div style="font-size:32px;margin-bottom:4px">${t.emoji}</div>
+      <div style="font-size:36px;font-weight:700">Tipo ${primary}</div>
+      <div style="font-size:18px;font-weight:600;margin-bottom:4px">${t.nome}</div>
+      <div style="font-size:12px;opacity:.75">Centro ${t.centro} · Asa ${secondary}</div>
+    </div>
+    <div class="result-card"><div class="card-title">O teu perfil</div><div class="result-desc">${t.desc}</div></div>
+    <div class="result-card"><div class="card-title">Asa — Tipo ${secondary}: ${s.nome}</div><div class="result-desc" style="font-size:13px">${s.desc.split('.')[0]}.</div></div>
+    <div class="result-card" style="text-align:center;color:#8080a0;font-size:13px">✓ Enviado · Casal ID: ${CASAL_ID}</div>`;
+}
+
+if(NOME&&NOME!=='Parceiro') iniciar();
+</script>
+</body>
+</html>

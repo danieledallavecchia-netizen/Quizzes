@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>As 5 Feridas da Infância</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',system-ui,sans-serif;background:linear-gradient(135deg,#fdf5f0 0%,#f8f0ff 100%);min-height:100vh;color:#2d2d3a}
+.cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center}
+.cover-icon{width:80px;height:80px;background:linear-gradient(135deg,#8b3a1a,#7b1a6a);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 24px;box-shadow:0 8px 24px rgba(139,58,26,.25)}
+.cover-title{font-size:clamp(20px,5vw,28px);font-weight:700;color:#2d2d3a;margin-bottom:8px}
+.cover-sub{font-size:14px;color:#6b6b80;max-width:460px;line-height:1.75;margin-bottom:10px}
+.cover-note{font-size:12.5px;color:#8b8ba0;max-width:440px;line-height:1.6;margin-bottom:10px;font-style:italic}
+.cover-time{font-size:13px;color:#8b3a1a;margin-bottom:28px}
+.cover-start{padding:14px 40px;background:linear-gradient(135deg,#8b3a1a,#7b1a6a);color:white;border:none;border-radius:50px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px rgba(139,58,26,.3);transition:.2s}
+.cover-start:hover{transform:translateY(-2px)}
+.quiz-wrap{max-width:640px;margin:0 auto;padding:24px 20px}
+.ferida-bar{border-radius:12px;padding:10px 16px;color:white;font-size:13px;font-weight:600;margin-bottom:16px}
+.progress-bar{background:#f0d8c8;border-radius:99px;height:6px;margin-bottom:8px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#8b3a1a,#7b1a6a);border-radius:99px;transition:.4s}
+.q-counter{font-size:12px;color:#8b3a1a;text-align:right;margin-bottom:20px}
+.q-text{font-size:clamp(14px,4vw,17px);font-weight:600;color:#1a1a2e;line-height:1.6;margin-bottom:24px}
+.scale-wrap{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px}
+.scale-btn{padding:14px 8px;background:white;border:2px solid #f0d8c8;border-radius:12px;font-size:13px;font-family:inherit;cursor:pointer;transition:.15s;color:#2d2d3a;text-align:center;font-weight:600}
+.scale-btn:hover{border-color:#8b3a1a;background:#fdf5f0}
+.scale-btn.selected{border-color:#8b3a1a;background:rgba(139,58,26,.1);color:#8b3a1a;font-weight:700}
+.scale-labels{display:flex;justify-content:space-between;font-size:11px;color:#8b9aa8;padding:0 4px;margin-bottom:20px}
+.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.btn-nav{padding:11px 28px;border-radius:99px;border:none;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:.15s}
+.btn-back{background:#f0d8c8;color:#8b3a1a}
+.btn-next{background:linear-gradient(135deg,#8b3a1a,#7b1a6a);color:white;box-shadow:0 4px 12px rgba(139,58,26,.25)}
+.btn-next:disabled{opacity:.35;cursor:default;box-shadow:none}
+.result-wrap{max-width:640px;margin:0 auto;padding:24px 20px 60px}
+.result-header{border-radius:20px;padding:28px;color:white;margin-bottom:16px;text-align:center}
+.result-title{font-size:20px;font-weight:700;margin-bottom:4px}
+.result-sub{font-size:13px;opacity:.8}
+.result-card{background:white;border-radius:16px;padding:22px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.card-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:14px}
+.ferida-row{margin-bottom:18px}
+.ferida-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.ferida-name{font-size:14px;font-weight:700}
+.ferida-pct{font-size:16px;font-weight:700}
+.ferida-desc{font-size:12px;color:#6b6b80;margin-bottom:6px;line-height:1.5}
+.ferida-track{background:#f5efe8;border-radius:99px;height:10px;overflow:hidden}
+.ferida-fill{height:100%;border-radius:99px;transition:.6s}
+.sending{text-align:center;padding:60px 20px}
+.sending-icon{font-size:40px;margin-bottom:16px}
+.sending p{color:#8b8ba0;font-size:14px}
+.hidden{display:none}
+.nome-tag{font-size:13px;color:white;opacity:.75;margin-bottom:8px}
+.ferida-card{border-radius:12px;padding:14px 16px;margin-bottom:10px;font-size:13px;line-height:1.6;border-left:4px solid}
+</style>
+</head>
+<body>
+
+<div id="cover" class="cover">
+  <div class="cover-icon">🌹</div>
+  <h1 class="cover-title">As 5 Feridas da Infância</h1>
+  <p class="cover-sub">Este questionário identifica as feridas emocionais mais profundas formadas na infância — os padrões que continuam a influenciar as tuas relações e escolhas hoje.</p>
+  <p class="cover-note">Baseado no trabalho de Lise Bourbeau — "As 5 Feridas que Impedem de Ser Tu Mesmo". Responde com honestidade, tal como és hoje.</p>
+  <p class="cover-time">⏱ 8–12 minutos · 25 afirmações · Escala 1–5</p>
+  <button class="cover-start" onclick="iniciar()">Começar →</button>
+</div>
+
+<div id="quiz" class="quiz-wrap hidden">
+  <div class="ferida-bar" id="feridaBar"></div>
+  <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+  <div class="q-counter" id="counter"></div>
+  <div class="q-text" id="qtext"></div>
+  <div class="scale-wrap" id="scaleWrap"></div>
+  <div class="scale-labels"><span>Nunca / Não me identifico</span><span>Sempre / Identifico-me muito</span></div>
+  <div class="nav-row">
+    <button class="btn-nav btn-back" onclick="anterior()">← Anterior</button>
+    <button class="btn-nav btn-next" id="btnNext" onclick="proximo()" disabled>Seguinte →</button>
+  </div>
+</div>
+
+<div id="sending" class="sending hidden">
+  <div class="sending-icon">📤</div>
+  <p>A guardar o teu resultado…</p>
+</div>
+
+<div id="result" class="result-wrap hidden"></div>
+
+<script>
+const APPS_URL='https://script.google.com/macros/s/AKfycbxW4NiXlsKJMLB3sNGaus2gllggJgY-LnPcbQnOD2T6Cq5DxDAYk-W0lm1nLdvNxifC/exec';
+const params=new URLSearchParams(window.location.search);
+const NOME=params.get('nome')||'';
+const CLIENT_ID=params.get('id')||'';
+
+const FERIDAS={
+  rejeicao:{nome:'Rejeição',emoji:'💜',cor:'#5a2d9a',bg:'rgba(90,45,154,.08)',
+    desc:'Medo de não ser amada ou aceite como és. Tendência a rejeitar-se antes de os outros o fazerem.',
+    clinico:'Isolamento, invisibilidade, auto-sabotagem, vazio interno, crença de que não merece existir.',
+    mascara:'Fugitiva — torna-se invisível, evita relacionamentos íntimos.',
+    cura:'Aprender que podes existir plenamente sem precisar de aprovação externa.'},
+  abandono:{nome:'Abandono',emoji:'💙',cor:'#2d4fa5',bg:'rgba(45,79,165,.08)',
+    desc:'Medo de ser deixada, de ficar sozinha. Necessidade intensa de presença e reassurance.',
+    clinico:'Dependência emocional, tristeza crónica, papel de vítima, busca constante de atenção.',
+    mascara:'Dependente — agarra-se às pessoas e relações por medo de ficar sozinha.',
+    cura:'Descobrir que és suficiente para ti própria — a solitude como diferente do abandono.'},
+  humilhacao:{nome:'Humilhação',emoji:'🧡',cor:'#8b3a00',bg:'rgba(139,58,0,.08)',
+    desc:'Vergonha do próprio corpo e necessidades. Crença de que és excessiva, pesada ou "demais".',
+    clinico:'Masoquismo, auto-privação, colocar sempre os outros primeiro, vergonha corporal, controlo por comida.',
+    mascara:'Masoquista — pune-se e priva-se antes que outros o façam.',
+    cura:'Reconhecer as tuas necessidades como legítimas — o teu corpo e desejos têm direito a existir.'},
+  traicao:{nome:'Traição',emoji:'❤️',cor:'#8b1a1a',bg:'rgba(139,26,26,.08)',
+    desc:'Desconfiança, necessidade de controlo. Dificuldade em delegar ou confiar que os outros cumprem.',
+    clinico:'Controlo, ciúme excessivo, intolerância à decepção, mentira defensiva, manipulação.',
+    mascara:'Controladora — tudo tem de ser feito da sua forma para sentir segurança.',
+    cura:'Permitir que os outros existam com as suas formas sem que isso seja uma ameaça.'},
+  injustica:{nome:'Injustiça',emoji:'💛',cor:'#7a6a00',bg:'rgba(122,106,0,.08)',
+    desc:'Rigidez, perfeccionismo. Dificuldade em sentir e expressar emoções, especialmente necessidades.',
+    clinico:'Auto-exigência extrema, dificuldade em pedir ajuda, rigidez de pensamento, raiva reprimida.',
+    mascara:'Rígida — esconde emoções e necessidades atrás do controlo e da perfeição.',
+    cura:'Soltar a perfeição — és amável com as tuas imperfeições e necessidades.'},
+};
+
+const PERGUNTAS=[
+  // REJEIÇÃO
+  {dim:'rejeicao',texto:'Tenho a sensação de que não pertenço a lugar nenhum — ou que não sou "normal" como os outros.'},
+  {dim:'rejeicao',texto:'Evito situações onde possa ser rejeitada, preferindo não tentar a arriscar a rejeição.'},
+  {dim:'rejeicao',texto:'Tenho tendência a rejeitar-me a mim própria antes que os outros o façam.'},
+  {dim:'rejeicao',texto:'Sinto com frequência que a minha existência incomoda ou é demais para os outros.'},
+  {dim:'rejeicao',texto:'Isolo-me facilmente e prefiro a invisibilidade à exposição.'},
+  // ABANDONO
+  {dim:'abandono',texto:'Fico muito perturbada quando alguém importante para mim não aparece ou não responde como esperava.'},
+  {dim:'abandono',texto:'Tenho tendência a depender muito de outras pessoas para me sentir bem comigo própria.'},
+  {dim:'abandono',texto:'O pensamento de ficar sozinha enche-me de angústia.'},
+  {dim:'abandono',texto:'Faço muitos esforços para que as pessoas não me deixem, mesmo cedendo em coisas que não quero.'},
+  {dim:'abandono',texto:'Sinto tristeza crónica e uma espécie de vazio que não consigo explicar.'},
+  // HUMILHAÇÃO
+  {dim:'humilhacao',texto:'Sinto vergonha do meu corpo, das minhas necessidades ou dos meus desejos.'},
+  {dim:'humilhacao',texto:'Coloco constantemente as necessidades dos outros à frente das minhas.'},
+  {dim:'humilhacao',texto:'Tenho tendência a privar-me de prazeres porque sinto que não os mereço.'},
+  {dim:'humilhacao',texto:'Sinto que sou "demasiado" — demasiado intensa, demasiado exigente, demasiado sensível.'},
+  {dim:'humilhacao',texto:'Critico-me duramente quando cometo erros, mais do que faria com qualquer outra pessoa.'},
+  // TRAIÇÃO
+  {dim:'traicao',texto:'Tenho dificuldade em confiar que as pessoas fazem o que disseram que iriam fazer.'},
+  {dim:'traicao',texto:'Sinto uma necessidade forte de controlar as situações e as pessoas à minha volta.'},
+  {dim:'traicao',texto:'A decepção é muito difícil de tolerar — prefiro não esperar nada para não ser defraudada.'},
+  {dim:'traicao',texto:'Sinto ciúme frequente nas relações próximas.'},
+  {dim:'traicao',texto:'Às vezes minto ou omito para evitar conflitos ou para controlar a situação.'},
+  // INJUSTIÇA
+  {dim:'injustica',texto:'Tenho dificuldade em exprimir o que sinto, especialmente quando preciso de algo.'},
+  {dim:'injustica',texto:'Sou muito exigente comigo própria — nada do que faço parece suficientemente bom.'},
+  {dim:'injustica',texto:'Sinto raiva facilmente mas raramente a expresso directamente.'},
+  {dim:'injustica',texto:'Prefiro resolver tudo sozinha a pedir ajuda.'},
+  {dim:'injustica',texto:'Sinto que o mundo é injusto e que tenho de ser perfeita para compensar.'},
+];
+
+let atual=0,respostas={};
+
+function iniciar(){
+  document.getElementById('cover').classList.add('hidden');
+  document.getElementById('quiz').classList.remove('hidden');
+  mostrarPergunta();
+}
+
+function mostrarPergunta(){
+  const p=PERGUNTAS[atual],total=PERGUNTAS.length;
+  document.getElementById('prog').style.width=((atual/total)*100)+'%';
+  document.getElementById('counter').textContent=`Afirmação ${atual+1} de ${total}`;
+  const f=FERIDAS[p.dim];
+  const bar=document.getElementById('feridaBar');
+  bar.textContent=`${f.emoji} Ferida da ${f.nome}`;
+  bar.style.background=`linear-gradient(135deg,${f.cor},#7b1a6a)`;
+  document.getElementById('qtext').textContent=p.texto;
+  const sel=respostas[atual];
+  document.getElementById('btnNext').disabled=sel===undefined;
+  document.getElementById('scaleWrap').innerHTML=[1,2,3,4,5].map(v=>`
+    <button class="scale-btn ${sel===v?'selected':''}" onclick="selecionar(${v})"
+      style="${sel===v?'border-color:'+f.cor+';color:'+f.cor+';background:'+f.cor+'18':''}">${v}</button>`).join('');
+}
+
+function selecionar(v){respostas[atual]=v;mostrarPergunta();}
+function anterior(){if(atual>0){atual--;mostrarPergunta();}}
+function proximo(){if(atual<PERGUNTAS.length-1){atual++;mostrarPergunta();}else{calcular();}}
+
+function calcular(){
+  document.getElementById('quiz').classList.add('hidden');
+  document.getElementById('sending').classList.remove('hidden');
+  const scores={rejeicao:0,abandono:0,humilhacao:0,traicao:0,injustica:0};
+  PERGUNTAS.forEach((p,i)=>{scores[p.dim]+=(respostas[i]||0);});
+  const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const dominante=sorted[0][0];
+  const pct={};Object.keys(scores).forEach(k=>pct[k]=Math.round((scores[k]/25)*100));
+  const resumo=`Ferida dominante: ${FERIDAS[dominante].nome} · ${Object.entries(pct).map(([k,v])=>FERIDAS[k].nome+':'+v+'%').join(' · ')}`;
+  enviar({quiz:'feridas_infancia',resumo,dados:{...pct,dominante},nome:NOME,id:CLIENT_ID},()=>mostrarResultado(scores,pct,dominante));
+}
+
+function enviar(payload,cb){
+  const cbName='cb_'+Date.now();window[cbName]=()=>{cb();};
+  const s=document.createElement('script');
+  s.src=APPS_URL+'?callback='+cbName+'&data='+encodeURIComponent(JSON.stringify(payload));
+  s.onerror=()=>cb();document.head.appendChild(s);setTimeout(cb,6000);
+}
+
+function mostrarResultado(scores,pct,dominante){
+  document.getElementById('sending').classList.add('hidden');
+  const el=document.getElementById('result');el.classList.remove('hidden');
+  const fd=FERIDAS[dominante];
+
+  const feridaRows=Object.entries(FERIDAS).sort((a,b)=>scores[b[0]]-scores[a[0]]).map(([k,f])=>`
+    <div class="ferida-row">
+      <div class="ferida-head">
+        <div class="ferida-name" style="color:${f.cor}">${f.emoji} ${f.nome}</div>
+        <div class="ferida-pct" style="color:${f.cor}">${pct[k]}%</div>
+      </div>
+      <div class="ferida-desc">${f.desc}</div>
+      <div class="ferida-track"><div class="ferida-fill" style="width:${pct[k]}%;background:${f.cor}"></div></div>
+    </div>`).join('');
+
+  el.innerHTML=`
+    <div class="result-header" style="background:linear-gradient(135deg,${fd.cor},#7b1a6a)">
+      ${NOME?`<div class="nome-tag">${NOME}</div>`:''}
+      <div style="font-size:32px;margin-bottom:8px">${fd.emoji}</div>
+      <div class="result-title">Ferida Dominante: ${fd.nome}</div>
+      <div class="result-sub">5 Feridas da Infância · Lise Bourbeau</div>
+    </div>
+
+    <div class="ferida-card" style="background:${fd.bg};border-color:${fd.cor}">
+      <strong style="color:${fd.cor}">${fd.nome} — O que significa</strong><br>
+      <span style="color:#3a3a4a">${fd.clinico}</span><br><br>
+      <strong style="color:${fd.cor}">Máscara usada:</strong> <span style="color:#3a3a4a">${fd.mascara}</span><br>
+      <strong style="color:${fd.cor}">Caminho de cura:</strong> <span style="color:#3a3a4a">${fd.cura}</span>
+    </div>
+
+    <div class="result-card">
+      <div class="card-title" style="color:${fd.cor}">Perfil das 5 feridas</div>
+      ${feridaRows}
+    </div>
+    <div class="result-card" style="text-align:center;color:${fd.cor};font-size:13px">✓ Resultado enviado à tua terapeuta</div>`;
+}
+
+if(NOME) iniciar();
+</script>
+</body>
+</html>

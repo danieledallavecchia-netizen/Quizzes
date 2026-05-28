@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linha Biográfica Relacional</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:   #f9f5ee;
+  --cream2:  #f2ead8;
+  --paper:   #fffdf7;
+  --plum:    #4a2040;
+  --plum-lt: #6b3060;
+  --rose:    #c4647a;
+  --rose-lt: #f5dde3;
+  --gold:    #b8924a;
+  --gold-lt: #f7ecd6;
+  --sage:    #5a7a6e;
+  --sage-lt: #e0eeea;
+  --ink:     #1c1612;
+  --muted:   #7a6a58;
+  --border:  #ddd0bc;
+  --shadow:  0 4px 24px rgba(74,32,64,.08);
+  --r: 12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;font-size:15px;line-height:1.7}
+
+body::before{content:'';position:fixed;inset:0;pointer-events:none;opacity:.03;z-index:999;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")}
+
+/* ─── HERO ─── */
+.page-hero{background:linear-gradient(160deg,var(--plum) 0%,#2a1030 100%);color:#fff;padding:52px 32px 44px;text-align:center;position:relative;overflow:hidden}
+.page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(196,100,122,.25) 0%,transparent 60%),radial-gradient(ellipse at 70% 20%,rgba(184,146,74,.2) 0%,transparent 50%)}
+.hero-inner{position:relative;z-index:1;max-width:660px;margin:0 auto}
+.hero-tag{display:inline-block;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:18px}
+.hero-title{font-family:'Cormorant Garant',serif;font-size:clamp(30px,5vw,46px);font-weight:600;line-height:1.2;color:#fff;margin-bottom:12px}
+.hero-title em{color:var(--rose);font-style:italic}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.55);line-height:1.7;max-width:500px;margin:0 auto 24px}
+
+/* ID badge */
+.id-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:8px 18px;font-size:12px;color:rgba(255,255,255,.7);font-weight:500}
+.id-badge code{font-family:monospace;color:var(--gold);font-size:13px;letter-spacing:.5px}
+
+.progress-bar-wrap{background:rgba(255,255,255,.08);border-radius:4px;height:3px;margin-top:16px;overflow:hidden}
+.progress-bar-fill{height:100%;background:var(--rose);border-radius:4px;transition:.4s;width:0%}
+
+/* ─── INTRO ─── */
+.intro-note{background:var(--paper);border:1px solid var(--border);border-radius:var(--r);padding:26px 30px;box-shadow:var(--shadow)}
+.intro-note p{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:8px}
+.intro-note p:last-child{margin-bottom:0}
+.intro-note strong{color:var(--plum);font-weight:600}
+.how-to{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.how-chip{padding:5px 14px;border-radius:999px;font-size:11.5px;font-weight:600;letter-spacing:.3px;border:1px solid}
+.how-chip.rose{background:var(--rose-lt);border-color:rgba(196,100,122,.3);color:var(--rose)}
+.how-chip.gold{background:var(--gold-lt);border-color:rgba(184,146,74,.3);color:var(--gold)}
+.how-chip.sage{background:var(--sage-lt);border-color:rgba(90,122,110,.3);color:var(--sage)}
+
+/* ─── LAYOUT ─── */
+.wrap{max-width:720px;margin:0 auto;padding:28px 20px 100px}
+
+.section-title{display:flex;align-items:center;gap:14px;margin:40px 0 20px}
+.section-title .line{flex:1;height:1px;background:var(--border)}
+.section-title h2{font-family:'Cormorant Garant',serif;font-size:21px;font-weight:600;color:var(--plum);white-space:nowrap}
+
+/* ─── REL CARD ─── */
+.rel-card{background:var(--paper);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:22px;overflow:hidden;animation:slideIn .35s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.rel-card-head{background:linear-gradient(135deg,var(--plum) 0%,#3a1550 100%);padding:16px 20px;display:flex;align-items:center;gap:12px}
+.rel-num{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garant',serif;font-size:17px;font-weight:700;color:#fff;flex-shrink:0}
+.rel-head-info{flex:1}
+.rel-head-info h3{font-family:'Cormorant Garant',serif;font-size:17px;font-weight:600;color:#fff}
+.rel-head-info p{font-size:10.5px;color:rgba(255,255,255,.4);margin-top:1px}
+.rel-importance{display:flex;flex-direction:column;align-items:center;gap:2px}
+.rel-importance label{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.38)}
+.importance-stars{display:flex;gap:2px}
+.importance-stars button{width:16px;height:16px;background:none;border:none;cursor:pointer;font-size:13px;opacity:.25;transition:.15s;padding:0}
+.importance-stars button.on{opacity:1}
+.importance-stars button:hover{opacity:.7;transform:scale(1.2)}
+.card-toggle{cursor:pointer;width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;font-size:11px;transition:.2s;flex-shrink:0}
+.card-toggle:hover{background:rgba(255,255,255,.14)}
+.card-body-wrap{overflow:hidden;transition:max-height .35s ease}
+
+.rel-card-body{padding:20px}
+.field-row{display:grid;gap:13px;margin-bottom:14px}
+.field-row.two{grid-template-columns:1fr 1fr}
+.field-row.three{grid-template-columns:1fr 1fr 1fr}
+.field-row.one{grid-template-columns:1fr}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--plum-lt)}
+.fg .hint{font-size:11.5px;color:var(--muted);font-style:italic;margin-bottom:1px;line-height:1.5}
+.fg input,.fg textarea,.fg select{padding:10px 13px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'Nunito',sans-serif;color:var(--ink);background:#fff;transition:border-color .2s,box-shadow .2s;width:100%}
+.fg input:focus,.fg textarea:focus{outline:none;border-color:var(--plum-lt);box-shadow:0 0 0 3px rgba(107,48,96,.09)}
+.fg textarea{resize:vertical;min-height:78px;line-height:1.6}
+
+.card-section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--gold);padding:0 0 7px;border-bottom:1px solid var(--gold-lt);margin:18px 0 13px;display:flex;align-items:center;gap:8px}
+.card-section-label::after{content:'';flex:1;height:1px;background:var(--gold-lt)}
+
+.emotion-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.emotion-chips button{padding:4px 11px;border-radius:999px;font-size:11px;font-weight:600;font-family:'Nunito',sans-serif;cursor:pointer;transition:.15s;border:1.5px solid var(--border);background:#fff;color:var(--muted)}
+.emotion-chips button:hover{border-color:var(--rose);color:var(--rose);background:var(--rose-lt)}
+.emotion-chips button.sel{border-color:var(--rose);color:var(--rose);background:var(--rose-lt)}
+
+.btn-delete-rel{margin-top:16px;padding:7px 16px;background:none;border:1.5px solid rgba(196,100,122,.28);border-radius:8px;color:var(--rose);font-size:12px;font-weight:600;font-family:'Nunito',sans-serif;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:6px;width:fit-content}
+.btn-delete-rel:hover{background:var(--rose-lt);border-color:var(--rose)}
+
+/* ─── ADD BUTTON ─── */
+.btn-add{width:100%;padding:17px;background:linear-gradient(135deg,var(--plum) 0%,#3a1550 100%);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:600;font-family:'Cormorant Garant',serif;letter-spacing:.5px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 20px rgba(74,32,64,.22)}
+.btn-add:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(74,32,64,.32)}
+
+/* ─── GENERAL CARD ─── */
+.general-card{background:var(--paper);border:1.5px solid var(--border);border-radius:var(--r);padding:22px 26px;box-shadow:var(--shadow);margin-bottom:22px}
+.general-card h3{font-family:'Cormorant Garant',serif;font-size:19px;font-weight:600;color:var(--plum);margin-bottom:5px}
+.general-card .gc-sub{font-size:13px;color:var(--muted);margin-bottom:16px;font-style:italic}
+
+/* ─── AI ANALYSIS SECTION ─── */
+.analysis-section{background:linear-gradient(135deg,#1a0d28 0%,#2d1040 100%);border-radius:var(--r);padding:28px;margin-top:32px;position:relative;overflow:hidden;box-shadow:0 8px 40px rgba(74,32,64,.3)}
+.analysis-section::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(196,100,122,.2) 0%,transparent 70%);pointer-events:none}
+.analysis-header{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.analysis-icon{width:44px;height:44px;border-radius:12px;background:rgba(196,100,122,.2);border:1px solid rgba(196,100,122,.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.analysis-header h3{font-family:'Cormorant Garant',serif;font-size:21px;font-weight:600;color:#fff}
+.analysis-header p{font-size:12px;color:rgba(255,255,255,.4);margin-top:2px}
+
+.btn-analyse{width:100%;padding:16px;background:linear-gradient(135deg,var(--rose) 0%,#a04060 100%);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 16px rgba(196,100,122,.35)}
+.btn-analyse:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 24px rgba(196,100,122,.45)}
+.btn-analyse:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* Loading dots */
+.loading-dots{display:none;align-items:center;gap:6px;justify-content:center}
+.loading-dots.show{display:flex}
+.loading-dots span{width:8px;height:8px;border-radius:50%;background:var(--rose);animation:bounce .8s infinite}
+.loading-dots span:nth-child(2){animation-delay:.15s}
+.loading-dots span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-8px);opacity:1}}
+
+/* Analysis result */
+.analysis-result{display:none;margin-top:20px}
+.analysis-result.show{display:block}
+.analysis-block{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:18px 20px;margin-bottom:14px}
+.analysis-block:last-child{margin-bottom:0}
+.analysis-block h4{font-family:'Cormorant Garant',serif;font-size:16px;font-weight:600;color:var(--gold-lt);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.analysis-block p,.analysis-block li{font-size:13.5px;color:rgba(255,255,255,.78);line-height:1.8}
+.analysis-block ul{padding-left:18px}
+.analysis-block li{margin-bottom:4px}
+.analysis-block .highlight{color:var(--rose);font-weight:600}
+
+/* Therapist copy button */
+.btn-copy{margin-top:16px;padding:9px 20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:8px;color:rgba(255,255,255,.7);font-size:12.5px;font-weight:600;font-family:'Nunito',sans-serif;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:7px;width:fit-content}
+.btn-copy:hover{background:rgba(255,255,255,.14);color:#fff}
+
+/* ─── SAVE BAR ─── */
+.save-bar{position:fixed;bottom:0;left:0;right:0;background:var(--plum);padding:12px 22px;display:flex;align-items:center;justify-content:space-between;z-index:500;box-shadow:0 -4px 20px rgba(74,32,64,.2)}
+.save-status{font-size:12px;color:rgba(255,255,255,.45);display:flex;align-items:center;gap:6px}
+.save-status .dot{width:6px;height:6px;border-radius:50%;background:var(--sage);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.btn-save{padding:9px 24px;background:var(--rose);color:#fff;border:none;border-radius:8px;font-size:13.5px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;transition:.15s}
+.btn-save:hover{background:#b05068}
+
+/* ─── TOAST ─── */
+.toast{position:fixed;top:18px;right:18px;background:var(--plum);color:#fff;padding:11px 18px;border-radius:8px;font-size:13px;font-weight:600;z-index:1000;transform:translateY(-80px);opacity:0;transition:.3s;border-left:3px solid var(--sage)}
+.toast.show{transform:none;opacity:1}
+
+@media(max-width:560px){
+  .field-row.two,.field-row.three{grid-template-columns:1fr}
+  .page-hero{padding:38px 18px 34px}
+  .wrap{padding:18px 12px 100px}
+}
+
+/* ─── CLIENT RESULT PAGE ─── */
+.client-result{background:var(--paper);border-radius:var(--r);overflow:hidden;margin-top:20px;animation:slideIn .5s ease}
+.cr-hero{background:linear-gradient(160deg,#2d1040 0%,var(--plum) 100%);padding:32px 28px;text-align:center}
+.cr-hero h2{font-family:'Cormorant Garant',serif;font-size:26px;font-weight:600;color:#fff;line-height:1.3;margin-bottom:10px}
+.cr-hero p{font-size:13px;color:rgba(255,255,255,.55);line-height:1.7;max-width:440px;margin:0 auto}
+.cr-body{padding:24px 26px}
+.cr-section{margin-bottom:22px}
+.cr-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--gold);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--gold-lt)}
+.cr-rel{background:var(--cream);border-radius:10px;padding:14px 16px;margin-bottom:10px;border-left:3px solid var(--plum-lt)}
+.cr-rel-name{font-family:'Cormorant Garant',serif;font-size:17px;font-weight:600;color:var(--plum);margin-bottom:4px}
+.cr-rel-meta{font-size:12px;color:var(--muted);margin-bottom:8px}
+.cr-rel-aprendizagem{font-size:13px;color:var(--sage);font-style:italic;line-height:1.6}
+.cr-insight{background:linear-gradient(135deg,var(--rose-lt),var(--gold-lt));border-radius:10px;padding:18px 20px;margin-bottom:14px;border:1px solid rgba(196,100,122,.2)}
+.cr-insight p{font-size:14px;color:var(--ink);line-height:1.8;font-style:italic}
+.cr-quote{font-family:'Cormorant Garant',serif;font-size:22px;color:var(--plum);font-style:italic;line-height:1.4;text-align:center;padding:20px 10px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:20px 0}
+.cr-note{background:var(--sage-lt);border-radius:10px;padding:16px 18px;font-size:13px;color:#2d5a4a;line-height:1.7;text-align:center}
+
+/* ─── PRINT / PDF ─── */
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body { background: #fff !important; font-family: 'Nunito', Georgia, serif; margin: 0; }
+  .page-hero, .wrap, .save-bar, .toast { display: none !important; }
+  #fullPageResult { display: block !important; }
+  .no-print { display: none !important; }
+  .print-only-section { display: block !important; }
+  /* Print-specific layout */
+  .print-doc { display: block !important; }
+  .cr-hero { background: #2d1040 !important; padding: 28px 32px; }
+  .cr-hero h2, .cr-hero p { color: #fff !important; }
+  .cr-insight { background: #fdf5f7 !important; border: 1px solid #e8c0cc !important; }
+  .cr-note { background: #e4f0ea !important; }
+  .cr-rel { background: #f9f5ee !important; }
+  .cr-quote { font-size: 22px; }
+  .print-section { page-break-inside: avoid; margin-bottom: 20px; }
+  .print-page-break { page-break-before: always; }
+  @page { margin: 15mm 18mm; size: A4; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div id="fullPageResult" style="display:none;min-height:100vh"></div>
+<div id="mainContent">
+<div class="page-hero">
+  <div class="hero-inner">
+    <div class="hero-tag">✦ Trabalho pessoal · Acompanhamento terapêutico</div>
+    <h1 class="hero-title">A Minha <em>História</em><br>nos Relacionamentos</h1>
+    <p class="hero-sub">Um espaço seguro para mapear a tua história afectiva — ao teu ritmo, com honestidade e sem julgamentos.</p>
+    <div class="id-badge">
+      ID do cliente: <code id="client-id-display">—</code>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ INTRO ═══ -->
+<div style="max-width:720px;margin:-18px auto 0;padding:0 20px;position:relative;z-index:2">
+  <div class="intro-note">
+    <p>Esta ficha é <strong>tua</strong> — para cada relacionamento que consideres relevante, preenche os campos abaixo. Não há respostas certas ou erradas. Escreve o que sentiste, mesmo que seja pouco.</p>
+    <p>No final, podes gerar uma análise automática dos padrões — que será partilhada com a tua terapeuta para trabalharmos juntas na sessão.</p>
+    <div class="how-to">
+      <span class="how-chip rose">🌹 Começa pelo mais recente</span>
+      <span class="how-chip gold">✍️ Guarda automaticamente</span>
+      <span class="how-chip sage">🔒 Só tu e a tua terapeuta vêem</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="wrap">
+
+  <div class="section-title">
+    <div class="line"></div>
+    <h2>💑 Os Meus Relacionamentos</h2>
+    <div class="line"></div>
+  </div>
+
+  <div id="rel-container"></div>
+
+  <button class="btn-add" onclick="addRel()">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Adicionar outro relacionamento
+  </button>
+
+  <!-- REFLEXÃO -->
+  <div class="section-title" style="margin-top:44px">
+    <div class="line"></div>
+    <h2>🔍 A Minha Reflexão</h2>
+    <div class="line"></div>
+  </div>
+
+  <div class="general-card">
+    <h3>Olhando para todos eles…</h3>
+    <p class="gc-sub">Responde ao que conseguires — mesmo uma palavra já ajuda.</p>
+
+    <div class="field-row one" style="margin-bottom:14px">
+      <div class="fg">
+        <label>O que vejo que se repete?</label>
+        <span class="hint">Um tipo de pessoa? Uma situação que se recria? Um papel que assumes?</span>
+        <textarea id="g_padrao" placeholder="Ex: escolho sempre pessoas que precisam de ser salvas. No início está tudo bem, depois surgem os ciúmes…" oninput="autoSave()"></textarea>
+      </div>
+    </div>
+
+    <div class="field-row one" style="margin-bottom:14px">
+      <div class="fg">
+        <label>Como me sinto no final de cada relação?</label>
+        <div class="emotion-chips" id="chips-final">
+          <button onclick="toggleChip(this)">Culpa</button>
+          <button onclick="toggleChip(this)">Alívio</button>
+          <button onclick="toggleChip(this)">Vazio</button>
+          <button onclick="toggleChip(this)">Tristeza</button>
+          <button onclick="toggleChip(this)">Raiva</button>
+          <button onclick="toggleChip(this)">Solidão</button>
+          <button onclick="toggleChip(this)">Libertação</button>
+          <button onclick="toggleChip(this)">Exaustão</button>
+          <button onclick="toggleChip(this)">Traição</button>
+          <button onclick="toggleChip(this)">Vergonha</button>
+        </div>
+        <textarea id="g_fim_emocao" placeholder="Acrescenta…" style="margin-top:10px;min-height:54px" oninput="autoSave()"></textarea>
+      </div>
+    </div>
+
+    <div class="field-row one" style="margin-bottom:14px">
+      <div class="fg">
+        <label>O que dou demais?</label>
+        <span class="hint">Onde me perco a mim própria numa relação?</span>
+        <textarea id="g_dar_demais" placeholder="Ex: abdicava dos meus planos, dos meus amigos, dos meus limites…" oninput="autoSave()"></textarea>
+      </div>
+    </div>
+
+    <div class="field-row one" style="margin-bottom:14px">
+      <div class="fg">
+        <label>O que precisava de receber e não recebi?</label>
+        <textarea id="g_precisava" placeholder="Ex: segurança, presença constante, ser escolhida sem condições…" oninput="autoSave()"></textarea>
+      </div>
+    </div>
+
+    <div class="field-row one" style="margin-bottom:14px">
+      <div class="fg">
+        <label>Há algo que todos tinham em comum?</label>
+        <textarea id="g_comum" placeholder="Ex: todos eram emocionalmente distantes. Ou: todos precisavam que eu os salvasse." oninput="autoSave()"></textarea>
+      </div>
+    </div>
+
+    <div class="field-row one" style="margin-bottom:14px">
+      <div class="fg">
+        <label>Numa relação, sinto que tenho de…</label>
+        <textarea id="g_sinto_que" placeholder="Ex: merecer o amor, provar que sou suficiente, não incomodar…" oninput="autoSave()" style="min-height:60px"></textarea>
+      </div>
+    </div>
+
+    <div class="field-row one" style="margin-bottom:14px">
+      <div class="fg">
+        <label>Quando estou sozinha, sinto-me…</label>
+        <textarea id="g_sozinha" placeholder="Ex: em paz, vazia, livre, perdida, aliviada, com medo…" oninput="autoSave()" style="min-height:60px"></textarea>
+      </div>
+    </div>
+
+    <div class="field-row one">
+      <div class="fg">
+        <label>O que quero que seja diferente na próxima relação?</label>
+        <textarea id="g_quero" placeholder="Escreve como se fosse um pedido…" oninput="autoSave()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ENVIAR ═══ -->
+  <div class="analysis-section">
+    <div class="analysis-header">
+      <div class="analysis-icon">📤</div>
+      <div>
+        <h3>Enviar à Terapeuta</h3>
+        <p>Os dados chegam ao Sheet · email · ficha de atendimento</p>
+      </div>
+    </div>
+
+    <p style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:18px;line-height:1.7">
+      Quando terminares de preencher, clica abaixo. A tua terapeuta recebe a tua história completa — e verás uma análise dos teus padrões, que podes também guardar em PDF para leres com calma.
+    </p>
+
+    <button class="btn-analyse" id="btnEnviar" onclick="enviarFicha()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Enviar à minha terapeuta
+    </button>
+
+    <div class="loading-dots" id="loadingDots" style="margin-top:18px">
+      <span></span><span></span><span></span>
+      <span style="font-size:13px;color:rgba(255,255,255,.5);margin-left:8px;font-family:'Nunito',sans-serif">A enviar…</span>
+    </div>
+
+    <div class="analysis-result" id="sendResult">
+      <div id="sendResultContent"></div>
+    </div>
+
+  </div>
+
+</div>
+
+</div><!-- /mainContent -->
+<!-- ═══ SAVE BAR ═══ -->
+<div class="save-bar">
+  <div class="save-status">
+    <div class="dot"></div>
+    <span id="statusText">A guardar automaticamente…</span>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button onclick="resetFicha()"
+      style="padding:9px 14px;background:transparent;border:1px solid rgba(255,255,255,.2);border-radius:8px;color:rgba(255,255,255,.45);font-size:11.5px;font-family:'Nunito',sans-serif;cursor:pointer;transition:.15s"
+      onmouseover="this.style.color='rgba(255,255,255,.8)'" onmouseout="this.style.color='rgba(255,255,255,.45)'"
+      title="Apaga todos os dados guardados e recomeça">🗑 Nova ficha</button>
+    <button class="btn-save" onclick="manualSave()">💾 Guardar</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Guardado</div>
+
+<!-- ═══ SCRIPT ═══ -->
+<script>
+// ─── CLIENT ID ───
+const CLIENT_ID = (() => {
+  let id = localStorage.getItem('lbr_client_id');
+  if (!id) { id = 'C-' + Date.now().toString(36).toUpperCase(); localStorage.setItem('lbr_client_id', id); }
+  return id;
+})();
+document.getElementById('client-id-display').textContent = CLIENT_ID;
+const SAVE_KEY = 'lbr_data_' + CLIENT_ID;
+
+// ─── STATE ───
+let relCounter = 0;
+const rels = {};
+
+const QUAL_CHIPS = ['Carinhoso','Protetor','Divertido','Inteligente','Ambicioso','Presente','Estável','Honesto','Generoso','Apaixonado','Respeitoso','Sensível','Comunicativo','Seguro'];
+const DEF_CHIPS  = ['Distante','Ciumento','Controlador','Manipulador','Agressivo','Imprevisível','Mentiroso','Evitante','Dependente','Inconsistente','Narcisista','Pouco empático','Violento'];
+const FIM_CHIPS  = ['Aliviada','Destruída','Vazia','Culpada','Raiva','Libertada','Triste','Sozinha','Confusa','Grata'];
+
+// ─── ADD RELATIONSHIP ───
+function addRel(data) {
+  relCounter++;
+  const id = 'rel_' + relCounter;
+  rels[id] = data || {};
+  const imp = rels[id].importance || 0;
+
+  const stars = Array.from({length:10},(_,i) =>
+    `<button data-v="${i+1}" onclick="setImp('${id}',${i+1})" class="${i<imp?'on':''}" title="${i+1}/10">♥</button>`
+  ).join('');
+
+  const card = document.createElement('div');
+  card.className = 'rel-card';
+  card.id = id;
+  card.innerHTML = `
+    <div class="rel-card-head">
+      <div class="rel-num">${relCounter}</div>
+      <div class="rel-head-info">
+        <h3 id="${id}_title">Relacionamento ${relCounter}</h3>
+        <p>Preenche ao teu ritmo</p>
+      </div>
+      <div class="rel-importance">
+        <label>Importância</label>
+        <div class="importance-stars" id="${id}_stars">${stars}</div>
+        <span style="font-size:9px;color:rgba(255,255,255,.3)" id="${id}_imp_lbl">${imp?imp+'/10':'clica'}</span>
+      </div>
+      <button class="card-toggle" onclick="toggleBody('${id}')">▾</button>
+    </div>
+    <div class="card-body-wrap" id="${id}_body" style="max-height:2000px">
+    <div class="rel-card-body">
+
+      <div class="field-row two">
+        <div class="fg">
+          <label>Como o/a chamas na tua memória?</label>
+          <span class="hint">Nome, apelido, alcunha, ou "o primeiro", "a da faculdade"…</span>
+          <input type="text" id="${id}_nome" placeholder="Ex: João, a Marta, o engenheiro…"
+            oninput="updateTitle('${id}');autoSave()" value="${rels[id].nome||''}">
+        </div>
+        <div class="fg">
+          <label>Importância na tua vida</label>
+          <span class="hint">De 1 (breve) a 10 (marcou profundamente).</span>
+          <input type="number" id="${id}_imp_n" min="1" max="10" placeholder="1–10"
+            oninput="setImp('${id}',this.value)" value="${imp||''}">
+        </div>
+      </div>
+
+      <div class="field-row three">
+        <div class="fg">
+          <label>A tua idade (início)</label>
+          <input type="number" id="${id}_minha_idade" min="10" max="99" placeholder="Ex: 22"
+            oninput="autoSave()" value="${rels[id].minha_idade||''}">
+        </div>
+        <div class="fg">
+          <label>Idade dele/a</label>
+          <input type="number" id="${id}_idade_p" min="10" max="99" placeholder="Ex: 28"
+            oninput="autoSave()" value="${rels[id].idade_p||''}">
+        </div>
+        <div class="fg">
+          <label>Duração</label>
+          <input type="text" id="${id}_dur" placeholder="Ex: 2 anos"
+            oninput="autoSave()" value="${rels[id].dur||''}">
+        </div>
+      </div>
+
+      <div class="card-section-label">🌱 O Início</div>
+
+      <div class="field-row one" style="margin-bottom:13px">
+        <div class="fg">
+          <label>Como nos conhecemos?</label>
+          <span class="hint">Onde foi? O que sentiste logo no início?</span>
+          <textarea id="${id}_inicio" oninput="autoSave()"
+            placeholder="Ex: conhecemo-nos no trabalho. Desde o início senti algo diferente…">${rels[id].inicio||''}</textarea>
+        </div>
+      </div>
+
+      <div class="card-section-label">💎 Qualidades e Defeitos</div>
+
+      <div class="field-row one" style="margin-bottom:10px">
+        <div class="fg">
+          <label>O que admiravas nele/a?</label>
+          <div class="emotion-chips" id="${id}_q">
+            ${QUAL_CHIPS.map(q=>`<button onclick="toggleChip(this)">${q}</button>`).join('')}
+          </div>
+          <textarea id="${id}_qual" oninput="autoSave()" placeholder="Acrescenta…" style="margin-top:9px;min-height:52px">${rels[id].qual||''}</textarea>
+        </div>
+      </div>
+
+      <div class="field-row one" style="margin-bottom:13px">
+        <div class="fg">
+          <label>O que te custou / defeitos ou comportamentos difíceis</label>
+          <div class="emotion-chips" id="${id}_d">
+            ${DEF_CHIPS.map(d=>`<button onclick="toggleChip(this)">${d}</button>`).join('')}
+          </div>
+          <textarea id="${id}_def" oninput="autoSave()" placeholder="Acrescenta…" style="margin-top:9px;min-height:52px">${rels[id].def||''}</textarea>
+        </div>
+      </div>
+
+      <div class="card-section-label">🌧️ Dificuldades e Memórias Difíceis</div>
+
+      <div class="field-row one" style="margin-bottom:13px">
+        <div class="fg">
+          <label>Principais dificuldades</label>
+          <span class="hint">Conflitos frequentes, o que se repetia, o que te esgotava.</span>
+          <textarea id="${id}_dif" oninput="autoSave()"
+            placeholder="Ex: discussões constantes. Eu tentava mudar-me para agradar…">${rels[id].dif||''}</textarea>
+        </div>
+      </div>
+
+      <div class="field-row one" style="margin-bottom:13px">
+        <div class="fg">
+          <label>Traumas ou memórias negativas</label>
+          <span class="hint">Só escreves o que sentes à vontade — pode ser uma frase curta.</span>
+          <textarea id="${id}_trauma" oninput="autoSave()"
+            placeholder="Ex: uma traição que não consegui esquecer. Uma humilhação. Uma noite difícil…" style="min-height:86px">${rels[id].trauma||''}</textarea>
+        </div>
+      </div>
+
+      <div class="card-section-label">🌅 O Fim e o que Ficou</div>
+
+      <div class="field-row one" style="margin-bottom:13px">
+        <div class="fg">
+          <label>Por que terminou?</label>
+          <textarea id="${id}_fim" oninput="autoSave()"
+            placeholder="Ex: ele partiu sem explicação. Eu fui ficando até não aguentar mais…">${rels[id].fim||''}</textarea>
+        </div>
+      </div>
+
+      <div class="field-row one" style="margin-bottom:13px">
+        <div class="fg">
+          <label>Como me senti quando terminou?</label>
+          <div class="emotion-chips" id="${id}_fe">
+            ${FIM_CHIPS.map(e=>`<button onclick="toggleChip(this)">${e}</button>`).join('')}
+          </div>
+          <textarea id="${id}_fim_e" oninput="autoSave()" placeholder="Acrescenta…" style="margin-top:9px;min-height:52px">${rels[id].fim_e||''}</textarea>
+        </div>
+      </div>
+
+      <div class="field-row one">
+        <div class="fg">
+          <label>🌱 O que aprendi? O que esta relação me deixou?</label>
+          <span class="hint">Uma ferida, uma lição, uma crença, uma força — ou tudo ao mesmo tempo.</span>
+          <textarea id="${id}_aprendizagem" oninput="autoSave()"
+            placeholder="Ex: aprendi que não posso salvar ninguém. Que dou muito e peço pouco. Que mereço mais…" style="min-height:86px">${rels[id].aprendizagem||''}</textarea>
+        </div>
+      </div>
+
+      <button class="btn-delete-rel" onclick="deleteRel('${id}')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
+        Remover este relacionamento
+      </button>
+    </div>
+    </div>
+  `;
+  document.getElementById('rel-container').appendChild(card);
+
+  // Restore chip states
+  if (rels[id].q_sel) restoreChips(id+'_q', rels[id].q_sel);
+  if (rels[id].d_sel) restoreChips(id+'_d', rels[id].d_sel);
+  if (rels[id].fe_sel) restoreChips(id+'_fe', rels[id].fe_sel);
+
+  updateProgress();
+}
+
+// ─── HELPERS ───
+function toggleBody(id) {
+  const body = document.getElementById(id+'_body');
+  const btn = body.previousElementSibling.querySelector('.card-toggle');
+  const open = body.style.maxHeight !== '0px' && body.style.maxHeight;
+  body.style.maxHeight = open ? '0px' : '2000px';
+  btn.textContent = open ? '▸' : '▾';
+}
+function updateTitle(id) {
+  const nome = document.getElementById(id+'_nome')?.value;
+  const el = document.getElementById(id+'_title');
+  if (el) el.textContent = nome || `Relacionamento ${id.split('_')[1]}`;
+}
+function setImp(id, val) {
+  val = parseInt(val); if (!val||val<1||val>10) return;
+  rels[id] = rels[id]||{}; rels[id].importance = val;
+  document.getElementById(id+'_stars')?.querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',i<val));
+  const lbl = document.getElementById(id+'_imp_lbl'); if(lbl) lbl.textContent = val+'/10';
+  const num = document.getElementById(id+'_imp_n'); if(num) num.value = val;
+  autoSave();
+}
+function toggleChip(btn) { btn.classList.toggle('sel'); autoSave(); }
+function restoreChips(groupId, selected) {
+  if (!selected?.length) return;
+  document.getElementById(groupId)?.querySelectorAll('button').forEach(b => {
+    if (selected.includes(b.textContent)) b.classList.add('sel');
+  });
+}
+function getChips(groupId) {
+  return Array.from(document.getElementById(groupId)?.querySelectorAll('button.sel')||[]).map(b=>b.textContent);
+}
+function deleteRel(id) {
+  if (!confirm('Remover este relacionamento?')) return;
+  document.getElementById(id)?.remove(); delete rels[id]; autoSave(); updateProgress();
+}
+function v(id) { return document.getElementById(id)?.value||''; }
+
+// ─── SAVE/LOAD ───
+function gatherData() {
+  const data = { client_id: CLIENT_ID, rels: {}, general: {}, ts: Date.now() };
+  document.querySelectorAll('.rel-card').forEach(card => {
+    const id = card.id;
+    if (!/^rel_\d+$/.test(id)) return;
+    data.rels[id] = {
+      nome: v(id+'_nome'), importance: rels[id]?.importance||0,
+      minha_idade: v(id+'_minha_idade'), idade_p: v(id+'_idade_p'), dur: v(id+'_dur'),
+      inicio: v(id+'_inicio'),
+      qual: v(id+'_qual'), q_sel: getChips(id+'_q'),
+      def: v(id+'_def'), d_sel: getChips(id+'_d'),
+      dif: v(id+'_dif'), trauma: v(id+'_trauma'),
+      fim: v(id+'_fim'), fim_e: v(id+'_fim_e'), fe_sel: getChips(id+'_fe'),
+      aprendizagem: v(id+'_aprendizagem'),
+    };
+  });
+  data.general = {
+    padrao: v('g_padrao'), fim_emocao: v('g_fim_emocao'),
+    fim_chips: getChips('chips-final'),
+    dar_demais: v('g_dar_demais'), precisava: v('g_precisava'),
+    comum: v('g_comum'), sinto_que: v('g_sinto_que'),
+    sozinha: v('g_sozinha'), quero: v('g_quero'),
+    counter: relCounter,
+  };
+  return data;
+}
+function autoSave() {
+  const data = gatherData();
+  localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+  document.getElementById('statusText').textContent = 'Guardado · '+new Date().toLocaleTimeString('pt-PT',{hour:'2-digit',minute:'2-digit'});
+  updateProgress();
+}
+function manualSave() {
+  autoSave();
+  const t = document.getElementById('toast'); t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+function updateProgress() {
+  const all = document.querySelectorAll('textarea,input[type=text],input[type=number]');
+  let f=0; all.forEach(e=>{if(e.value?.trim())f++});
+  document.getElementById('progressFill').style.width = Math.min(100,Math.round(f/Math.max(all.length,1)*100))+'%';
+}
+function loadData() {
+  const raw = localStorage.getItem(SAVE_KEY);
+  if (!raw) { addRel(); return; }
+  try {
+    const data = JSON.parse(raw);
+    relCounter = data.general?.counter||0;
+    const ids = Object.keys(data.rels||{});
+    if (!ids.length) { addRel(); }
+    else {
+      ids.forEach(id => {
+        const num = parseInt(id.split('_')[1]);
+        if (num > relCounter) relCounter = num;
+        rels[id] = data.rels[id];
+        // Temporarily set counter to num-1 so addRel increments to correct value
+        const tmp = relCounter; relCounter = num-1;
+        addRel(data.rels[id]);
+        relCounter = tmp;
+      });
+    }
+    const g = data.general||{};
+    ['g_padrao','g_fim_emocao','g_dar_demais','g_precisava','g_comum','g_sinto_que','g_sozinha','g_quero'].forEach(k=>{
+      const map = {g_padrao:'padrao',g_fim_emocao:'fim_emocao',g_dar_demais:'dar_demais',g_precisava:'precisava',g_comum:'comum',g_sinto_que:'sinto_que',g_sozinha:'sozinha',g_quero:'quero'};
+      const el = document.getElementById(k); if(el) el.value = g[map[k]]||'';
+    });
+    if (g.fim_chips) restoreChips('chips-final', g.fim_chips);
+    updateProgress();
+  } catch(e) { addRel(); }
+}
+setInterval(autoSave, 30000);
+
+// ─── AI ANALYSIS ───
+const APPS_URL = 'https://script.google.com/macros/s/AKfycbzBGhVOM83mSWIxpxvfb64DVIlKB1yyN2XS_pXryI4wuC6Q0o_ntJIufqIPnZjXOrwT/exec';
+const params = new URLSearchParams(window.location.search);
+const NOME = params.get('nome') || '';
+const URL_ID = params.get('id') || '';
+
+function buildResumo(data) {
+  const nRels = Object.keys(data.rels).length;
+  const nomes = Object.values(data.rels).map(r => r.nome || '?').join(', ');
+  const g = data.general;
+  let txt = `Linha Biográfica Relacional — ${nRels} relacionamento(s): ${nomes}.\n`;
+  if (g.padrao)     txt += `Padrão identificado: ${g.padrao}\n`;
+  if (g.dar_demais) txt += `Dá em excesso: ${g.dar_demais}\n`;
+  if (g.comum)      txt += `Em comum: ${g.comum}\n`;
+  if (g.sozinha)    txt += `Sozinha sente-se: ${g.sozinha}\n`;
+  if (g.quero)      txt += `Quer que mude: ${g.quero}`;
+  return txt.trim();
+}
+
+function enviarFicha() {
+  const data = gatherData();
+  const nRels = Object.keys(data.rels).length;
+  if (nRels === 0) { alert('Adiciona pelo menos um relacionamento antes de enviar.'); return; }
+
+  document.getElementById('btnEnviar').disabled = true;
+  document.getElementById('loadingDots').classList.add('show');
+  document.getElementById('sendResult').classList.remove('show');
+
+  const payload = {
+    quiz: 'linha_biografica_relacional',
+    nome:        NOME       || '',
+    id_cliente:  URL_ID     || '',
+    timestamp:   new Date().toISOString(),
+    resumo: buildResumo(data),
+    dados: data
+  };
+
+  const cbName = 'cb_' + Date.now();
+  window[cbName] = () => { onSendSuccess(); };
+
+  const s = document.createElement('script');
+  s.src = APPS_URL + '?callback=' + cbName + '&data=' + encodeURIComponent(JSON.stringify(payload));
+  s.onerror = () => { onSendSuccess(); };
+  document.head.appendChild(s);
+  setTimeout(onSendSuccess, 6000);
+}
+
+function onSendSuccess() {
+  const data = gatherData();
+  // Hide entire form, show only result
+  document.getElementById('mainContent').style.display = 'none';
+  document.querySelector('.save-bar').style.display = 'none';
+  document.getElementById('loadingDots').classList.remove('show');
+  document.getElementById('btnEnviar').disabled = false;
+  // Build result in a full-page container
+  const resultDiv = document.getElementById('fullPageResult');
+  resultDiv.innerHTML = buildClientResult(data);
+  resultDiv.style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+
+function buildClientResult(data) {
+  const g    = data.general || {};
+  const rels = Object.values(data.rels || {});
+  const nRels = rels.length;
+
+  // ── Pattern detection ────────────────────────────────────────
+  const todosDefeitos = rels.flatMap(r => r.d_sel || []);
+  const todasEmocoes  = rels.flatMap(r => r.fe_sel || []);
+  const temControlo   = todosDefeitos.some(d => ['Controlador','Manipulador','Agressivo','Ciumento','Violento'].includes(d));
+  const temDependente = todosDefeitos.some(d => ['Dependente','Evitante','Inconsistente'].includes(d));
+  const temCulpa      = todasEmocoes.some(e => ['Culpada','Destruída','Vergonha'].includes(e));
+  const temExaustao   = todasEmocoes.some(e => ['Exaustão','Solidão','Vazia'].includes(e));
+  const padraoTexto   = g.padrao || '';
+  const temSalvadora  = padraoTexto.toLowerCase().includes('salv') || temDependente;
+  const temAutoSacr   = (g.dar_demais || '').length > 3;
+
+  let padraoMensagem = '';
+  if (temControlo && temCulpa) {
+    padraoMensagem = 'O que partilhaste revela um padrão muito comum e muito doloroso: envolveres-te com pessoas controladoras e acabares a sentir-te culpada — mesmo quando não tens culpa de nada. Esse ciclo esgota. Não é coincidência — há algo por baixo que atrai este padrão, e é exactamente isso que vamos explorar juntas.';
+  } else if (temSalvadora && temExaustao) {
+    padraoMensagem = 'Há um padrão claro de auto-sacrifício: dás muito, cuidas, salvas — e no fim ficas sozinha e exausta. O problema não é a tua generosidade. O problema é que aprendeste que tinhas de merecer o amor ao serviço dos outros. Isso vai mudar.';
+  } else if (temAutoSacr) {
+    padraoMensagem = 'Identificaste que abdicaste muito de ti própria nas tuas relações. Isso não é fraqueza — é um padrão aprendido, muitas vezes na infância. O que se aprende, pode desaprender-se.';
+  } else if (padraoTexto.length > 5) {
+    padraoMensagem = 'Já consegues ver o teu próprio padrão — e isso é o primeiro passo. Muito poucas pessoas chegam a este nível de auto-consciência. Na sessão, vamos aprofundar de onde vem e como o transformar.';
+  } else if (nRels > 0) {
+    padraoMensagem = 'Mapeaste a tua história relacional — e isso já é um acto de coragem. Na próxima sessão vamos olhar para este mapa juntas e identificar o que se repete, o que ficou por resolver, e o que queres criar a seguir.';
+  } else {
+    padraoMensagem = 'Obrigada por partilhares o que conseguiste. Mesmo o pouco que escreveste já revela muito. Na sessão continuamos este mapa juntas.';
+  }
+
+  // ── PARTE 1: Resultado visível na página ────────────────────
+  const relsHtml = rels.map((r, i) => {
+    const aprendizagem = r.aprendizagem ? `<div class="cr-rel-aprendizagem">"${r.aprendizagem}"</div>` : '';
+    const imp = r.importance || 0;
+    const meta = [imp ? imp+'/10 de importância' : '', r.minha_idade ? r.minha_idade+' anos' : '', r.dur || ''].filter(Boolean).join(' · ');
+    return `<div class="cr-rel print-section">
+      <div class="cr-rel-name">${r.nome || 'Relação '+(i+1)}</div>
+      ${meta ? `<div class="cr-rel-meta">${meta}</div>` : ''}
+      ${aprendizagem}
+    </div>`;
+  }).join('');
+
+  const reflexoes = [
+    g.dar_demais ? `<p>🌿 <strong>Dás muito de ti:</strong> ${g.dar_demais}</p>` : '',
+    g.precisava  ? `<p>💛 <strong>O que mereciais receber:</strong> ${g.precisava}</p>` : '',
+    g.sozinha    ? `<p>🌙 <strong>Quando estás sozinha:</strong> ${g.sozinha}</p>` : '',
+  ].filter(Boolean).join('');
+
+  const quero = g.quero ? `<div class="cr-section"><div class="cr-section-title">🌱 O que queres criar a seguir</div><div class="cr-quote">"${g.quero}"</div></div>` : '';
+
+  // ── PARTE 2: Transcrição completa (visível só no PDF) ───────
+  const transcRels = rels.map((r, i) => {
+    const campos = [
+      ['Importância', r.importance ? r.importance+'/10' : null],
+      ['A tua idade (início)', r.minha_idade],
+      ['Idade do/a parceiro/a', r.idade_p],
+      ['Duração', r.dur],
+      ['Como se conheceram / início', r.inicio],
+      ['Qualidades (opções seleccionadas)', (r.q_sel||[]).join(', ')],
+      ['Qualidades (texto livre)', r.qual],
+      ['Defeitos / comportamentos difíceis (opções)', (r.d_sel||[]).join(', ')],
+      ['Defeitos / comportamentos difíceis (texto)', r.def],
+      ['Principais dificuldades', r.dif],
+      ['Traumas ou memórias negativas', r.trauma],
+      ['Por que terminou', r.fim],
+      ['Emoção ao terminar (opções)', (r.fe_sel||[]).join(', ')],
+      ['Emoção ao terminar (texto)', r.fim_e],
+      ['O que aprendi', r.aprendizagem],
+    ];
+    const rows = campos.map(([label, val]) => {
+      if (!val || String(val).trim() === '') return '';
+      const isTrauma = label.includes('Trauma');
+      return `<tr>
+        <td style="padding:7px 10px;width:200px;font-size:12px;color:#9b8fa0;vertical-align:top;border-bottom:1px solid #f0ead8">${label}</td>
+        <td style="padding:7px 10px;font-size:13px;color:${isTrauma?'#c4647a':'#1a2744'};font-weight:${isTrauma?'600':'400'};border-bottom:1px solid #f0ead8;line-height:1.6">${String(val).replace(/\n/g,'<br>')}</td>
+      </tr>`;
+    }).filter(Boolean).join('');
+    return rows ? `<div class="print-section" style="margin-bottom:20px">
+      <div style="background:#2d1040;color:white;padding:10px 16px;border-radius:6px 6px 0 0;font-weight:700;font-size:13px">
+        Relação ${i+1} — ${r.nome || '?'}
+        <span style="opacity:.5;font-weight:400;font-size:11px;margin-left:8px">importância ${r.importance||'?'}/10</span>
+      </div>
+      <table style="width:100%;border-collapse:collapse;border:1px solid #f0ead8;border-top:none">${rows}</table>
+    </div>` : '';
+  }).join('');
+
+  const reflexaoCampos = [
+    ['O que vejo que se repete', g.padrao],
+    ['Como me sinto no final', g.fim_emocao],
+    ['O que dou em excesso', g.dar_demais],
+    ['O que precisava e não recebi', g.precisava],
+    ['Todos tinham em comum', g.comum],
+    ['Numa relação sinto que tenho de', g.sinto_que],
+    ['Quando estou sozinha, sinto-me', g.sozinha],
+    ['O que quero que seja diferente', g.quero],
+  ];
+  const reflexaoRows = reflexaoCampos.map(([label, val]) => {
+    if (!val || String(val).trim() === '') return '';
+    return `<tr>
+      <td style="padding:7px 10px;width:220px;font-size:12px;color:#9b8fa0;vertical-align:top;border-bottom:1px solid #f0ead8">${label}</td>
+      <td style="padding:7px 10px;font-size:13px;color:#1a2744;border-bottom:1px solid #f0ead8;line-height:1.6">${String(val).replace(/\n/g,'<br>')}</td>
+    </tr>`;
+  }).filter(Boolean).join('');
+
+  // ── MONTAR O HTML COMPLETO ────────────────────────────────────
+  return `<div style="background:var(--cream);min-height:100vh;font-family:'Nunito',sans-serif">
+
+    <!-- RESULTADO VISÍVEL + impresso na pág 1 -->
+    <div class="cr-hero">
+      <h2>Obrigada pela tua coragem<br>de olhares para dentro 🌹</h2>
+      <p>O que partilhaste hoje é um passo enorme.<br>A tua terapeuta recebeu este mapa completo.</p>
+    </div>
+
+    <div style="max-width:680px;margin:0 auto;padding:28px 20px 20px">
+
+      <div class="cr-section print-section">
+        <div class="cr-section-title">✦ O que o teu padrão diz sobre ti</div>
+        <div class="cr-insight"><p>${padraoMensagem}</p></div>
+        ${g.padrao ? `<div style="font-size:13px;color:var(--muted);line-height:1.8;margin-top:10px"><strong>O que identificaste:</strong> ${g.padrao}</div>` : ''}
+      </div>
+
+      ${nRels > 0 ? `<div class="cr-section print-section">
+        <div class="cr-section-title">💑 As tuas relações — o que mapeaste</div>
+        ${relsHtml}
+      </div>` : ''}
+
+      ${reflexoes ? `<div class="cr-section print-section">
+        <div class="cr-section-title">🪞 O que reconheceste em ti</div>
+        <div style="font-size:13.5px;color:var(--ink);line-height:2">${reflexoes}</div>
+      </div>` : ''}
+
+      ${quero}
+
+      <div class="cr-note print-section">
+        🔒 A tua terapeuta recebeu a análise clínica completa.<br>
+        Na próxima sessão vão explorar este mapa juntas — ao teu ritmo.<br>
+        <strong>Até lá, cuida de ti com a mesma gentileza que dás aos outros.</strong>
+      </div>
+
+      <!-- PDF BUTTON -->
+      <div class="no-print" style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+        <button onclick="window.print()"
+          style="padding:14px 32px;background:linear-gradient(135deg,var(--plum) 0%,#3a1550 100%);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:'Nunito',sans-serif;cursor:pointer;display:flex;align-items:center;gap:10px;box-shadow:0 4px 20px rgba(74,32,64,.25);transition:.2s"
+          onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='none'">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Guardar como PDF
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ═══ SECÇÃO APENAS PARA IMPRESSÃO ═══ -->
+    <div class="print-page-break" style="display:none"><!-- quebra de página --></div>
+
+    <div style="display:none;max-width:680px;margin:0 auto;padding:32px 20px 40px" class="print-only-section">
+
+      <div style="background:#2d1040;padding:20px 24px;border-radius:8px;color:white;margin-bottom:24px">
+        <div style="font-size:10px;text-transform:uppercase;letter-spacing:2px;opacity:.5;margin-bottom:4px">TRANSCRIÇÃO INTEGRAL</div>
+        <div style="font-size:20px;font-weight:700">O que escrevi na ficha</div>
+        <div style="font-size:12px;opacity:.4;margin-top:4px">Todos os campos, pela ordem em que foram preenchidos</div>
+      </div>
+
+      ${transcRels || '<p style="color:#999;font-size:13px">Sem relacionamentos registados.</p>'}
+
+      ${reflexaoRows ? `<div style="background:#f8f5ef;border-radius:8px;padding:16px 18px;margin-top:8px">
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#6b7594;font-weight:700;margin-bottom:12px">REFLEXÃO GERAL</div>
+        <table style="width:100%;border-collapse:collapse">${reflexaoRows}</table>
+      </div>` : ''}
+
+    </div>
+
+  </div>`;
+}
+
+
+// ─── INIT ───
+function resetFicha() {
+  if (!confirm('Apagar todos os dados e começar uma ficha nova?\nEsta acção não pode ser desfeita.')) return;
+  localStorage.removeItem(SAVE_KEY);
+  localStorage.removeItem('lbr_client_id');
+  location.reload();
+}
+
+window.addEventListener('DOMContentLoaded', loadData);
+</script>
+</body>
+</html>

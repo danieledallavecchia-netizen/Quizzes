@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Big Five — Modo Casal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',system-ui,sans-serif;background:linear-gradient(135deg,#f0fff8 0%,#e8f5f0 100%);min-height:100vh;color:#2d2d3a}
+.cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;text-align:center}
+.cover-icon{width:80px;height:80px;background:linear-gradient(135deg,#27ae60,#2980b9);border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 24px;box-shadow:0 8px 24px rgba(39,174,96,.25)}
+.casal-badge{display:inline-block;padding:6px 18px;background:linear-gradient(135deg,#27ae60,#2980b9);color:white;border-radius:99px;font-size:13px;font-weight:600;margin-bottom:20px}
+.cover-title{font-size:clamp(22px,5vw,30px);font-weight:700;color:#2d2d3a;margin-bottom:8px}
+.cover-sub{font-size:15px;color:#6b6b80;max-width:440px;line-height:1.7;margin-bottom:10px}
+.cover-time{font-size:13px;color:#3a9e70;margin-bottom:32px}
+.cover-start{padding:14px 40px;background:linear-gradient(135deg,#27ae60,#2980b9);color:white;border:none;border-radius:50px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;transition:.2s}
+.cover-start:hover{transform:translateY(-2px)}
+.quiz-wrap{max-width:640px;margin:0 auto;padding:24px 20px}
+.parceiro-bar{background:linear-gradient(135deg,#27ae60,#2980b9);border-radius:12px;padding:10px 16px;color:white;font-size:14px;font-weight:600;margin-bottom:16px}
+.progress-bar{background:#c8ead8;border-radius:99px;height:6px;margin-bottom:8px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,#27ae60,#2980b9);border-radius:99px;transition:.4s}
+.q-counter{font-size:12px;color:#3a9e70;text-align:right;margin-bottom:20px}
+.dim-badge{display:inline-block;padding:3px 12px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:14px}
+.q-text{font-size:clamp(15px,4vw,18px);font-weight:600;line-height:1.5;margin-bottom:24px}
+.scale-wrap{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px}
+.scale-btn{padding:14px 8px;background:white;border:2px solid #c8ead8;border-radius:12px;font-size:14px;font-family:inherit;cursor:pointer;transition:.15s;text-align:center;font-weight:600}
+.scale-btn:hover{border-color:#27ae60}
+.scale-btn.selected{border-color:#27ae60;background:rgba(39,174,96,.1);color:#27ae60}
+.scale-labels{display:flex;justify-content:space-between;font-size:11px;color:#8b9ea8;padding:0 4px;margin-bottom:20px}
+.nav-row{display:flex;justify-content:space-between;margin-top:8px}
+.btn-nav{padding:11px 28px;border-radius:99px;border:none;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:.15s}
+.btn-back{background:#d8f0e4;color:#27ae60}
+.btn-next{background:linear-gradient(135deg,#27ae60,#2980b9);color:white}
+.btn-next:disabled{opacity:.35;cursor:default}
+.result-wrap{max-width:640px;margin:0 auto;padding:24px 20px 60px}
+.result-header{background:linear-gradient(135deg,#27ae60,#2980b9);border-radius:20px;padding:28px;color:white;margin-bottom:16px;text-align:center}
+.result-title{font-size:20px;font-weight:700;margin-bottom:4px}
+.result-card{background:white;border-radius:16px;padding:22px;margin-bottom:12px;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.card-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#3a9e70;margin-bottom:16px}
+.dim-row{margin-bottom:18px}
+.dim-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.dim-name{font-size:14px;font-weight:600}
+.dim-score{font-size:14px;font-weight:700}
+.dim-track{background:#e8f5ee;border-radius:99px;height:10px;overflow:hidden;margin-top:6px}
+.dim-fill{height:100%;border-radius:99px;transition:.6s}
+.hidden{display:none}
+.sending{text-align:center;padding:60px 20px}
+.sending-icon{font-size:40px;margin-bottom:16px}
+.sending p{color:#8b8ba0;font-size:14px}
+.nome-tag{font-size:13px;color:white;opacity:.75;margin-bottom:6px}
+</style>
+</head>
+<body>
+
+<div id="cover" class="cover">
+  <div class="cover-icon">🌿</div>
+  <div class="casal-badge">💑 Modo Casal</div>
+  <h1 class="cover-title">Big Five — OCEAN</h1>
+  <p class="cover-sub">Este questionário faz parte de um exercício em casal. Responde honestamente e de forma independente.</p>
+  <p class="cover-time">⏱ 8–12 minutos · 25 afirmações · Escala 1–5</p>
+  <button class="cover-start" onclick="iniciar()">Começar →</button>
+</div>
+
+<div id="quiz" class="quiz-wrap hidden">
+  <div class="parceiro-bar" id="parceiroBar">💑 A carregar…</div>
+  <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+  <div class="q-counter" id="counter"></div>
+  <div class="dim-badge" id="dimBadge"></div>
+  <div class="q-text" id="qtext"></div>
+  <div class="scale-wrap" id="scaleWrap"></div>
+  <div class="scale-labels"><span>Discordo totalmente</span><span>Concordo totalmente</span></div>
+  <div class="nav-row">
+    <button class="btn-nav btn-back" onclick="anterior()">← Anterior</button>
+    <button class="btn-nav btn-next" id="btnNext" onclick="proximo()" disabled>Seguinte →</button>
+  </div>
+</div>
+
+<div id="sending" class="sending hidden">
+  <div class="sending-icon">📤</div>
+  <p>A enviar o teu resultado…</p>
+</div>
+
+<div id="result" class="result-wrap hidden"></div>
+
+<script>
+const APPS_URL='https://script.google.com/macros/s/AKfycbxW4NiXlsKJMLB3sNGaus2gllggJgY-LnPcbQnOD2T6Cq5DxDAYk-W0lm1nLdvNxifC/exec';
+const params=new URLSearchParams(window.location.search);
+const NOME=params.get('nome')||'Parceiro';
+const CLIENT_ID=params.get('id')||'';
+const CASAL_ID=params.get('casal_id')||'';
+const PARCEIRO=params.get('parceiro')||'1';
+
+const DIMS={
+  O:{nome:'Abertura (O)',cor:'#9b59b6',desc:'Curiosidade intelectual, imaginação e abertura a novas ideias.'},
+  C:{nome:'Conscienciosidade (C)',cor:'#2980b9',desc:'Organização, disciplina e orientação para objectivos.'},
+  E:{nome:'Extroversão (E)',cor:'#e67e22',desc:'Sociabilidade, assertividade e energia positiva.'},
+  A:{nome:'Amabilidade (A)',cor:'#27ae60',desc:'Empatia, cooperação e sensibilidade para com os outros.'},
+  N:{nome:'Neuroticismo (N)',cor:'#c0392b',desc:'Tendência para emoções negativas: ansiedade, tristeza.'},
+};
+
+const PERGUNTAS=[
+  {dim:'O',texto:'Tenho uma imaginação activa e gosto de pensar em cenários e possibilidades.',inv:false},
+  {dim:'C',texto:'Sou sempre bem preparada e organizada nas tarefas que assumo.',inv:false},
+  {dim:'E',texto:'Sinto-me cheia de energia quando estou em grupos grandes de pessoas.',inv:false},
+  {dim:'A',texto:'Geralmente confio nas intenções das pessoas e acredito no melhor dos outros.',inv:false},
+  {dim:'N',texto:'Fico ansiosa ou preocupada com facilidade, mesmo sem razão aparente.',inv:false},
+  {dim:'O',texto:'Tenho pouco interesse em arte, música ou literatura.',inv:true},
+  {dim:'C',texto:'Às vezes deixo as coisas para o último momento ou esqueço compromissos.',inv:true},
+  {dim:'E',texto:'Prefiro trabalhar sozinha a trabalhar em equipa.',inv:true},
+  {dim:'A',texto:'Não me importo em confrontar os outros quando é necessário.',inv:true},
+  {dim:'N',texto:'Raramente me sinto triste ou deprimida sem motivo claro.',inv:true},
+  {dim:'O',texto:'Adoro explorar novas ideias, filosofias e formas diferentes de ver o mundo.',inv:false},
+  {dim:'C',texto:'Cumpro sempre as minhas responsabilidades e raramente falho compromissos.',inv:false},
+  {dim:'E',texto:'Tenho facilidade em iniciar conversas com pessoas que não conheço.',inv:false},
+  {dim:'A',texto:'Preocupo-me genuinamente com o bem-estar dos outros.',inv:false},
+  {dim:'N',texto:'Quando as coisas correm mal, costumo ficar muito perturbada emocionalmente.',inv:false},
+  {dim:'O',texto:'Tenho curiosidade sobre muitos temas diferentes, mesmo fora da minha área.',inv:false},
+  {dim:'C',texto:'Estabeleço planos e sigo-os com disciplina.',inv:false},
+  {dim:'E',texto:'Sinto-me confortável a ser o centro das atenções.',inv:false},
+  {dim:'A',texto:'Posso ser fria ou distante quando não me identifico com alguém.',inv:true},
+  {dim:'N',texto:'Mantenho a calma em situações stressantes.',inv:true},
+  {dim:'O',texto:'Tenho pouco interesse em debater ideias abstractas ou filosóficas.',inv:true},
+  {dim:'C',texto:'Sou metódica e prefiro fazer as coisas de forma sistemática.',inv:false},
+  {dim:'E',texto:'Prefiro passar o tempo com poucas pessoas do que em grupos grandes.',inv:true},
+  {dim:'A',texto:'Tenho dificuldade em perdoar quando alguém me magoa.',inv:true},
+  {dim:'N',texto:'As críticas afectam-me mais do que devia.',inv:false},
+];
+
+let atual=0,respostas={};
+
+function iniciar(){
+  document.getElementById('cover').classList.add('hidden');
+  document.getElementById('quiz').classList.remove('hidden');
+  document.getElementById('parceiroBar').innerHTML=`💑 Parceiro ${PARCEIRO} — <strong>${NOME}</strong> · Casal ID: ${CASAL_ID}`;
+  mostrarPergunta();
+}
+
+function mostrarPergunta(){
+  const p=PERGUNTAS[atual],total=PERGUNTAS.length;
+  document.getElementById('prog').style.width=((atual/total)*100)+'%';
+  document.getElementById('counter').textContent=`Afirmação ${atual+1} de ${total}`;
+  const d=DIMS[p.dim];
+  const badge=document.getElementById('dimBadge');
+  badge.textContent=d.nome; badge.style.background=d.cor+'20'; badge.style.color=d.cor;
+  document.getElementById('qtext').textContent=p.texto;
+  const sel=respostas[atual];
+  document.getElementById('btnNext').disabled=sel===undefined;
+  document.getElementById('scaleWrap').innerHTML=[1,2,3,4,5].map(v=>`
+    <button class="scale-btn ${sel===v?'selected':''}" onclick="selecionar(${v})"
+      style="${sel===v?'border-color:'+d.cor+';color:'+d.cor+';background:'+d.cor+'15':''}">${v}</button>`).join('');
+}
+
+function selecionar(v){respostas[atual]=v;mostrarPergunta();}
+function anterior(){if(atual>0){atual--;mostrarPergunta();}}
+function proximo(){if(atual<PERGUNTAS.length-1){atual++;mostrarPergunta();}else{calcular();}}
+
+function calcular(){
+  document.getElementById('quiz').classList.add('hidden');
+  document.getElementById('sending').classList.remove('hidden');
+  const scores={O:0,C:0,E:0,A:0,N:0},counts={O:0,C:0,E:0,A:0,N:0};
+  PERGUNTAS.forEach((p,i)=>{
+    if(respostas[i]!==undefined){const v=p.inv?6-respostas[i]:respostas[i];scores[p.dim]+=v;counts[p.dim]++;}
+  });
+  const avg={};
+  Object.keys(scores).forEach(k=>{avg[k]=counts[k]?Math.round((scores[k]/counts[k])*20):0;});
+  const resumo=Object.entries(avg).map(([k,v])=>`${k}:${v}%`).join(' · ');
+  enviar({quiz:'bigfive',resumo,dados:avg,nome:NOME,id:CLIENT_ID,casal_id:CASAL_ID,parceiro:PARCEIRO},()=>mostrarResultado(avg));
+}
+
+function enviar(payload,cb){
+  const cbName='cb_'+Date.now();window[cbName]=()=>{cb();};
+  const s=document.createElement('script');
+  s.src=APPS_URL+'?callback='+cbName+'&data='+encodeURIComponent(JSON.stringify(payload));
+  s.onerror=()=>cb();document.head.appendChild(s);setTimeout(cb,6000);
+}
+
+function mostrarResultado(avg){
+  document.getElementById('sending').classList.add('hidden');
+  const el=document.getElementById('result');el.classList.remove('hidden');
+  const dimHtml=Object.entries(DIMS).map(([k,d])=>`
+    <div class="dim-row">
+      <div class="dim-head"><div class="dim-name" style="color:${d.cor}">${d.nome}</div><div class="dim-score" style="color:${d.cor}">${avg[k]}%</div></div>
+      <div style="font-size:12px;color:#8b9ea8">${d.desc}</div>
+      <div class="dim-track"><div class="dim-fill" style="width:${avg[k]}%;background:${d.cor}"></div></div>
+    </div>`).join('');
+  el.innerHTML=`
+    <div class="result-header">
+      <div class="nome-tag">💑 Parceiro ${PARCEIRO} — ${NOME}</div>
+      <div class="result-title">Perfil OCEAN</div>
+    </div>
+    <div class="result-card"><div class="card-title">As tuas 5 dimensões</div>${dimHtml}</div>
+    <div class="result-card" style="text-align:center;color:#3a9e70;font-size:13px">✓ Enviado · Casal ID: ${CASAL_ID}</div>`;
+}
+
+if(NOME && NOME!=='Parceiro') iniciar();
+</script>
+</body>
+</html>

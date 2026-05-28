@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f7f4ef">
+<title>Ficha Clínica · Daniele Dallavecchia · v6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+
+<style>
+/* ════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM
+   ════════════════════════════════════════════════════════════════════ */
+:root {
+  --bg:             #f7f4ef;
+  --surface:        #ffffff;
+  --surface-2:      #faf8f5;
+  --surface-3:      #f1eae0;
+
+  /* Texto · contraste reforçado (Maio 2026) — +50% legibilidade */
+  --text:           #1f1f1f;    /* era #2b2b2b */
+  --text-2:         #4d4942;    /* era #6f6a64 */
+  --text-3:         #7a766e;    /* era #8c867f */
+  --text-on-primary:#ffffff;
+
+  --primary:        #2d0a5a;
+  --primary-hover:  #3a1570;
+  --primary-soft:   #e3dcef;
+  --primary-pressed:#1a052e;
+
+  --border:         #e6dfd7;
+  --border-2:       #ebe5de;
+  --border-strong:  #c8c0b6;
+
+  /* Cores oficiais da logomarca — reservadas ao SVG */
+  --logo-bg-1:      #060114;
+  --logo-bg-2:      #050112;
+  --logo-cosmos:    #2d0a5a;
+  --logo-gold:      #c9a84c;
+  --logo-gold-l:    #f5e090;
+
+  --success:        #4f8a6a;
+  --warning:        #b88a2a;
+  --danger:         #a85460;
+
+  --ff-text:        'Inter', system-ui, sans-serif;
+  --ff-display:     'Poppins', 'Inter', sans-serif;
+  --ff-quote:       'Cormorant Garamond', Georgia, serif;
+  --ff-brand:       'Cinzel', 'Poppins', serif;
+
+  --r-1:    6px;
+  --r-2:    10px;
+  --r-3:    14px;
+  --r-4:    20px;
+  --r-pill: 999px;
+
+  --sh-1:   0 1px 2px rgba(43,43,43,.04);
+  --sh-2:   0 4px 14px rgba(43,43,43,.06);
+  --sh-3:   0 12px 32px rgba(43,43,43,.10);
+  --sh-focus: 0 0 0 3px var(--primary-soft);
+
+  --t-fast: 120ms ease;
+  --t-base: 180ms ease;
+  --t-slow: 280ms cubic-bezier(.4,0,.2,1);
+
+  --topbar-h:     78px;
+  --footer-h:     34px;
+  --aside-w:      300px;
+  --gap:          24px;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   BASE
+   ════════════════════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+
+/* ─── Zoom dinâmico · controlado pela barra A−/A/A+/A++ no topbar ───
+   Default 16 px (era 14 px) · Maio 2026 · +14% conforto de leitura  */
+html { font-size: var(--base-fz, 16px); transition: font-size .25s ease; }
+
+body {
+  font-family: var(--ff-text);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4 {
+  font-family: var(--ff-display);
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.25;
+  color: var(--text);
+}
+p { margin: 0; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+button {
+  font: inherit; color: inherit; background: none; border: none;
+  padding: 0; cursor: pointer;
+}
+input, select, textarea { font: inherit; color: inherit; }
+::selection { background: var(--primary-soft); color: var(--primary); }
+
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: var(--r-pill);
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--primary-soft); }
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: var(--r-1);
+}
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: none;
+  box-shadow: var(--sh-focus);
+  border-color: var(--primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   LAYOUT — app grid completo no fold
+   ════════════════════════════════════════════════════════════════════ */
+.app {
+  display: grid;
+  grid-template-rows: var(--topbar-h) 1fr var(--footer-h);
+  height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  padding: 0 var(--gap);
+  background: rgba(247,244,239,.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  z-index: 5;
+}
+/* ─── Letterhead no topbar ─── */
+.topbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.topbar__brand-logo {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+.topbar__brand-logo svg { width: 100%; height: 100%; display: block; }
+.topbar__brand-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;     /* centra nome e subtítulo entre si (eixo horizontal) */
+  justify-content: center;
+  min-width: 0;
+}
+.topbar__brand-name {
+  font-family: var(--ff-brand);
+  font-weight: 500;
+  font-size: 1.0625rem;
+  color: var(--text);
+  letter-spacing: .02em;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.topbar__brand-sub {
+  font-family: var(--ff-text);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .22em;
+  color: #8a7fa8;
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+.topbar__actions { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+
+/* ─── Barra de zoom · controla --base-fz (Maio 2026) ─── */
+.zoom-bar {
+  display: inline-flex; align-items: center; gap: 2px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 999px; padding: 3px;
+  font-size: 14px; /* fixo · não escala */
+}
+.zoom-bar__label {
+  font-size: 10px; color: var(--text-3);
+  padding: 0 6px 0 8px; letter-spacing: .08em;
+  text-transform: uppercase; font-weight: 600;
+}
+.zoom-btn {
+  width: 26px; height: 26px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; border: none; cursor: pointer;
+  color: var(--text); font-family: var(--ff-display); font-weight: 600;
+  border-radius: 50%;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.zoom-btn:hover { background: var(--surface-2); }
+.zoom-btn.is-active { background: var(--primary); color: var(--text-on-primary); }
+.zoom-btn--xs { font-size: 10px; }
+.zoom-btn--sm { font-size: 12px; }
+.zoom-btn--md { font-size: 14px; }
+.zoom-btn--lg { font-size: 16px; font-weight: 700; }
+.zoom-current {
+  font-size: 10px; color: var(--text-3);
+  padding: 0 8px 0 4px; letter-spacing: .04em;
+  font-variant-numeric: tabular-nums;
+}
+.zoom-current strong { color: var(--primary); font-weight: 600; }
+@media (max-width: 760px) {
+  .zoom-bar__label, .zoom-current { display: none; }
+}
+
+/* v5: .client-select-* substituído por .all__* (estilo v3 head com label + select + filter + Nova) */
+
+/* ───  Body com 2 colunas  ─── */
+.body {
+  display: grid;
+  grid-template-columns: var(--aside-w) 1fr;
+  gap: 0;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: left;
+  padding: 22px 22px 20px;
+  background: var(--surface-2);
+  border-right: 1px solid var(--border);
+  overflow: hidden;
+}
+
+/* v4: .brand-mark removido do aside — letterhead vive no topbar */
+
+.aside__greet {
+  font-family: var(--ff-display);
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.aside__greet strong { color: var(--primary); font-weight: 600; }
+
+.aside__date {
+  font-size: .75rem;
+  color: var(--text-2);
+  margin-bottom: 18px;
+}
+
+.aside__quote {
+  font-family: var(--ff-quote);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--text-2);
+  margin-bottom: auto;
+  line-height: 1.5;
+  opacity: 0;
+  animation: fade-in var(--t-slow) .25s forwards;
+}
+
+.aside__actions {
+  display: flex; flex-direction: column; gap: 8px;
+  width: 100%;
+  padding-top: 22px;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Board (coluna direita) ─── */
+.board {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 18px;
+  padding: 22px var(--gap) 20px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.section__head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.section__head h2 {
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--text-2);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.section__head .count {
+  font-size: .75rem;
+  color: var(--text-3);
+  font-weight: 500;
+}
+.section__head .grow { flex: 1; }
+.section__head .action {
+  font-size: .75rem;
+  color: var(--primary);
+  font-weight: 500;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+.section__head .action:hover { color: var(--primary-hover); }
+
+/* ─── HOJE — cards horizontais compactos (igual à v3) ─── */
+.today {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  overflow: hidden;
+}
+.today-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-3);
+  cursor: pointer;
+  transition: border-color var(--t-base), box-shadow var(--t-base);
+  text-align: left;
+  width: 100%;
+}
+.today-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 14px rgba(45,10,90,.08);
+}
+.today-card__avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff-display); font-size: .8125rem; font-weight: 600;
+  flex-shrink: 0;
+}
+.today-card__body { min-width: 0; flex: 1; }
+.today-card__name {
+  font-family: var(--ff-display);
+  font-size: .875rem; font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.today-card__meta {
+  font-size: .75rem;
+  color: var(--text-2);
+}
+.today-card__time {
+  margin-left: auto;
+  font-family: var(--ff-display);
+  font-size: .8125rem;
+  font-weight: 600;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+.today-empty {
+  grid-column: 1 / -1;
+  padding: 18px;
+  text-align: center;
+  color: var(--text-3);
+  font-size: .8125rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--r-3);
+}
+
+/* ─── CLIENTES — bloco no estilo v3 (head com label + select + filter + Nova) ─── */
+.all {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-3);
+  overflow: hidden;
+}
+.all__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--surface);
+}
+.all__label {
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  white-space: nowrap;
+  margin-right: 4px;
+}
+.all__select {
+  flex: 1;
+  height: 36px;
+  padding: 0 36px 0 14px;
+  background: var(--surface) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7' fill='none' stroke='%232d0a5a' stroke-width='1.6'><path d='M1 1l5 5 5-5' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat right 14px center;
+  border: 1px solid var(--border);
+  border-radius: var(--r-2);
+  font-family: var(--ff-text);
+  font-size: .875rem;
+  color: var(--text);
+  cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.all__select:hover { border-color: var(--border-strong); }
+.all__select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: var(--sh-focus);
+}
+.all__filter {
+  height: 36px;
+  padding: 0 32px 0 14px;
+  background: var(--surface) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none' stroke='%236f6a64' stroke-width='1.4'><path d='M1 1l4 4 4-4' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat right 12px center;
+  border: 1px solid var(--border);
+  border-radius: var(--r-2);
+  font-size: .8125rem;
+  color: var(--text);
+  cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+}
+.all__new {
+  height: 36px;
+  padding: 0 14px;
+  background: var(--primary);
+  color: var(--text-on-primary);
+  border: 1px solid var(--primary);
+  border-radius: var(--r-2);
+  font-size: .8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: background var(--t-fast);
+}
+.all__new:hover { background: var(--primary-hover); }
+
+/* ─── v6: Lista de clientes (cabeçalhos de colunas + linhas) ─── */
+.all__list-wrap {
+  overflow-y: auto;
+  min-height: 0;
+  border-top: 1px solid var(--border-2);
+}
+.all__row-head, .all__row {
+  display: grid;
+  grid-template-columns: 44px minmax(140px, 1.5fr) 80px minmax(120px, 1fr) 100px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  font-size: .8125rem;
+}
+.all__row-head {
+  height: 36px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--text-3);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border-2);
+}
+.all__row {
+  height: 46px;
+  border-bottom: 1px solid var(--border-2);
+  cursor: pointer;
+  transition: background var(--t-fast);
+  text-align: left;
+  width: 100%;
+  background: none;
+  border-left: none; border-right: none; border-top: none;
+  font-family: var(--ff-text);
+  color: var(--text);
+}
+.all__row:last-child { border-bottom: none; }
+.all__row:hover { background: var(--surface-2); }
+.all__row.is-active { background: var(--primary-soft); }
+.all__row.is-active .all__name { color: var(--primary); font-weight: 600; }
+.all__row:focus-visible { outline: none; background: var(--primary-soft); }
+.all__avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff-display);
+  font-size: 11px; font-weight: 600;
+  flex-shrink: 0;
+}
+.all__name {
+  font-family: var(--ff-display);
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.all__sess {
+  font-size: .75rem;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+.all__last {
+  font-size: .75rem;
+  color: var(--text-2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.all__time {
+  font-size: 11px;
+  color: var(--text-3);
+  text-align: right;
+}
+.all__empty {
+  padding: 28px;
+  text-align: center;
+  color: var(--text-3);
+  font-size: .8125rem;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   BOTÕES & INPUTS
+   ════════════════════════════════════════════════════════════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2);
+  font-size: .8125rem;
+  font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  transition: background var(--t-fast), border-color var(--t-fast);
+  white-space: nowrap;
+}
+.btn:hover { background: var(--surface-3); border-color: var(--border-strong); }
+.btn--primary {
+  background: var(--primary);
+  color: var(--text-on-primary);
+  border-color: var(--primary);
+}
+.btn--primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.btn--ghost {
+  background: transparent; border-color: transparent;
+  color: var(--text-2);
+}
+.btn--ghost:hover { background: var(--surface-3); color: var(--text); }
+.btn--icon { width: 36px; padding: 0; }
+.btn--sm { height: 30px; padding: 0 12px; font-size: .75rem; }
+.btn--full { width: 100%; }
+
+.input {
+  display: block;
+  width: 100%;
+  height: 36px;
+  padding: 0 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2);
+  font-size: .875rem;
+  color: var(--text);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
+}
+.input:focus {
+  outline: none; border-color: var(--primary); box-shadow: var(--sh-focus);
+}
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field__label {
+  font-size: .75rem; font-weight: 500;
+  color: var(--text-2);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   FOOTER
+   ════════════════════════════════════════════════════════════════════ */
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--gap);
+  font-size: 11px;
+  color: var(--text-3);
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+.foot__status { display: inline-flex; align-items: center; gap: 8px; }
+.foot__dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--success);
+}
+
+/* v4: Command palette (⌘K) removida — busca agora vive directamente no topbar */
+
+/* ════════════════════════════════════════════════════════════════════
+   MODAL
+   ════════════════════════════════════════════════════════════════════ */
+.modal-bg {
+  position: fixed; inset: 0;
+  background: rgba(43,43,43,.32);
+  backdrop-filter: blur(2px);
+  z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--t-base);
+}
+.modal-bg.is-open { opacity: 1; pointer-events: auto; }
+.modal {
+  width: min(420px, 100%);
+  background: var(--surface);
+  border-radius: var(--r-4);
+  box-shadow: 0 24px 60px rgba(0,0,0,.18);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transform: translateY(8px);
+  transition: transform var(--t-base);
+}
+.modal-bg.is-open .modal { transform: translateY(0); }
+.modal__head {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-2);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal__title { font: 600 15px var(--ff-display); }
+.modal__close {
+  width: 26px; height: 26px;
+  border-radius: var(--r-1);
+  color: var(--text-2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+.modal__close:hover { background: var(--surface-2); color: var(--text); }
+.modal__body {
+  padding: 20px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.modal__foot {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-2);
+  display: flex; justify-content: flex-end; gap: 8px;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   TOAST
+   ════════════════════════════════════════════════════════════════════ */
+.toast-host {
+  position: fixed; bottom: 18px; right: 18px;
+  display: flex; flex-direction: column; gap: 10px;
+  z-index: 200;
+  pointer-events: none;
+}
+.toast {
+  background: var(--text); color: #fff;
+  padding: 10px 16px;
+  border-radius: var(--r-2);
+  font-size: .8125rem;
+  box-shadow: var(--sh-3);
+  border-left: 3px solid var(--primary);
+  pointer-events: auto;
+  animation: t-in var(--t-slow);
+  max-width: 360px;
+}
+.toast--success { border-left-color: var(--success); }
+.toast--warning { border-left-color: var(--warning); }
+.toast--danger  { border-left-color: var(--danger); }
+@keyframes t-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   LOGOMARCA — animações oficiais
+   ════════════════════════════════════════════════════════════════════ */
+@keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes spin-rev  { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+@keyframes pulse     { 0%, 100% { opacity: .5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
+@keyframes shimmer   { 0%, 100% { opacity: .25; } 50% { opacity: .85; } }
+@keyframes float-l   { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+
+/* ════════════════════════════════════════════════════════════════════
+   RESPONSIVO — tablet collapse
+   ════════════════════════════════════════════════════════════════════ */
+@media (max-width: 980px) {
+  :root { --aside-w: 260px; }
+  .topbar__brand-logo { width: 40px; height: 40px; }
+  .topbar__brand-name { font-size: .9375rem; }
+  .topbar__brand-sub  { font-size: 8.5px; letter-spacing: .18em; }
+  .aside__quote { display: none; }
+}
+@media (max-width: 760px) {
+  html, body { overflow: auto; }
+  .app { height: auto; min-height: 100vh; grid-template-rows: var(--topbar-h) auto var(--footer-h); }
+  .body { grid-template-columns: 1fr; }
+  .aside { border-right: none; border-bottom: 1px solid var(--border); padding: 18px; }
+  .topbar__brand-sub { display: none; }
+  .all__head { flex-wrap: wrap; }
+  .all__label { width: 100%; margin-bottom: 4px; }
+  .all__select { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ═══ TOPBAR — letterhead oficial ═══ -->
+  <header class="topbar" role="banner">
+    <div class="topbar__brand">
+      <div class="topbar__brand-logo" aria-hidden="true">
+        <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" fill="none">
+          <defs>
+            <radialGradient id="tbBg" cx="50%" cy="48%" r="55%">
+              <stop offset="0%"   stop-color="#2d0a5a" stop-opacity=".95"/>
+              <stop offset="100%" stop-color="#060114" stop-opacity="1"/>
+            </radialGradient>
+            <linearGradient id="tbGold" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stop-color="#b8922c"/>
+              <stop offset="50%"  stop-color="#f5e090"/>
+              <stop offset="100%" stop-color="#c9a84c"/>
+            </linearGradient>
+            <linearGradient id="tbSilver" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stop-color="#a098c8"/>
+              <stop offset="100%" stop-color="#e8e0ff"/>
+            </linearGradient>
+            <linearGradient id="tbViolet" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stop-color="#6020b0"/>
+              <stop offset="100%" stop-color="#9040e0"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Fundo cosmos dentro do círculo (cor oficial do logo) -->
+          <circle cx="30" cy="30" r="27.5" fill="url(#tbBg)"/>
+          <!-- Aro dourado fino -->
+          <circle cx="30" cy="30" r="27.5" fill="none" stroke="url(#tbGold)" stroke-width=".6" opacity=".8"/>
+
+          <!-- 12 ticks horários no aro -->
+          <g stroke="#c9a84c" stroke-width=".5" opacity=".5">
+            <line x1="30" y1="3.5" x2="30" y2="6.5"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(30 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(60 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(90 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(120 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(150 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(180 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(210 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(240 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(270 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(300 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(330 30 30)"/>
+          </g>
+          <!-- Anel interior dourado tracejado -->
+          <circle cx="30" cy="30" r="22" fill="none" stroke="url(#tbGold)" stroke-width=".25" stroke-dasharray="1 2" opacity=".35"/>
+
+          <!-- Tronco (PRATA luminoso — não dourado) -->
+          <line x1="30" y1="44" x2="30" y2="13" stroke="url(#tbSilver)" stroke-width="1" stroke-linecap="round" opacity=".95"/>
+
+          <!-- Ramos principais — alternam prata + dourado -->
+          <path d="M30 35 Q23 32 17 30"  stroke="url(#tbSilver)" stroke-width=".95" fill="none" stroke-linecap="round" opacity=".95"/>
+          <path d="M30 35 Q37 32 43 30"  stroke="url(#tbSilver)" stroke-width=".95" fill="none" stroke-linecap="round" opacity=".95"/>
+          <path d="M30 28 Q24 25 19 22"  stroke="url(#tbGold)"   stroke-width=".75" fill="none" stroke-linecap="round" opacity=".85"/>
+          <path d="M30 28 Q36 25 41 22"  stroke="url(#tbGold)"   stroke-width=".75" fill="none" stroke-linecap="round" opacity=".85"/>
+          <path d="M30 22 Q26 19 22 17"  stroke="url(#tbSilver)" stroke-width=".6"  fill="none" stroke-linecap="round" opacity=".82"/>
+          <path d="M30 22 Q34 19 38 17"  stroke="url(#tbSilver)" stroke-width=".6"  fill="none" stroke-linecap="round" opacity=".82"/>
+          <path d="M30 17 Q27.5 15 25 13.5" stroke="url(#tbGold)" stroke-width=".45" fill="none" stroke-linecap="round" opacity=".7"/>
+          <path d="M30 17 Q32.5 15 35 13.5" stroke="url(#tbGold)" stroke-width=".45" fill="none" stroke-linecap="round" opacity=".7"/>
+
+          <!-- Folhas — 3 cores alternadas (gold + silver + violet) como no logo oficial -->
+          <circle cx="17" cy="30"   r="1.5" fill="url(#tbViolet)" opacity=".95"/>
+          <circle cx="43" cy="30"   r="1.5" fill="url(#tbViolet)" opacity=".95"/>
+          <circle cx="19" cy="22"   r="1.2" fill="url(#tbGold)"   opacity=".92"/>
+          <circle cx="41" cy="22"   r="1.2" fill="url(#tbGold)"   opacity=".92"/>
+          <circle cx="22" cy="17"   r=".95" fill="url(#tbSilver)" opacity=".88"/>
+          <circle cx="38" cy="17"   r=".95" fill="url(#tbSilver)" opacity=".88"/>
+          <circle cx="25" cy="13.5" r=".8"  fill="url(#tbViolet)" opacity=".82"/>
+          <circle cx="35" cy="13.5" r=".8"  fill="url(#tbViolet)" opacity=".82"/>
+
+          <!-- Coroa dourada -->
+          <circle cx="30" cy="11" r="1.7" fill="url(#tbGold)" opacity=".98"
+                  style="animation:pulse 4s ease-in-out infinite"/>
+          <circle cx="30" cy="11" r="3.2" stroke="url(#tbGold)" stroke-width=".3" opacity=".5" fill="none"
+                  style="animation:pulse 4s ease-in-out infinite .8s"/>
+
+          <!-- Raízes (dourado + prata, como o logo oficial) -->
+          <path d="M30 44 Q26 47 21 49" stroke="url(#tbGold)"   stroke-width=".6"  fill="none" stroke-linecap="round" opacity=".75"/>
+          <path d="M30 44 Q34 47 39 49" stroke="url(#tbGold)"   stroke-width=".6"  fill="none" stroke-linecap="round" opacity=".75"/>
+          <path d="M30 46 Q24 50 19 52" stroke="url(#tbSilver)" stroke-width=".4"  fill="none" stroke-linecap="round" opacity=".55"/>
+          <path d="M30 46 Q36 50 41 52" stroke="url(#tbSilver)" stroke-width=".4"  fill="none" stroke-linecap="round" opacity=".55"/>
+
+          <!-- Orb da junção raiz/tronco -->
+          <circle cx="30" cy="44" r="1.3" fill="url(#tbGold)" opacity=".8"/>
+        </svg>
+      </div>
+      <div class="topbar__brand-text">
+        <div class="topbar__brand-name">Daniele Dallavecchia</div>
+        <div class="topbar__brand-sub">Psicanálise Integrativa &amp; Hipnose Clínica</div>
+      </div>
+    </div>
+
+    <div class="topbar__actions">
+      <div class="zoom-bar" role="group" aria-label="Tamanho do texto">
+        <span class="zoom-bar__label">Texto</span>
+        <button class="zoom-btn zoom-btn--xs" data-size="14" type="button" title="Pequeno (14 px)" aria-label="Texto pequeno">A</button>
+        <button class="zoom-btn zoom-btn--sm is-active" data-size="16" type="button" title="Normal (16 px · padrão)" aria-label="Texto normal">A</button>
+        <button class="zoom-btn zoom-btn--md" data-size="18" type="button" title="Grande (18 px)" aria-label="Texto grande">A</button>
+        <button class="zoom-btn zoom-btn--lg" data-size="20" type="button" title="Muito grande (20 px)" aria-label="Texto muito grande">A</button>
+        <span class="zoom-current"><strong id="zoomDisplay">16</strong> px</span>
+      </div>
+      <button class="btn btn--ghost btn--sm" id="btnImportar" type="button" title="Importar ficha">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8m0 0-3-3m3 3 3-3M3 13h10" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Importar
+      </button>
+      <button class="btn btn--ghost btn--icon" id="btnBackup" type="button" title="Backup" aria-label="Backup">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h10v10H3z M3 6h10 M6 9h4" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══ BODY: aside + board ═══ -->
+  <div class="body">
+
+    <!-- ──── ASIDE: logomarca + saudação + quote + actions ──── -->
+    <aside class="aside" aria-label="Identidade">
+
+      <!-- v4: letterhead movido para o topbar — aside fica apenas com saudação, quote e acções -->
+      <h1 class="aside__greet" id="greet">Boa tarde, <strong>Daniele</strong>.</h1>
+      <p class="aside__date" id="dateText"></p>
+      <p class="aside__quote" id="quote">Começa por escutar.</p>
+
+      <div class="aside__actions">
+        <button class="btn btn--primary btn--full" id="btnNovo" type="button">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M3 8h10" stroke-linecap="round"/></svg>
+          Nova cliente
+        </button>
+        <button class="btn btn--full" id="btnSync" type="button">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8a6 6 0 0 1 10-4.5 M14 8a6 6 0 0 1-10 4.5 M11 3.5h2v-2 M5 12.5H3v2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Sincronizar Forms
+        </button>
+      </div>
+    </aside>
+
+    <!-- ──── BOARD: hoje (igual à v3) + dropdown Clientes ──── -->
+    <main class="board" role="main">
+
+      <!-- HOJE — exactamente como na v3 (não colapsável) -->
+      <section aria-labelledby="hojeTitle">
+        <div class="section__head">
+          <h2 id="hojeTitle">Hoje</h2>
+          <span class="count" id="hojeCount">0 sessões</span>
+          <span class="grow"></span>
+          <button class="action" id="verAgenda" type="button">Ver agenda da semana →</button>
+        </div>
+        <div class="today" id="todayList">
+          <!-- cards preenchidos por JS -->
+        </div>
+      </section>
+
+      <!-- CLIENTES — dropdown nativo (substitui a barra "Procurar entre clientes") -->
+      <section class="all" aria-label="Clientes">
+        <div class="all__head">
+          <label class="all__label" for="clientSelect">Clientes</label>
+          <select class="all__select" id="clientSelect" aria-label="Seleccionar cliente">
+            <option value="">— Seleccionar cliente —</option>
+            <!-- options preenchidas por JS -->
+          </select>
+          <select class="all__filter" id="filterMode" aria-label="Filtro">
+            <option value="recent">Recentes</option>
+            <option value="az">A–Z</option>
+            <option value="session">Próxima sessão</option>
+            <option value="archived">Arquivadas</option>
+          </select>
+          <button class="all__new" id="btnNovo2" type="button">
+            <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M3 8h10" stroke-linecap="round"/></svg>
+            Nova
+          </button>
+        </div>
+
+        <!-- v6: Cabeçalhos das colunas + lista de clientes (restaurada da v2) -->
+        <div class="all__row-head" role="row" aria-label="Cabeçalhos">
+          <span></span>
+          <span>Cliente</span>
+          <span>Sessão</span>
+          <span>Última atualização</span>
+          <span style="text-align:right">Activa há</span>
+        </div>
+        <div class="all__list-wrap" id="listWrap">
+          <ul id="clientList"></ul>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="foot" role="contentinfo">
+    <div class="foot__status">
+      <span class="foot__dot"></span>
+      <span id="syncStatus">Sincronizado · localStorage</span>
+    </div>
+    <div id="totalCount">0 clientes</div>
+    <div>v2.0 · Ficha Clínica</div>
+  </footer>
+
+</div>
+
+<!-- v4: Command palette removida (busca agora é o dropdown nativo na board) -->
+
+<!-- ═══ MODAL — nova cliente ═══ -->
+<div class="modal-bg" id="modalBg" aria-hidden="true">
+  <div class="modal" role="dialog" aria-labelledby="modalTitle">
+    <div class="modal__head">
+      <h3 class="modal__title" id="modalTitle">Nova cliente</h3>
+      <button class="modal__close" id="modalClose" type="button" aria-label="Fechar">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m3 3 8 8M11 3l-8 8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="modal__body">
+      <div class="field">
+        <label class="field__label" for="novoNome">Nome</label>
+        <input class="input" id="novoNome" type="text" placeholder="Ex.: Maria Santos" autocomplete="off">
+      </div>
+      <div class="field">
+        <label class="field__label" for="novoInicio">Data de início</label>
+        <input class="input" id="novoInicio" type="date">
+      </div>
+    </div>
+    <div class="modal__foot">
+      <button class="btn" id="modalCancel" type="button">Cancelar</button>
+      <button class="btn btn--primary" id="modalCriar" type="button">Criar ficha</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast host -->
+<div class="toast-host" id="toastHost" aria-live="polite" aria-atomic="true"></div>
+
+
+<script>
+'use strict';
+
+/* ────────────────────────────────────────────────────────────────────
+   ZOOM DINÂMICO · controla --base-fz no <html>
+   Default 16 px (era 14 px). Sizes: 14 / 16 / 18 / 20.
+   Chave localStorage: dd_zoom_ficha
+   ──────────────────────────────────────────────────────────────────── */
+(function () {
+  const SIZES = [14, 16, 18, 20];
+  const KEY = 'dd_zoom_ficha';
+  const display = document.getElementById('zoomDisplay');
+  const btns = document.querySelectorAll('.zoom-btn[data-size]');
+  function applyZoom(size) {
+    if (!SIZES.includes(size)) return;
+    document.documentElement.style.setProperty('--base-fz', size + 'px');
+    if (display) display.textContent = size;
+    btns.forEach(b => b.classList.toggle('is-active', parseInt(b.dataset.size, 10) === size));
+    try { localStorage.setItem(KEY, size); } catch (e) {}
+  }
+  btns.forEach(b => b.addEventListener('click', () => applyZoom(parseInt(b.dataset.size, 10))));
+  try {
+    const saved = parseInt(localStorage.getItem(KEY), 10);
+    if (SIZES.includes(saved)) applyZoom(saved);
+  } catch (e) {}
+  window.addEventListener('keydown', (e) => {
+    if (!(e.ctrlKey || e.metaKey)) return;
+    const current = parseInt(getComputedStyle(document.documentElement).fontSize, 10);
+    const idx = SIZES.indexOf(current);
+    if (e.key === 'ArrowUp' && idx < SIZES.length - 1) { e.preventDefault(); applyZoom(SIZES[idx + 1]); }
+    if (e.key === 'ArrowDown' && idx > 0) { e.preventDefault(); applyZoom(SIZES[idx - 1]); }
+  });
+})();
+
+/* ────────────────────────────────────────────────────────────────────
+   CONFIGURAÇÃO
+   ──────────────────────────────────────────────────────────────────── */
+const CONFIG = {
+  STORAGE_CLIENTS: 'dd_clients_v1',
+  STORAGE_CHIPS:   'dd_chips_v1',
+  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzBGhVOM83mSWIxpxvfb64DVIlKB1yyN2XS_pXryI4wuC6Q0o_ntJIufqIPnZjXOrwT/exec',
+  QUOTES: [
+    'Começa por escutar.',
+    'O silêncio também é escuta.',
+    'Antes de interpretar, presta atenção.',
+    'A cliente sabe — só precisa de tempo.',
+    'Hoje é o que está disponível.',
+    'Confia no processo — não no resultado.',
+    'Estar presente é meio caminho.',
+    'O corpo lembra-se do que a mente esquece.',
+    'A pausa é parte do trabalho.'
+  ],
+  VERSION: '2.0',
+  SEED_IF_EMPTY: true   /* injecta 30 clientes demo se localStorage estiver vazio */
+};
+
+/* ────────────────────────────────────────────────────────────────────
+   ESTADO
+   ──────────────────────────────────────────────────────────────────── */
+const STATE = {
+  clients: {},
+  activeId: null,
+  filterMode: 'recent'
+};
+
+/* ────────────────────────────────────────────────────────────────────
+   UTILS
+   ──────────────────────────────────────────────────────────────────── */
+const $  = (s, c = document) => c.querySelector(s);
+const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+
+const uid = () => 'c_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7);
+
+function dateToday() {
+  return new Date().toLocaleDateString('pt-PT', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+  });
+}
+function greetingTime() {
+  const h = new Date().getHours();
+  if (h < 6)  return 'Boa madrugada';
+  if (h < 13) return 'Bom dia';
+  if (h < 20) return 'Boa tarde';
+  return 'Boa noite';
+}
+function initialsOf(name) {
+  if (!name) return '?';
+  const p = name.trim().split(/\s+/);
+  return p.length === 1 ? p[0].slice(0, 2).toUpperCase() : (p[0][0] + p[p.length - 1][0]).toUpperCase();
+}
+function formatRelative(t) {
+  if (!t) return '—';
+  const d = new Date(t);
+  if (isNaN(d)) return '—';
+  const ms = Date.now() - d.getTime();
+  const dy = Math.floor(ms / 86400000);
+  if (dy < 1)   return 'hoje';
+  if (dy < 2)   return 'ontem';
+  if (dy < 7)   return `há ${dy} dias`;
+  if (dy < 30)  return `há ${Math.floor(dy / 7)} sem.`;
+  if (dy < 365) return `há ${Math.floor(dy / 30)} meses`;
+  return `há ${Math.floor(dy / 365)} anos`;
+}
+function isSameDay(a, b) {
+  const da = new Date(a), db = new Date(b);
+  return da.getFullYear() === db.getFullYear() &&
+         da.getMonth() === db.getMonth() &&
+         da.getDate() === db.getDate();
+}
+function capitalize(s) { return s ? s[0].toUpperCase() + s.slice(1) : s; }
+
+/* ────────────────────────────────────────────────────────────────────
+   STORAGE
+   ──────────────────────────────────────────────────────────────────── */
+const Store = {
+  read(k, fb = null) {
+    try { const r = localStorage.getItem(k); return r ? JSON.parse(r) : fb; }
+    catch (e) { console.warn(e); return fb; }
+  },
+  write(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+    catch (e) { showToast('Não consegui guardar.', 'danger'); return false; }
+  }
+};
+
+/* ────────────────────────────────────────────────────────────────────
+   TOAST
+   ──────────────────────────────────────────────────────────────────── */
+function showToast(msg, type = 'info', ms = 2600) {
+  const host = $('#toastHost'); if (!host) return;
+  const t = document.createElement('div');
+  t.className = 'toast' + (type !== 'info' ? ' toast--' + type : '');
+  t.textContent = msg;
+  host.appendChild(t);
+  setTimeout(() => {
+    t.style.opacity = '0'; t.style.transform = 'translateY(8px)';
+    setTimeout(() => t.remove(), 250);
+  }, ms);
+}
+
+/* ────────────────────────────────────────────────────────────────────
+   FUNÇÕES CRÍTICAS — assinaturas compatíveis com ficha terapeuta
+   (implementação limpa; expandidas em v3+)
+   ──────────────────────────────────────────────────────────────────── */
+function loadClient(id) {
+  if (!id || !STATE.clients[id]) return;
+  STATE.activeId = id;
+  const c = STATE.clients[id];
+  /* Reflectir selecção no dropdown e na lista */
+  if ($('#clientSelect')) $('#clientSelect').value = id;
+  renderList();
+  showToast('Cliente selecionada: ' + (c.dados?.f_nome || 'sem nome'), 'success');
+  /* v7+: carregamento de campos, chips, sessões, sonhos, etc. */
+}
+function saveClient() {
+  if (!STATE.activeId) return;
+  const c = STATE.clients[STATE.activeId]; if (!c) return;
+  c.updatedAt = Date.now();
+  Store.write(CONFIG.STORAGE_CLIENTS, STATE.clients);
+  showToast('Guardado', 'success', 1400);
+}
+function createClient(nome, dataInicio, proxSessao) {
+  if (!nome || !nome.trim()) { showToast('Indica um nome.', 'warning'); return; }
+  const id = uid();
+  STATE.clients[id] = {
+    id, createdAt: Date.now(), updatedAt: Date.now(),
+    dados: {
+      f_id: id,
+      f_nome: nome.trim(),
+      f_inicio: dataInicio || new Date().toISOString().slice(0, 10),
+      proxSessao: proxSessao || null
+    },
+    sessions: {}, siDreams: [], siInsights: [],
+    quizResultados: [], modulo: null,
+    archived: false
+  };
+  Store.write(CONFIG.STORAGE_CLIENTS, STATE.clients);
+  STATE.activeId = id;
+  renderAll();
+  showToast('Ficha criada para ' + nome, 'success');
+  return id;
+}
+function collectData() { return {}; }
+function toggleChip()  {}
+function restoreChips() {}
+function _loadChipsForClient() {}
+function _saveChipsNow() {}
+function renderTestesIndex() {}
+function carregarQuizResultados() {}
+function renderQuizResultados() {}
+function renderSiSonhos() {}
+function renderSiInsights() {}
+function adicionarSonhoManual() {}
+function loadSiData() {}
+function renderSessions() {}
+function buildSessionHTML() {}
+function restoreSession() {}
+function openHipnoseReader() {}
+function copyHxSessao() {}
+function abrirSessaoExterna() {}
+function closeHipnoseReader() {}
+function pedirEliminarQuizResultado() {}
+function confirmarEliminarQuizResultado() {}
+function cancelarEliminarQuizResultado() {}
+function autoSave() { saveClient(); }
+
+/* ────────────────────────────────────────────────────────────────────
+   RENDER — saudação, data, quote
+   ──────────────────────────────────────────────────────────────────── */
+function renderHeader() {
+  $('#greet').innerHTML = `${greetingTime()}, <strong>Daniele</strong>.`;
+  $('#dateText').textContent = capitalize(dateToday());
+  $('#quote').textContent = CONFIG.QUOTES[Math.floor(Math.random() * CONFIG.QUOTES.length)];
+}
+
+/* ────────────────────────────────────────────────────────────────────
+   RENDER — Hoje (clientes com sessão hoje)
+   ──────────────────────────────────────────────────────────────────── */
+function renderToday() {
+  const today = new Date().toISOString().slice(0, 10);
+  const items = Object.values(STATE.clients)
+    .filter(c => !c.archived && c.dados?.proxSessao && c.dados.proxSessao.startsWith(today))
+    .sort((a, b) => a.dados.proxSessao.localeCompare(b.dados.proxSessao))
+    .slice(0, 4);
+
+  $('#hojeCount').textContent = items.length === 0
+    ? 'sem sessões marcadas'
+    : (items.length + ' sessão' + (items.length > 1 ? 'ões' : ''));
+
+  const root = $('#todayList');
+  if (items.length === 0) {
+    root.innerHTML = `<div class="today-empty">Sem sessões marcadas para hoje.</div>`;
+    return;
+  }
+  root.innerHTML = items.map(c => {
+    const nome = c.dados?.f_nome || '—';
+    const sessions = c.sessions || {};
+    const sCount = Object.values(sessions).filter(s => s && s.data).length;
+    const time = c.dados.proxSessao.slice(11, 16) || '';
+    return `
+      <button type="button" class="today-card" onclick="loadClient('${c.id}')">
+        <div class="today-card__avatar">${initialsOf(nome)}</div>
+        <div class="today-card__body">
+          <div class="today-card__name">${nome}</div>
+          <div class="today-card__meta">Sessão ${sCount + 1}/9</div>
+        </div>
+        <div class="today-card__time">${time || '—'}</div>
+      </button>`;
+  }).join('');
+}
+
+/* ────────────────────────────────────────────────────────────────────
+   RENDER — Dropdown nativo de clientes (substitui tabela)
+   ──────────────────────────────────────────────────────────────────── */
+function renderClientSelect() {
+  const sel = $('#clientSelect');
+  if (!sel) return;
+  const mode = STATE.filterMode || 'recent';
+  const all = Object.values(STATE.clients);
+
+  let list;
+  if (mode === 'archived') {
+    list = all.filter(c => c.archived);
+  } else {
+    list = all.filter(c => !c.archived);
+  }
+
+  if (mode === 'az') {
+    list.sort((a, b) => (a.dados?.f_nome || '').localeCompare(b.dados?.f_nome || '', 'pt'));
+  } else if (mode === 'session') {
+    list.sort((a, b) => (a.dados?.proxSessao || '￿').localeCompare(b.dados?.proxSessao || '￿'));
+  } else {
+    /* Recentes (padrão) — última actualização primeiro */
+    list.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+  }
+
+  $('#totalCount').textContent = `${all.filter(c => !c.archived).length} clientes`;
+
+  const opts = ['<option value="">— Seleccionar cliente —</option>'];
+  list.forEach(c => {
+    const nome = c.dados?.f_nome || 'Sem nome';
+    const sCount = Object.values(c.sessions || {}).filter(s => s && s.data).length;
+    const meta = sCount > 0 ? `Sessão ${sCount}/9` : '—';
+    const selAttr = STATE.activeId === c.id ? ' selected' : '';
+    opts.push(`<option value="${c.id}"${selAttr}>${nome} · ${meta}</option>`);
+  });
+  $('#clientSelect').innerHTML = opts.join('');
+}
+
+/* ────────────────────────────────────────────────────────────────────
+   v6: RENDER — Lista de clientes (sessões do dia / próximas / recentes)
+   ──────────────────────────────────────────────────────────────────── */
+function renderList() {
+  const root = $('#clientList');
+  if (!root) return;
+
+  const mode = STATE.filterMode || 'recent';
+  const all = Object.values(STATE.clients);
+
+  let list;
+  if (mode === 'archived') {
+    list = all.filter(c => c.archived);
+  } else {
+    list = all.filter(c => !c.archived);
+  }
+
+  if (mode === 'az') {
+    list.sort((a, b) => (a.dados?.f_nome || '').localeCompare(b.dados?.f_nome || '', 'pt'));
+  } else if (mode === 'session') {
+    list.sort((a, b) => (a.dados?.proxSessao || '￿').localeCompare(b.dados?.proxSessao || '￿'));
+  } else {
+    /* Recentes (padrão) — última actualização primeiro */
+    list.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+  }
+
+  $('#totalCount').textContent = `${all.filter(c => !c.archived).length} clientes`;
+
+  if (list.length === 0) {
+    root.innerHTML = `<li class="all__empty">Sem clientes neste filtro.</li>`;
+    return;
+  }
+
+  /* Limita a 200 linhas para performance — quem tiver mais usa o dropdown */
+  const slice = list.slice(0, 200);
+  root.innerHTML = slice.map(c => {
+    const nome = c.dados?.f_nome || 'Sem nome';
+    const sessions = c.sessions || {};
+    const sCount = Object.values(sessions).filter(s => s && s.data).length;
+    const last = formatRelative(c.updatedAt);
+    const since = formatRelative(c.createdAt);
+    const active = STATE.activeId === c.id ? ' is-active' : '';
+    return `
+      <li>
+        <button type="button" class="all__row${active}" onclick="loadClient('${c.id}')" aria-label="Abrir ficha de ${nome}">
+          <span class="all__avatar">${initialsOf(nome)}</span>
+          <span class="all__name">${nome}</span>
+          <span class="all__sess">${sCount}/9</span>
+          <span class="all__last">${last === 'hoje' ? '<strong style="color:var(--primary)">hoje</strong>' : last}</span>
+          <span class="all__time">${since}</span>
+        </button>
+      </li>`;
+  }).join('');
+
+  if (list.length > 200) {
+    root.insertAdjacentHTML('beforeend',
+      `<li class="all__empty">Mostradas as primeiras 200 de ${list.length}. Usa o dropdown CLIENTES para encontrar outras.</li>`);
+  }
+}
+
+function renderAll() {
+  renderHeader();
+  renderToday();
+  renderClientSelect();
+  renderList();
+}
+
+/* v5: toggleToday e welcome-pane removidos — HOJE volta a ser sempre visível (igual à v3) */
+
+/* ────────────────────────────────────────────────────────────────────
+   MODAL — nova cliente
+   ──────────────────────────────────────────────────────────────────── */
+function openModalNovo() {
+  $('#novoNome').value = '';
+  $('#novoInicio').value = new Date().toISOString().slice(0, 10);
+  $('#modalBg').classList.add('is-open');
+  setTimeout(() => $('#novoNome').focus(), 40);
+}
+function closeModal() { $('#modalBg').classList.remove('is-open'); }
+
+/* ────────────────────────────────────────────────────────────────────
+   ACÇÕES
+   ──────────────────────────────────────────────────────────────────── */
+function sincronizar() {
+  showToast('A sincronizar anamneses…', 'info');
+  const cb  = 'cb_sync_' + Date.now();
+  const url = CONFIG.APPS_SCRIPT_URL + '?action=getAnamneseData&callback=' + cb;
+
+  window[cb] = function(data) {
+    delete window[cb];
+    if (!data || !Array.isArray(data.clientes)) {
+      showToast('Erro na sincronização: ' + (data?.erro || 'resposta inválida'), 'danger');
+      return;
+    }
+    let novos = 0, atualizados = 0;
+    data.clientes.forEach(c => {
+      if (!c.f_nome || !c.f_nome.trim()) return;
+      const existe = Object.values(STATE.clients).find(
+        x => (x.dados?.f_nome || '').trim().toLowerCase() === c.f_nome.trim().toLowerCase()
+      );
+      if (existe) {
+        // Atualiza dados da anamnese sem sobrescrever sessões
+        Object.assign(existe.dados, c);
+        existe.updatedAt = Date.now();
+        atualizados++;
+      } else {
+        // Cria nova ficha a partir da anamnese
+        const id = uid();
+        STATE.clients[id] = {
+          id,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          dados: {
+            f_id:     id,
+            f_inicio: new Date().toISOString().slice(0, 10),
+            ...c
+          },
+          sessions:       {},
+          siDreams:       [],
+          siInsights:     [],
+          quizResultados: [],
+          modulo:         null,
+          archived:       false
+        };
+        novos++;
+      }
+    });
+    Store.write(CONFIG.STORAGE_CLIENTS, STATE.clients);
+    renderAll();
+    if (novos > 0)        showToast(`${novos} nova(s) ficha(s) criada(s) ✅`, 'success', 3500);
+    else if (atualizados) showToast(`${atualizados} anamnese(s) atualizadas ✅`, 'success', 3000);
+    else                  showToast('Tudo já sincronizado.', 'info');
+  };
+
+  const s = document.createElement('script');
+  s.src = url;
+  s.onerror = () => {
+    delete window[cb];
+    showToast('Não consegui ligar ao Apps Script.', 'danger');
+    s.remove();
+  };
+  document.body.appendChild(s);
+}
+function abrirBiblioteca() { showToast('Biblioteca abre em v5.', 'info'); }
+function importarFicha()   { showToast('Importação implementada em v5.', 'info'); }
+function fazerBackup() {
+  const blob = new Blob([JSON.stringify(STATE.clients, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ficha_clinica_backup_' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click();
+  showToast('Backup descarregado.', 'success');
+}
+
+/* ────────────────────────────────────────────────────────────────────
+   SEED — 30 clientes de demonstração (apenas se localStorage vazio)
+   ──────────────────────────────────────────────────────────────────── */
+function seedDemoIfEmpty() {
+  if (!CONFIG.SEED_IF_EMPTY) return;
+  if (Object.keys(STATE.clients).length > 0) return;
+
+  const nomes = [
+    'Maria Gomes', 'João Silva', 'Ana Rita Pinto', 'Patrícia Rocha', 'Teresa Cardoso',
+    'Mariana Santos', 'Sofia Lopes', 'Carla Mendes', 'Inês Ribeiro', 'Beatriz Costa',
+    'Helena Marques', 'Luísa Ferreira', 'Catarina Sousa', 'Isabel Carvalho', 'Filipa Alves',
+    'Cláudia Nunes', 'Joana Pereira', 'Sara Almeida', 'Rita Teixeira', 'Susana Martins',
+    'Margarida Oliveira', 'Vânia Henriques', 'Diana Antunes', 'Cristina Ramos', 'Andreia Tavares',
+    'Mafalda Brito', 'Eduarda Coelho', 'Rosa Faria', 'Fátima Domingues', 'Liliana Reis'
+  ];
+  const now = Date.now();
+  const today = new Date().toISOString().slice(0, 10);
+
+  /* 3 sessões hoje a horas diferentes */
+  const sessoesHojeIdx = [0, 4, 11];
+  const horas = ['14:00', '16:30', '18:00'];
+
+  nomes.forEach((nome, i) => {
+    const id = uid();
+    const inicio = new Date(now - (Math.random() * 365 + 30) * 86400000);
+    const sessions = {};
+    const nSess = 1 + Math.floor(Math.random() * 8);
+    for (let s = 1; s <= nSess; s++) {
+      sessions[s] = {
+        data: new Date(inicio.getTime() + s * 14 * 86400000).toISOString().slice(0, 10),
+        notas: ''
+      };
+    }
+    let prox = null;
+    const hojeIdx = sessoesHojeIdx.indexOf(i);
+    if (hojeIdx >= 0) {
+      prox = today + 'T' + horas[hojeIdx] + ':00';
+    }
+
+    STATE.clients[id] = {
+      id,
+      createdAt: inicio.getTime(),
+      updatedAt: now - Math.floor(Math.random() * 30) * 86400000,
+      dados: {
+        f_id: id,
+        f_nome: nome,
+        f_inicio: inicio.toISOString().slice(0, 10),
+        proxSessao: prox
+      },
+      sessions,
+      siDreams: [],
+      siInsights: [],
+      quizResultados: [],
+      modulo: null,
+      archived: false
+    };
+  });
+
+  Store.write(CONFIG.STORAGE_CLIENTS, STATE.clients);
+}
+
+/* ────────────────────────────────────────────────────────────────────
+   LISTENERS
+   ──────────────────────────────────────────────────────────────────── */
+function setupListeners() {
+  /* Botões — vários "Nova" e acções globais */
+  $('#btnNovo').addEventListener('click', openModalNovo);
+  $('#btnNovo2')?.addEventListener('click', openModalNovo);
+  $('#btnSync').addEventListener('click', sincronizar);
+  $('#btnImportar').addEventListener('click', importarFicha);
+  $('#btnBackup').addEventListener('click', fazerBackup);
+
+  /* Dropdown de clientes — selecção carrega a ficha */
+  $('#clientSelect').addEventListener('change', e => {
+    const id = e.target.value;
+    if (id) loadClient(id);
+  });
+
+  /* Filtro do modo de ordenação — afecta tanto o dropdown como a lista */
+  $('#filterMode').addEventListener('change', e => {
+    STATE.filterMode = e.target.value;
+    renderClientSelect();
+    renderList();
+  });
+
+  /* Botão "Ver agenda da semana" */
+  $('#verAgenda')?.addEventListener('click', () => showToast('Agenda da semana em v6.', 'info'));
+
+  /* Modal — nova cliente */
+  $('#modalClose').addEventListener('click', closeModal);
+  $('#modalCancel').addEventListener('click', closeModal);
+  $('#modalBg').addEventListener('click', e => { if (e.target.id === 'modalBg') closeModal(); });
+  $('#modalCriar').addEventListener('click', () => {
+    const id = createClient($('#novoNome').value, $('#novoInicio').value);
+    if (id) closeModal();
+  });
+  $('#novoNome').addEventListener('keydown', e => {
+    if (e.key === 'Enter') $('#modalCriar').click();
+  });
+
+  /* Escape global — fecha modal se aberto */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if ($('#modalBg').classList.contains('is-open')) closeModal();
+    }
+  });
+}
+
+/* ────────────────────────────────────────────────────────────────────
+   BOOTSTRAP
+   ──────────────────────────────────────────────────────────────────── */
+function boot() {
+  STATE.clients = Store.read(CONFIG.STORAGE_CLIENTS, {}) || {};
+  seedDemoIfEmpty();
+  setupListeners();
+  renderAll();
+  console.info('[Ficha Clínica v' + CONFIG.VERSION + '] arrancou com',
+               Object.keys(STATE.clients).length, 'clientes.');
+}
+document.addEventListener('DOMContentLoaded', boot);
+</script>
+
+</body>
+</html>

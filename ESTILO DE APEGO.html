@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estilo de Apego — Daniele Dallavecchia</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1a2744;--deep:#0f1a35;--gold:#c9a84c;--gold-lt:#e8c97a;--cream:#f8f5ef;--cream2:#f0ead8;--text:#2c3550;--text-lt:#6b7594;--border:#dcd6c8;--rose:#b85c6e;--sage:#5a7a6e;--plum:#7b5ea7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh}
+.screen{display:none}.screen.active{display:block}
+.cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center}
+.logo-text{font-family:'Playfair Display',serif;font-size:21px;color:var(--navy);font-weight:600;margin-top:10px}
+.logo-sub{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--text-lt);margin-top:3px}
+.ornament{width:44px;height:2px;background:var(--plum);margin:18px auto}
+.cover h1{font-family:'Playfair Display',serif;font-size:clamp(26px,6vw,40px);font-weight:400;color:var(--navy);line-height:1.3;margin-bottom:14px}
+.cover h1 em{font-style:italic;color:var(--plum)}
+.cover p{font-size:15px;font-weight:300;line-height:1.8;color:var(--text-lt);max-width:440px;margin:0 auto 32px}
+.id-box{background:white;border:1px solid var(--border);border-radius:10px;padding:26px;max-width:400px;width:100%;margin:0 auto 28px;text-align:left}
+.id-box label{font-size:11px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--text-lt);display:block;margin-bottom:7px}
+.id-box input{width:100%;padding:11px 13px;border:1px solid var(--border);border-radius:6px;font-size:15px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--cream);margin-bottom:16px;transition:.15s}
+.id-box input:focus{outline:none;border-color:var(--plum);background:white}
+.id-box .note{font-size:12px;color:var(--text-lt);line-height:1.6}
+.btn-start{background:var(--plum);color:white;border:none;padding:15px 44px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;letter-spacing:1px;cursor:pointer;transition:.2s}
+.btn-start:hover{background:#6b4e97;transform:translateY(-1px);box-shadow:0 6px 20px rgba(123,94,167,.3)}
+.err-box{background:#fff0f3;border:1px solid #ffd0d8;border-radius:8px;padding:12px 16px;font-size:13px;color:#c0392b;margin-top:10px;max-width:400px;display:none}
+.quiz-wrap{max-width:660px;margin:0 auto;padding:36px 20px 80px}
+.quiz-header{text-align:center;margin-bottom:28px}
+.phase-pill{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;letter-spacing:1px;margin-bottom:10px}
+.phase-pill.p1{background:var(--navy);color:white}
+.phase-pill.p2{background:var(--plum);color:white}
+.phase-dot{width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.quiz-title{font-family:'Playfair Display',serif;font-size:19px;color:var(--navy);margin-bottom:4px}
+.quiz-subtitle{font-size:13px;color:var(--text-lt);font-style:italic}
+.prog-wrap{margin-bottom:28px}
+.prog-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--text-lt);margin-bottom:7px}
+.prog-bar{height:3px;background:var(--border);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--plum));border-radius:3px;transition:width .5s ease}
+.instr-chip{display:flex;align-items:center;gap:10px;background:rgba(123,94,167,.08);border:1px solid rgba(123,94,167,.2);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--navy);margin-bottom:20px;line-height:1.5}
+.instr-chip .badges{display:flex;gap:4px;flex-shrink:0}
+.badge-n{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white}
+.q-card{background:white;border:1px solid var(--border);border-radius:12px;padding:26px;margin-bottom:18px;box-shadow:0 2px 12px rgba(26,39,68,.06);animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.q-num{font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--plum);margin-bottom:9px}
+.q-text{font-family:'Playfair Display',serif;font-size:18px;font-weight:400;color:var(--navy);line-height:1.5;margin-bottom:22px}
+.options{display:flex;flex-direction:column;gap:10px}
+.option{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;font-weight:300;color:var(--text);background:var(--cream);transition:.2s;text-align:left;line-height:1.5;width:100%}
+.option:hover{border-color:var(--plum);background:white}
+.opt-badge{width:28px;height:28px;min-width:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:2px solid var(--border);color:var(--border);transition:.2s;background:white;margin-top:2px}
+.option.first{border-color:var(--navy);background:rgba(26,39,68,.04)}
+.option.first .opt-badge{background:var(--navy);border-color:var(--navy);color:white}
+.option.second{border-color:var(--plum);background:rgba(123,94,167,.06)}
+.option.second .opt-badge{background:var(--plum);border-color:var(--plum);color:white}
+.opt-text{flex:1}
+.opt-style{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px}
+.sel-info{font-size:12px;color:var(--text-lt);text-align:right;margin-top:10px;min-height:18px}
+.sel-info.ok{color:var(--sage)}.sel-info.warn{color:var(--rose)}
+.quiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:20px}
+.btn-nav{padding:11px 26px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:.2s;border:none}
+.btn-prev{background:transparent;border:1px solid var(--border);color:var(--text-lt)}
+.btn-prev:hover{border-color:var(--navy);color:var(--navy)}
+.btn-next{background:var(--plum);color:white}
+.btn-next:hover{background:#6b4e97;transform:translateY(-1px)}
+.btn-nav:disabled{opacity:.3;cursor:not-allowed;transform:none!important}
+.trans-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;max-width:500px;margin:0 auto}
+.trans-icon{width:64px;height:64px;background:var(--plum);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 22px;font-size:28px}
+.trans-screen h2{font-family:'Playfair Display',serif;font-size:28px;color:var(--navy);margin-bottom:12px}
+.trans-screen p{font-size:15px;color:var(--text-lt);line-height:1.8;margin-bottom:28px}
+.load-screen{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--plum);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-screen p{font-size:14px;color:var(--text-lt)}
+.res-wrap{max-width:660px;margin:0 auto;padding:48px 20px 80px}
+.res-header{text-align:center;margin-bottom:40px}
+.res-header .ico{font-size:32px;margin-bottom:14px}
+.res-header h2{font-family:'Playfair Display',serif;font-size:30px;color:var(--navy);margin-bottom:8px}
+.res-header p{font-size:14px;color:var(--text-lt);font-style:italic}
+.res-divider{width:44px;height:2px;background:var(--plum);margin:16px auto}
+.style-card{background:white;border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-bottom:18px;box-shadow:0 2px 16px rgba(26,39,68,.07)}
+.sc-head{padding:18px 22px;display:flex;align-items:center;gap:12px;color:white}
+.sc-head h3{font-family:'Playfair Display',serif;font-size:17px;font-weight:400}
+.sc-tag{font-size:10px;letter-spacing:1px;text-transform:uppercase;opacity:.75;margin-bottom:3px}
+.sc-body{padding:22px}
+.sc-name{font-family:'Playfair Display',serif;font-size:22px;color:var(--navy);margin-bottom:16px}
+.bar-item{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.bar-label{font-size:12px;color:var(--text-lt);width:165px;flex-shrink:0}
+.bar-track{flex:1;height:7px;background:var(--cream2);border-radius:7px;overflow:hidden}
+.bar-fill{height:100%;border-radius:7px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.bar-pct{font-size:12px;font-weight:600;color:var(--navy);width:38px;text-align:right}
+.sc-desc{font-size:14px;line-height:1.8;color:var(--text-lt);font-weight:300;margin-top:16px}
+.match-box{background:linear-gradient(135deg,var(--navy),#2a3d6e);border-radius:12px;padding:26px;margin:24px 0;color:white}
+.match-box .mlabel{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.match-box h3{font-family:'Playfair Display',serif;font-size:19px;margin-bottom:10px}
+.match-box p{font-size:14px;line-height:1.8;color:rgba(255,255,255,.75)}
+.insight-final{background:rgba(123,94,167,.07);border:1px solid rgba(123,94,167,.2);border-radius:12px;padding:22px;margin-top:20px;font-family:'Playfair Display',serif;font-size:17px;font-style:italic;line-height:1.8;color:var(--navy);text-align:center}
+.foot-note{text-align:center;font-size:12px;color:var(--border);margin-top:44px;letter-spacing:.5px}
+</style>
+</head>
+<body>
+
+<div class="screen active" id="s-cover">
+<div class="cover">
+  <div style="margin-bottom:28px">
+    <div style="width:90px;height:90px;background:rgba(8,4,18,0.35);border-radius:50%;border:1.5px solid rgba(201,168,76,.4);overflow:hidden;margin:0 auto">
+      <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" width="90" height="90">
+        <defs><linearGradient id="gd" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#b8922c"/><stop offset="40%" stop-color="#f5e090"/><stop offset="100%" stop-color="#c9a84c"/></linearGradient><linearGradient id="sv" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#c8c0f0"/><stop offset="100%" stop-color="#f0ecff"/></linearGradient><filter id="g2"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+        <circle cx="200" cy="190" r="155" fill="none" stroke="url(#gd)" stroke-width="1" opacity=".7"/>
+        <path d="M196 260 C185 240,192 220,197 205 C202 190,188 175,196 160 C204 145,190 130,197 80" fill="none" stroke="url(#sv)" stroke-width="1.4" stroke-linecap="round" opacity=".65"/>
+        <path d="M204 260 C215 240,208 220,203 205 C198 190,212 175,204 160 C196 145,210 130,203 80" fill="none" stroke="url(#gd)" stroke-width="1.4" stroke-linecap="round" opacity=".65"/>
+        <path d="M200 235 Q162 215 132 206" stroke="url(#sv)" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M200 235 Q238 215 268 206" stroke="url(#sv)" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+        <path d="M200 210 Q170 188 148 175" stroke="url(#gd)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M200 210 Q230 188 252 175" stroke="url(#gd)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <circle cx="200" cy="268" r="7" fill="url(#gd)" opacity=".9" filter="url(#g2)"/>
+        <text x="200" y="195" text-anchor="middle" font-size="11" fill="#f0d080" opacity=".8">☉</text>
+      </svg>
+    </div>
+    <div class="logo-text">Daniele Dallavecchia</div>
+    <div class="logo-sub">Psicanálise Integrativa e Hipnose Clínica</div>
+  </div>
+  <div class="ornament"></div>
+  <h1>O meu<br><em>Estilo de Apego</em></h1>
+  <p>Como me relaciono com quem amo — e de onde vem esse padrão.<br>Não há respostas certas ou erradas.</p>
+  <div class="id-box">
+    <label>O teu nome</label>
+    <input type="text" id="inp-name" placeholder="Como te chamas?" autocomplete="off"/>
+    <input type="hidden" id="inp-id" value=""/>
+    <div class="note">O teu código é fornecido pela terapeuta.</div>
+  </div>
+  <div class="err-box" id="err-cover">Por favor preenche o teu nome e código.</div>
+  <button class="btn-start" onclick="startQuiz()">Começar →</button>
+</div>
+</div>
+
+<div class="screen" id="s-fase1">
+<div class="quiz-wrap">
+  <div class="quiz-header">
+    <div class="phase-pill p1"><div class="phase-dot"></div>Parte 1 de 2 — Padrão geral</div>
+    <div class="quiz-title">Como me relaciono</div>
+    <div class="quiz-subtitle">Um olhar geral sobre o teu padrão de vinculação</div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-meta"><span>Parte 1</span><span id="f1-cnt">1 / 10</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="f1-fill" style="width:10%"></div></div>
+  </div>
+  <div class="instr-chip">
+    <div class="badges"><div class="badge-n" style="background:var(--navy)">1</div><div class="badge-n" style="background:var(--plum)">2</div></div>
+    <span>Clica primeiro na opção que <strong>mais te representa</strong>, depois na segunda. Clica de novo para deseleccionar.</span>
+  </div>
+  <div id="f1-q"></div>
+  <div class="sel-info" id="f1-info"></div>
+  <div class="quiz-nav">
+    <button class="btn-nav btn-prev" id="f1-prev" onclick="f1Prev()">← Anterior</button>
+    <button class="btn-nav btn-next" id="f1-next" onclick="f1Next()">Seguinte →</button>
+  </div>
+</div>
+</div>
+
+<div class="screen" id="s-trans">
+<div class="trans-screen">
+  <div class="trans-icon">🔍</div>
+  <h2>Muito bem.</h2>
+  <p>Respondeste à primeira parte — um olhar geral sobre como te relacionas.<br><br>
+  A segunda parte <strong>aprofunda e afina</strong> o que acabou de surgir, com perguntas mais específicas sobre momentos concretos da relação.</p>
+  <button class="btn-start" onclick="goFase2()">Continuar →</button>
+</div>
+</div>
+
+<div class="screen" id="s-fase2">
+<div class="quiz-wrap">
+  <div class="quiz-header">
+    <div class="phase-pill p2"><div class="phase-dot"></div>Parte 2 de 2 — Refinamento</div>
+    <div class="quiz-title">Nos momentos específicos</div>
+    <div class="quiz-subtitle">Quando a relação é posta à prova — o que acontece dentro de ti</div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-meta"><span>Parte 2</span><span id="f2-cnt">1 / 10</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="f2-fill" style="width:10%"></div></div>
+  </div>
+  <div class="instr-chip">
+    <div class="badges"><div class="badge-n" style="background:var(--plum)">1</div><div class="badge-n" style="background:var(--gold);color:var(--navy)">2</div></div>
+    <span>Mesmo sistema — escolhe <strong>1.ª e 2.ª</strong> opção por ordem de preferência.</span>
+  </div>
+  <div id="f2-q"></div>
+  <div class="sel-info" id="f2-info"></div>
+  <div class="quiz-nav">
+    <button class="btn-nav btn-prev" id="f2-prev" onclick="f2Prev()">← Anterior</button>
+    <button class="btn-nav btn-next" id="f2-next" onclick="f2Next()">Ver Resultado →</button>
+  </div>
+</div>
+</div>
+
+<div class="screen" id="s-load">
+<div class="load-screen"><div class="spinner"></div><p>A preparar o teu perfil de apego...</p></div>
+</div>
+
+<div class="screen" id="s-result">
+<div class="res-wrap">
+  <div class="res-header">
+    <div class="ico">🔗</div>
+    <h2>O teu estilo de apego</h2>
+    <div class="res-divider"></div>
+    <p id="res-greeting"></p>
+  </div>
+  <div id="res-content"></div>
+  <div class="foot-note">Daniele Dallavecchia · Psicanálise Integrativa e Hipnose Clínica<br>Este perfil é confidencial e partilhado com a sua terapeuta.</div>
+</div>
+</div>
+
+<script>
+const APPS_URL='https://script.google.com/macros/s/AKfycbxW4NiXlsKJMLB3sNGaus2gllggJgY-LnPcbQnOD2T6Cq5DxDAYk-W0lm1nLdvNxifC/exec';
+const STYLES={
+  ans:{name:'Apego Ansioso',color:'#b85c6e',desc:'O teu sistema de apego está em modo de alerta permanente — o medo de abandono organiza muitas das tuas respostas relacionais. Procuras reassurance, sentes a distância do outro de forma intensa e a relação ocupa muito espaço mental e emocional. Não é fraqueza — é o sistema nervoso a fazer o que aprendeu.'},
+  evi:{name:'Apego Evitante',color:'#1a2744',desc:'Aprendeste a gerir sozinha — o sistema nervoso desactivou o pedido de apoio como estratégia de protecção. Valorizas a independência, sentes desconforto com demasiada proximidade e preferes resolver internamente. Por baixo disso, as necessidades existem — mas ficam guardadas.'},
+  seg:{name:'Apego Seguro',color:'#5a7a6e',desc:'Tens uma base interna que te permite confiar sem demasiada ansiedade e estar próxima sem te perderes. Consegues pedir apoio e recebê-lo, tolerar a separação sem entrar em alarme, e reparar conflitos com relativa naturalidade.'},
+  des:{name:'Apego Desorganizado',color:'#7b5ea7',desc:'O teu padrão oscila entre aproximação e afastamento — o outro é simultaneamente desejado e temido. Não é incoerência de carácter. É a marca de uma vinculação onde a fonte de segurança e a fonte de medo eram a mesma pessoa.'}
+};
+const QS1=[
+  {text:'Quando estou numa relação e o outro fica em silêncio ou distante, o meu impulso natural é...',opts:[{s:'ans',l:'Ansioso',t:'Procurar activamente perceber o que se passa — envio mensagem, ligo, preciso de saber'},{s:'evi',l:'Evitante',t:'Dar espaço e ocupar-me com outras coisas — o silêncio não me perturba muito'},{s:'seg',l:'Seguro',t:'Aguardar com calma — sei que o outro vai falar quando estiver pronto'},{s:'des',l:'Desorganizado',t:'Fico agitada mas ao mesmo tempo evito — quero aproximar-me mas algo me trava'}]},
+  {text:'Quando a relação está a correr bem por um período longo, costumo sentir...',opts:[{s:'ans',l:'Ansioso',t:'Alguma insegurança — penso que não pode durar, que algo vai correr mal'},{s:'evi',l:'Evitante',t:'Uma ligeira necessidade de espaço — a proximidade constante começa a pesar'},{s:'seg',l:'Seguro',t:'Paz e gratidão — consigo simplesmente estar bem e aproveitar'},{s:'des',l:'Desorganizado',t:'Uma estranha mistura — felicidade e ao mesmo tempo medo de que tudo se desfaça'}]},
+  {text:'Quando preciso de apoio emocional, costumo...',opts:[{s:'ans',l:'Ansioso',t:'Pedir com intensidade — preciso muito que o outro esteja presente e disponível'},{s:'evi',l:'Evitante',t:'Gerir sozinha — é difícil mostrar que preciso de ajuda'},{s:'seg',l:'Seguro',t:'Pedir com naturalidade e conseguir receber o apoio que me é dado'},{s:'des',l:'Desorganizado',t:'Querer pedir mas sentir que não consigo — fico presa entre a necessidade e o medo'}]},
+  {text:'Em momentos de conflito com o meu parceiro, a minha resposta mais habitual é...',opts:[{s:'ans',l:'Ansioso',t:'Querer resolver imediatamente — não aguento a tensão sem resolução'},{s:'evi',l:'Evitante',t:'Afastar-me — preciso de tempo sozinha para processar'},{s:'seg',l:'Seguro',t:'Conseguir falar sobre o que sinto com alguma calma, mesmo que seja difícil'},{s:'des',l:'Desorganizado',t:'Entro em alarme — oscilo entre querer resolver e querer fugir da situação'}]},
+  {text:'A forma como penso sobre as relações amorosas é...',opts:[{s:'ans',l:'Ansioso',t:'As relações são muito importantes mas também a principal fonte de ansiedade na minha vida'},{s:'evi',l:'Evitante',t:'As relações são boas mas a minha independência é essencial — preciso do meu espaço'},{s:'seg',l:'Seguro',t:'As relações são importantes e consigo ter equilíbrio entre intimidade e autonomia'},{s:'des',l:'Desorganizado',t:'As relações são algo que desejo muito mas também algo que me assusta — é ambivalente'}]},
+  {text:'Quando o meu parceiro precisa de espaço ou independência, sinto...',opts:[{s:'ans',l:'Ansioso',t:'Insegurança e medo — interpreto como sinal de que algo está errado na relação'},{s:'evi',l:'Evitante',t:'Alívio — o espaço é bem-vindo para mim também'},{s:'seg',l:'Seguro',t:'Compreensão — sei que o espaço não ameaça a relação'},{s:'des',l:'Desorganizado',t:'Confusão — parte de mim fica aliviada, outra fica com medo de ser abandonada'}]},
+  {text:'Quando sinto que a relação está a ficar mais séria e comprometida, a minha reacção interna é...',opts:[{s:'ans',l:'Ansioso',t:'Alívio e felicidade — finalmente tenho a segurança que preciso para relaxar'},{s:'evi',l:'Evitante',t:'Algum desconforto — começo a sentir necessidade de travar ou criar distância'},{s:'seg',l:'Seguro',t:'Conforto e entusiasmo — é natural aprofundar o vínculo'},{s:'des',l:'Desorganizado',t:'Ambivalência intensa — quero mas ao mesmo tempo surge um medo que não consigo explicar'}]},
+  {text:'Em relação à confiança nos meus parceiros, costumo...',opts:[{s:'ans',l:'Ansioso',t:'Ter dificuldade em confiar plenamente — estou sempre à espera de ser desiludida'},{s:'evi',l:'Evitante',t:'Preferir contar comigo mesma — é mais seguro do que depender de outros'},{s:'seg',l:'Seguro',t:'Conseguir confiar sem precisar de provas constantes — tenho base interna segura'},{s:'des',l:'Desorganizado',t:'Oscilar — às vezes confio demasiado, outras vezes fecho-me completamente sem razão clara'}]},
+  {text:'Quando uma relação termina, costumo...',opts:[{s:'ans',l:'Ansioso',t:'Demorar muito a recuperar — sinto a perda de forma muito intensa e dificilmente largo'},{s:'evi',l:'Evitante',t:'Avançar relativamente depressa — ocupo-me e não gosto de ficar presa na perda'},{s:'seg',l:'Seguro',t:'Sentir a dor mas conseguir processar e seguir em frente num tempo razoável'},{s:'des',l:'Desorganizado',t:'Reagir de forma imprevisível — às vezes fico bem, outras vezes entra em colapso'}]},
+  {text:'A minha relação com a solidão é...',opts:[{s:'ans',l:'Ansioso',t:'Difícil — a solidão activa ansiedade e um sentido de que algo está errado'},{s:'evi',l:'Evitante',t:'Confortável — o tempo sozinha é necessário e restaurador'},{s:'seg',l:'Seguro',t:'Equilibrada — consigo estar bem sozinha sem que isso signifique isolamento'},{s:'des',l:'Desorganizado',t:'Estranha — às vezes procuro-a, outras vezes aterra-me sem perceber porquê'}]}
+];
+const QS2=[
+  {text:'Quando o meu parceiro não responde a uma mensagem por algumas horas, o que passa pela minha mente?',opts:[{s:'ans',l:'Ansioso',t:'Preocupação crescente — imagino cenários negativos, questiono se algo mudou'},{s:'evi',l:'Evitante',t:'Nada de especial — lembro-me quando vejo a resposta, não fico presa no silêncio'},{s:'seg',l:'Seguro',t:'Percebo que está ocupado — aguardo com calma sem criar histórias'},{s:'des',l:'Desorganizado',t:'Uma mistura de irritação e ansiedade que não consigo explicar bem — o corpo reage'}]},
+  {text:'Quando o meu parceiro me critica ou está descontente comigo, sinto...',opts:[{s:'ans',l:'Ansioso',t:'Muito medo — associo à possibilidade de abandono e faço muito para reparar rapidamente'},{s:'evi',l:'Evitante',t:'Defesa — fecho-me ou afasto-me emocionalmente, prefiro não discutir'},{s:'seg',l:'Seguro',t:'Algum desconforto mas consigo ouvir e distinguir o que é válido do que não é'},{s:'des',l:'Desorganizado',t:'Reacção intensa difícil de gerir — posso explodir ou congelar, dependendo do momento'}]},
+  {text:'Quando alguém que amo mostra vulnerabilidade e precisa de cuidado, a minha reacção interna é...',opts:[{s:'ans',l:'Ansioso',t:'Absorvo as emoções do outro intensamente — a dor deles torna-se quase a minha'},{s:'evi',l:'Evitante',t:'Quero ajudar mas sinto desconforto com a intensidade emocional — prefiro resolver'},{s:'seg',l:'Seguro',t:'Consigo estar presente com compaixão sem me perder na emoção do outro'},{s:'des',l:'Desorganizado',t:'Fico confusa — quero ajudar mas algo em mim recua quando a emoção é muito intensa'}]},
+  {text:'Em relação às memórias da minha infância e das figuras parentais, costumo...',opts:[{s:'ans',l:'Ansioso',t:'Ter memórias vívidas e frequentemente emocionais — o passado está muito presente'},{s:'evi',l:'Evitante',t:'Ter memórias vagas ou neutras — não me lembro muito e prefiro não ir lá'},{s:'seg',l:'Seguro',t:'Ter memórias positivas e negativas e conseguir integrá-las sem que dominem o presente'},{s:'des',l:'Desorganizado',t:'Ter memórias fragmentadas ou contraditórias — algumas perturbam-me sem perceber porquê'}]},
+  {text:'Quando imagino uma relação ideal, o que mais importa para mim é...',opts:[{s:'ans',l:'Ansioso',t:'Sentir segurança e certeza — saber que o outro está aqui e não vai partir'},{s:'evi',l:'Evitante',t:'Ter espaço e respeito pela minha autonomia — sem pressão de demasiada proximidade'},{s:'seg',l:'Seguro',t:'Conexão genuína com liberdade — intimidade que não sufoca'},{s:'des',l:'Desorganizado',t:'Proximidade e segurança — mas quando a imagino com detalhe, algo me diz que não é possível para mim'}]},
+  {text:'Quando o meu parceiro faz algo que me magoa, sem intenção, costumo...',opts:[{s:'ans',l:'Ansioso',t:'Reagir com intensidade — é difícil não personalizar e associar a algo maior'},{s:'evi',l:'Evitante',t:'Guardar para mim — é difícil dizer o que senti sem me sentir demasiado exposta'},{s:'seg',l:'Seguro',t:'Conseguir dizer o que senti com calma e resolver sem arrastar'},{s:'des',l:'Desorganizado',t:'Oscilar entre guardar e explodir — a resposta é imprevisível, mesmo para mim'}]},
+  {text:'A forma como me sinto relativamente a mim mesma dentro de uma relação é...',opts:[{s:'ans',l:'Ansioso',t:'Dependente da forma como o outro me vê — a relação afecta muito a minha auto-estima'},{s:'evi',l:'Evitante',t:'Independente — a minha auto-estima não depende muito de como o outro me trata'},{s:'seg',l:'Seguro',t:'Relativamente estável — a relação influencia-me mas tenho uma base sólida em mim'},{s:'des',l:'Desorganizado',t:'Muito variável — há momentos em que me sinto bem e outros em que me sinto completamente perdida'}]},
+  {text:'Quando sinto que a relação está em perigo, o meu corpo reage...',opts:[{s:'ans',l:'Ansioso',t:'Com muita intensidade — coração acelerado, pensamentos acelerados, dificuldade em parar'},{s:'evi',l:'Evitante',t:'Pouco — fecho-me emocionalmente e o corpo fica quase anestesiado'},{s:'seg',l:'Seguro',t:'Com algum desconforto mas consigo respirar e pensar com relativa clareza'},{s:'des',l:'Desorganizado',t:'De forma caótica — às vezes explode, outras vezes paralisa — não sei o que vai acontecer'}]},
+  {text:'Em relação ao amor que recebi em criança, diria que...',opts:[{s:'ans',l:'Ansioso',t:'Era imprevisível — às vezes presente, outras vezes ausente — nunca sabia o que esperar'},{s:'evi',l:'Evitante',t:'Era distante ou racional — mais baseado em actos do que em proximidade emocional'},{s:'seg',l:'Seguro',t:'Era consistente — sentia-me amada e segura mesmo que com imperfeições'},{s:'des',l:'Desorganizado',t:'Era confuso — havia momentos de calor e momentos que me assustavam ou magoavam'}]},
+  {text:'Quando penso em comprometer-me a longo prazo com alguém, o que sinto é...',opts:[{s:'ans',l:'Ansioso',t:'Alívio — o compromisso dá-me a segurança que preciso para relaxar dentro da relação'},{s:'evi',l:'Evitante',t:'Alguma pressão — o compromisso parece limitar algo que valorizo em mim'},{s:'seg',l:'Seguro',t:'Entusiasmo genuíno — gosto da ideia de construir algo duradouro'},{s:'des',l:'Desorganizado',t:'Ambivalência — quero mas ao mesmo tempo surge um medo que não consigo explicar'}]}
+];
+
+let clientName='',clientId='';
+let f1Idx=0,f2Idx=0;
+let f1Ans=QS1.map(()=>({first:null,second:null}));
+let f2Ans=QS2.map(()=>({first:null,second:null}));
+
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+function startQuiz(){clientName=document.getElementById('inp-name').value.trim();clientId=document.getElementById('inp-id').value.trim();if(!clientName){document.getElementById('err-cover').style.display='block';return}document.getElementById('err-cover').style.display='none';f1Idx=0;show('s-fase1');renderF1()}
+function goFase2(){f2Idx=0;show('s-fase2');renderF2()}
+
+function renderF1(){const p=Math.round(((f1Idx+1)/QS1.length)*100);document.getElementById('f1-fill').style.width=p+'%';document.getElementById('f1-cnt').textContent=(f1Idx+1)+' / '+QS1.length;document.getElementById('f1-q').innerHTML=buildQ(QS1[f1Idx],f1Ans[f1Idx],'f1');document.getElementById('f1-prev').disabled=f1Idx===0;document.getElementById('f1-next').textContent=f1Idx===QS1.length-1?'Continuar →':'Seguinte →';updateInfo('f1')}
+function f1Next(){if(!f1Ans[f1Idx].first){const e=document.getElementById('f1-info');e.textContent='Por favor selecciona pelo menos uma opção.';e.className='sel-info warn';return}if(f1Idx<QS1.length-1){f1Idx++;renderF1()}else{show('s-trans')}window.scrollTo({top:0,behavior:'smooth'})}
+function f1Prev(){if(f1Idx>0){f1Idx--;renderF1();window.scrollTo({top:0,behavior:'smooth'})}}
+
+function renderF2(){const p=Math.round(((f2Idx+1)/QS2.length)*100);document.getElementById('f2-fill').style.width=p+'%';document.getElementById('f2-cnt').textContent=(f2Idx+1)+' / '+QS2.length;document.getElementById('f2-q').innerHTML=buildQ(QS2[f2Idx],f2Ans[f2Idx],'f2');document.getElementById('f2-prev').disabled=f2Idx===0;document.getElementById('f2-next').textContent=f2Idx===QS2.length-1?'Ver Resultado →':'Seguinte →';updateInfo('f2')}
+function f2Next(){if(!f2Ans[f2Idx].first){const e=document.getElementById('f2-info');e.textContent='Por favor selecciona pelo menos uma opção.';e.className='sel-info warn';return}if(f2Idx<QS2.length-1){f2Idx++;renderF2()}else{calcAndShow()}window.scrollTo({top:0,behavior:'smooth'})}
+function f2Prev(){if(f2Idx>0){f2Idx--;renderF2();window.scrollTo({top:0,behavior:'smooth'})}}
+
+function buildQ(q,ans,ph){return`<div class="q-card"><div class="q-num">${ph==='f1'?'Parte 1 — Padrão geral':'Parte 2 — Refinamento'} · Questão ${ph==='f1'?f1Idx+1:f2Idx+1}</div><div class="q-text">${q.text}</div><div class="options">${q.opts.map(o=>`<button class="option ${ans.first===o.s?'first':ans.second===o.s?'second':''}" onclick="selectOpt('${o.s}','${ph}')"><div class="opt-badge">${ans.first===o.s?'1':ans.second===o.s?'2':'&nbsp;'}</div><div class="opt-text">${o.t}</div></button>`).join('')}</div></div>`}
+
+function selectOpt(s,ph){const ans=ph==='f1'?f1Ans[f1Idx]:f2Ans[f2Idx];if(ans.first===s){ans.first=null;ans.second=null}else if(ans.second===s){ans.second=null}else if(!ans.first){ans.first=s}else if(!ans.second){ans.second=s}else{ans.second=s}const c=ph==='f1'?'f1-q':'f2-q';const i=ph==='f1'?f1Idx:f2Idx;const Q=ph==='f1'?QS1:QS2;document.getElementById(c).innerHTML=buildQ(Q[i],ans,ph);updateInfo(ph)}
+function updateInfo(ph){const ans=ph==='f1'?f1Ans[f1Idx]:f2Ans[f2Idx];const el=document.getElementById(ph+'-info');if(!ans.first&&!ans.second){el.textContent='';el.className='sel-info'}else if(ans.first&&!ans.second){el.textContent='1.ª escolha · Clica numa segunda (opcional)';el.className='sel-info'}else{el.textContent='✓ Duas escolhas seleccionadas';el.className='sel-info ok'}}
+
+function calcScores(ans){const s={ans:0,evi:0,seg:0,des:0};ans.forEach(a=>{if(a.first)s[a.first]+=2;if(a.second)s[a.second]+=1});return s}
+function calcAndShow(){show('s-load');const s1=calcScores(f1Ans);const s2=calcScores(f2Ans);const total={ans:s1.ans+s2.ans,evi:s1.evi+s2.evi,seg:s1.seg+s2.seg,des:s1.des+s2.des};const sorted=Object.entries(total).sort((a,b)=>b[1]-a[1]);submitData(s1,s2,total,sorted[0][0],sorted[1][0]);setTimeout(()=>{buildResult(total,sorted[0][0],sorted[1][0]);show('s-result')},1800)}
+
+function buildResult(total,primary,secondary){
+  document.getElementById('res-greeting').textContent=clientName+' — o teu padrão de vinculação.';
+  const maxPts=(QS1.length+QS2.length)*2;
+  const totalSum=Object.values(total).reduce((a,b)=>a+b,0)||1;
+  const bars=Object.entries(total).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="bar-item"><div class="bar-label">${STYLES[k].name}</div><div class="bar-track"><div class="bar-fill" data-w="${Math.round(v/maxPts*100)}" style="background:${STYLES[k].color}"></div></div><div class="bar-pct">${Math.round(v/totalSum*100)}%</div></div>`).join('');
+  const pDesc=STYLES[primary];const sDesc=STYLES[secondary];
+  const note=primary==='seg'?'O teu padrão dominante é seguro — tens uma base interna sólida que te permite relacionar com confiança e presença.':'O teu padrão dominante é <strong>'+pDesc.name+'</strong>, com traços de <strong>'+sDesc.name+'</strong>. Esta combinação é muito comum — o padrão principal organiza a tua resposta habitual, enquanto o secundário aparece em momentos de maior stress ou vulnerabilidade.';
+  document.getElementById('res-content').innerHTML=`<div class="style-card"><div class="sc-head" style="background:${pDesc.color}"><div><div class="sc-tag">PADRÃO DOMINANTE</div><h3>${pDesc.name}</h3></div></div><div class="sc-body"><div class="sc-name">${pDesc.name}</div>${bars}<div class="sc-desc">${pDesc.desc}</div></div></div><div class="match-box"><div class="mlabel">O QUE ISTO SIGNIFICA</div><h3>${pDesc.name} + ${sDesc.name}</h3><p>${note}</p></div><div class="insight-final">"O estilo de apego não é um destino — é um ponto de partida. Compreendê-lo é o primeiro passo para criar relações mais conscientes e seguras."</div>`;
+  setTimeout(()=>{document.querySelectorAll('.bar-fill').forEach(b=>{b.style.width=(b.dataset.w||0)+'%'})},300)
+}
+
+function submitData(s1,s2,total,primary,secondary){
+  const r1=f1Ans.map(a=>(a.first||'-')+'>'+(a.second||'-')).join('|');
+  const r2=f2Ans.map(a=>(a.first||'-')+'>'+(a.second||'-')).join('|');
+  const payload={timestamp:new Date().toISOString(),nome:clientName,id_cliente:clientId,quiz:'estilo-apego',f1_ans:s1.ans,f1_evi:s1.evi,f1_seg:s1.seg,f1_des:s1.des,f2_ans:s2.ans,f2_evi:s2.evi,f2_seg:s2.seg,f2_des:s2.des,total_ans:total.ans,total_evi:total.evi,total_seg:total.seg,total_des:total.des,padrao_primario:STYLES[primary].name,padrao_secundario:STYLES[secondary].name,f1_bruto:r1,f2_bruto:r2};
+  fetch(APPS_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(e=>console.error(e))
+}
+</script>
+</body>
+</html>

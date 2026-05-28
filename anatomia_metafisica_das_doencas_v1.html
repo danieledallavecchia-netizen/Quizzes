@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<title>MODELO C v2 · Tabs · Anatomia Metafísica das Doenças</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Poppins:wght@500;600;700&family=Cinzel:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f4ef; --surface:#fff; --surface-2:#faf8f5; --surface-3:#f1eae0;
+  --text:#1f1f1f; --text-2:#4d4942; --text-3:#7a766e;
+  --primary:#2d0a5a; --primary-hover:#3a1570; --primary-soft:#e3dcef;
+  --border:#e6dfd7; --border-2:#ebe5de; --border-strong:#c8c0b6;
+  --success:#4f8a6a; --warning:#b88a2a;
+  --ff-text:'Inter',system-ui,sans-serif;
+  --ff-display:'Poppins','Inter',sans-serif;
+  --ff-brand:'Cinzel',serif;
+  --r-2:10px;--r-3:14px;--r-pill:999px;
+  --sh-1:0 1px 2px rgba(43,43,43,.04);
+  --sh-focus:0 0 0 3px var(--primary-soft);
+  --t-fast:120ms ease;--t-base:180ms ease;
+  --base-fz:16px;
+}
+*{box-sizing:border-box}
+html{font-size:var(--base-fz)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--ff-text);font-size:1rem;line-height:1.55}
+
+.banner-modelo{background:#fff4cc;border-bottom:1px solid #e8c34a;padding:8px 24px;font-size:.8125rem;color:#7a5b00}
+.banner-modelo strong{font-weight:600}
+
+/* Topbar em grid 3 colunas: brand | título (centro absoluto) | zoom */
+.topbar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:24px;height:78px;padding:0 24px;background:rgba(247,244,239,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:14px;justify-self:start;min-width:0}
+.logo-mini{width:48px;height:48px;flex-shrink:0}
+.logo-mini svg{width:100%;height:100%;display:block}
+.brand-text{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0}
+.brand-name{font-family:var(--ff-brand);font-weight:500;font-size:1.0625rem;color:var(--text);letter-spacing:.02em;line-height:1.1;white-space:nowrap}
+.brand-sub{font-family:var(--ff-text);font-size:9px;font-weight:500;letter-spacing:.22em;color:#8a7fa8;margin-top:4px;text-transform:uppercase;white-space:nowrap}
+.topbar-title{font-family:var(--ff-display);font-size:1.375rem;font-weight:600;color:var(--text);text-align:center;justify-self:center;margin:0;white-space:nowrap}
+.zoom-bar{justify-self:end}
+.zoom-bar{display:flex;gap:4px}
+.zoom-btn{width:32px;height:32px;border-radius:var(--r-2);border:1px solid var(--border);background:var(--surface);font-weight:600;font-size:12px;color:var(--text-2);cursor:pointer}
+.zoom-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+
+.board{max-width:1100px;margin:0 auto;padding:32px 24px}
+
+.selector-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-3);padding:20px 24px;margin-bottom:20px;box-shadow:var(--sh-1)}
+.field-label{display:block;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-2);font-weight:600;margin-bottom:6px}
+.field-select,.field-input,textarea.field-textarea{width:100%;height:42px;padding:0 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-2);font-family:var(--ff-text);font-size:.9375rem;color:var(--text)}
+textarea.field-textarea{height:auto;min-height:90px;padding:12px 14px;line-height:1.5;resize:vertical}
+.field-select{appearance:none;background:var(--surface) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%232d0a5a' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat right 14px center}
+.field-select:focus,.field-input:focus,.field-textarea:focus{outline:none;border-color:var(--primary);box-shadow:var(--sh-focus)}
+/* (legacy .free-row e .btn-prompt removidos — substituídos por .search-row + .btn-search no fluxo v3) */
+
+.import-card{margin-top:18px}
+.import-card summary{cursor:pointer;font-size:.9375rem;font-weight:500;color:var(--primary);display:flex;align-items:center;gap:12px;padding:14px 18px;list-style:none;background:var(--surface-2);border:1.5px solid var(--border);border-radius:10px;transition:all var(--t-fast);user-select:none}
+.import-card summary::-webkit-details-marker{display:none}
+.import-card summary:hover{background:var(--primary-soft);border-color:var(--primary)}
+.import-card summary::before{content:'';display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:var(--primary);color:#fff;border-radius:6px;flex-shrink:0;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4'/><polyline points='7 10 12 15 17 10'/><line x1='12' y1='15' x2='12' y2='3'/></svg>");background-repeat:no-repeat;background-position:center;background-size:14px}
+.import-card summary::after{content:'\25B8';margin-left:auto;color:var(--text-2);transition:transform .25s;font-size:12px;font-weight:600}
+.import-card[open] summary{border-color:var(--primary);background:var(--primary-soft);border-bottom-left-radius:0;border-bottom-right-radius:0}
+.import-card[open] summary::after{transform:rotate(90deg);color:var(--primary)}
+.import-body{padding:16px 18px 18px;background:var(--surface);border:1.5px solid var(--primary);border-top:none;border-radius:0 0 10px 10px;display:flex;flex-direction:column;gap:12px}
+.import-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn-secondary{height:38px;padding:0 14px;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--r-2);font-weight:500;cursor:pointer;font-family:var(--ff-text);font-size:.875rem}
+.btn-secondary:hover{background:var(--surface-3);border-color:var(--border-strong)}
+.btn-success{height:38px;padding:0 16px;background:var(--success);color:#fff;border:none;border-radius:var(--r-2);font-weight:500;cursor:pointer;font-family:var(--ff-text);font-size:.875rem}
+.btn-success:hover{filter:brightness(1.08)}
+.import-help{font-size:.8125rem;color:var(--text-2);line-height:1.5}
+.import-help code{background:var(--surface-3);padding:1px 6px;border-radius:4px;font-size:.8125rem}
+.import-status{font-size:.8125rem;padding:8px 12px;border-radius:var(--r-2);display:none}
+.import-status.show{display:block}
+.import-status.ok{background:#e3eee7;color:#2d5640;border-left:3px solid var(--success)}
+.import-status.err{background:#f1dde0;color:#7a2f3a;border-left:3px solid #a85460}
+
+/* NOVO fluxo v3 — Campo livre com lupa embutida */
+.search-row{margin-top:12px;padding-top:16px;border-top:1px solid var(--border-2)}
+.search-input-wrap{position:relative}
+.search-input-wrap .field-input{padding-right:56px;height:46px;font-size:1rem}
+.btn-search{position:absolute;right:4px;top:4px;bottom:4px;width:46px;background:var(--primary);color:#fff;border:none;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background var(--t-fast)}
+.btn-search:hover{background:var(--primary-hover)}
+.btn-search svg{width:20px;height:20px}
+/* Quadro do prompt gerado */
+.prompt-box{display:none;background:#fdf6e6;border:1px solid #e8c98a;border-radius:var(--r-2);padding:18px;margin-top:16px}
+.prompt-box.show{display:block;animation:slide-down .3s ease-out}
+@keyframes slide-down{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.prompt-box-title{font-family:var(--ff-display);font-weight:600;color:#7a5b00;font-size:1rem;margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.prompt-box textarea{width:100%;min-height:180px;max-height:320px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-family:'SF Mono','Monaco','Consolas',monospace;font-size:.78rem;line-height:1.5;color:var(--text);resize:vertical}
+
+/* Caixa "Próximos passos" com numeração */
+.steps-box{margin-top:16px;background:var(--surface);border:1.5px dashed #c9a84c;border-radius:10px;padding:14px 18px}
+.steps-title{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#7a5b00;font-weight:700;margin:0 0 10px}
+.steps{display:flex;flex-direction:column;gap:10px}
+.step{display:flex;align-items:center;gap:12px}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;background:var(--primary);color:#fff;border-radius:50%;font-weight:700;font-size:.9375rem;flex-shrink:0;font-family:var(--ff-display)}
+.step-btn{flex:1;display:inline-flex;align-items:center;gap:10px;padding:12px 18px;background:var(--primary);border:1.5px solid var(--primary);border-radius:8px;font-family:var(--ff-text);font-size:.9375rem;font-weight:500;color:#fff;cursor:pointer;text-decoration:none;transition:all var(--t-fast);box-shadow:0 1px 2px rgba(45,10,90,.12)}
+.step-btn:hover{background:var(--primary-hover);border-color:var(--primary-hover);box-shadow:0 2px 6px rgba(45,10,90,.22)}
+.step-btn svg{width:18px;height:18px;flex-shrink:0;stroke:#fff}
+.step-btn.is-done{background:var(--success);border-color:var(--success);color:#fff}
+.step-btn.is-done:hover{background:#3d7156;border-color:#3d7156}
+.step-btn.is-done svg{stroke:#fff}
+
+.doenca-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-3);overflow:hidden;box-shadow:var(--sh-1)}
+.doenca-head{background:var(--primary);color:#fff;padding:16px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.doenca-title{font-family:var(--ff-display);font-size:1.125rem;font-weight:600;margin:0;display:flex;align-items:center;gap:10px}
+.tag-custom{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.32);padding:2px 10px;border-radius:var(--r-pill);font-size:.6875rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.btn-add{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:8px 14px;border-radius:var(--r-2);font-size:.8125rem;font-weight:500;cursor:pointer;font-family:var(--ff-text)}
+.btn-add:hover{background:rgba(255,255,255,.25)}
+.doenca-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn-toggle-all{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22);color:rgba(255,255,255,.9);padding:7px 12px;border-radius:var(--r-2);font-size:.75rem;font-weight:500;cursor:pointer;font-family:var(--ff-text);display:inline-flex;align-items:center;gap:5px}
+.btn-toggle-all:hover{background:rgba(255,255,255,.18);color:#fff}
+
+.tabs-bar{display:flex;background:var(--surface-2);border-bottom:1px solid var(--border-2);overflow-x:auto;scrollbar-width:thin}
+.tab{flex:0 0 auto;padding:14px 20px;background:transparent;border:none;border-bottom:3px solid transparent;font-family:var(--ff-text);font-size:.875rem;font-weight:500;color:var(--text-2);cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap;transition:color var(--t-fast),border-color var(--t-fast),background var(--t-fast)}
+.tab:hover{color:var(--text);background:var(--surface-3)}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary);background:var(--surface);font-weight:600}
+.tab-icon{font-size:14px}
+.tab-count{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 5px;background:var(--primary-soft);color:var(--primary);border-radius:var(--r-pill);font-size:.6875rem;font-weight:600}
+.tab.active .tab-count{background:var(--primary);color:#fff}
+
+.tab-panel{display:none;padding:28px 28px 24px;min-height:280px}
+.tab-panel.active{display:block;animation:fade .25s ease-out}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* Fontes como collapsibles (Design System §7.10) */
+details.fonte-block{background:var(--surface);border:1px solid var(--border-2);border-radius:var(--r-2);overflow:hidden;margin-bottom:14px}
+details.fonte-block:last-child{margin-bottom:0}
+details.fonte-block > summary.fonte-head{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--surface);cursor:pointer;list-style:none;user-select:none;flex-wrap:wrap;transition:background var(--t-fast)}
+details.fonte-block > summary.fonte-head::-webkit-details-marker{display:none}
+details.fonte-block > summary.fonte-head:hover{background:var(--surface-2)}
+.fonte-chevron{width:14px;height:14px;color:var(--text-2);flex-shrink:0;transition:transform var(--t-base)}
+details[open].fonte-block .fonte-chevron{transform:rotate(90deg)}
+.fonte-titulo{font-family:var(--ff-display);font-size:.9375rem;font-weight:600;color:var(--primary)}
+.fonte-source{font-size:.75rem;color:var(--text-2);text-transform:uppercase;letter-spacing:.05em;font-weight:500;margin-left:auto}
+.fonte-body{padding:16px 18px 18px;border-top:1px solid var(--border-2);background:var(--surface)}
+.fonte-content{font-size:.9375rem;line-height:1.65;color:var(--text)}
+.fonte-content p{margin:0 0 14px;text-align:justify;hyphens:auto}
+.fonte-content p:last-child{margin-bottom:0}
+.fonte-content a{color:var(--primary);text-decoration:none;border-bottom:1px solid var(--primary);font-weight:500}
+.fonte-content a:hover{color:var(--primary-hover);border-color:var(--primary-hover)}
+
+/* Metáfora — Inter italic com contraste reforçado, fundo destacado */
+.metafora-text{font-family:var(--ff-text);font-style:italic;font-weight:500;color:var(--text);background:var(--primary-soft);padding:14px 18px;border-left:3px solid var(--primary);border-radius:var(--r-2);font-size:.9375rem;line-height:1.6;margin-bottom:14px}
+
+/* Avaliação / Exercício — lista estruturada com explicação */
+.recurso-list{display:flex;flex-direction:column;gap:14px;margin:0;padding:0;list-style:none}
+.recurso-item{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;padding:14px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:var(--r-2)}
+.recurso-item.is-prompt{background:#fdf6e6;border-color:#e8c98a}
+.recurso-nome{display:inline-flex;align-items:center;justify-content:center;padding:6px 12px;background:var(--surface);border:1px solid var(--primary);border-radius:var(--r-2);color:var(--primary);font-weight:600;font-size:.8125rem;text-decoration:none;white-space:nowrap;font-family:var(--ff-text);height:fit-content}
+.recurso-nome:hover{background:var(--primary-soft)}
+.recurso-nome.is-missing{border-color:#a85460;color:#a85460;background:#f1dde0;cursor:help}
+.recurso-nome.is-missing:hover{background:#f1dde0}
+.recurso-nome.is-missing::before{content:'⚠ ';font-weight:700}
+.recurso-prompt{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--warning);color:#fff;border-radius:var(--r-2);font-size:.8125rem;font-weight:600;font-family:var(--ff-text);height:fit-content}
+.recurso-prompt::before{content:'\2728';font-size:12px}
+.recurso-porque{font-size:.875rem;line-height:1.55;color:var(--text-2)}
+.recurso-porque strong{color:var(--text);font-weight:600}
+
+.nota-clinica{padding:20px 24px;background:var(--surface-2);border-top:1px solid var(--border-2)}
+.nota-clinica label{display:flex;align-items:center;gap:6px;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--text-2);font-weight:600;margin-bottom:8px}
+.nota-clinica textarea{width:100%;min-height:90px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-2);font-family:var(--ff-text);font-size:.9375rem;line-height:1.5;resize:vertical;color:var(--text)}
+.nota-clinica textarea:focus{outline:none;border-color:var(--primary);box-shadow:var(--sh-focus)}
+
+.hidden{display:none}
+.empty{padding:60px 24px;text-align:center;color:var(--text-2);font-family:var(--ff-text);font-size:1rem;line-height:1.6}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo-mini" aria-hidden="true">
+      <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <defs>
+          <radialGradient id="cdBg" cx="50%" cy="48%" r="55%">
+            <stop offset="0%" stop-color="#2d0a5a" stop-opacity=".95"/>
+            <stop offset="100%" stop-color="#060114" stop-opacity="1"/>
+          </radialGradient>
+          <linearGradient id="cdGold" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#b8922c"/>
+            <stop offset="50%" stop-color="#f5e090"/>
+            <stop offset="100%" stop-color="#c9a84c"/>
+          </linearGradient>
+          <linearGradient id="cdSilver" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#a098c8"/>
+            <stop offset="100%" stop-color="#e8e0ff"/>
+          </linearGradient>
+          <linearGradient id="cdViolet" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#6020b0"/>
+            <stop offset="100%" stop-color="#9040e0"/>
+          </linearGradient>
+        </defs>
+        <circle cx="30" cy="30" r="27.5" fill="url(#cdBg)"/>
+        <circle cx="30" cy="30" r="27.5" fill="none" stroke="url(#cdGold)" stroke-width=".6" opacity=".8"/>
+        <g stroke="#c9a84c" stroke-width=".5" opacity=".5">
+          <line x1="30" y1="3.5" x2="30" y2="6.5"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(30 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(60 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(90 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(120 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(150 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(180 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(210 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(240 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(270 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(300 30 30)"/>
+          <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(330 30 30)"/>
+        </g>
+        <circle cx="30" cy="30" r="22" fill="none" stroke="url(#cdGold)" stroke-width=".25" stroke-dasharray="1 2" opacity=".35"/>
+        <line x1="30" y1="44" x2="30" y2="13" stroke="url(#cdSilver)" stroke-width="1" stroke-linecap="round" opacity=".95"/>
+        <path d="M30 35 Q23 32 17 30" stroke="url(#cdSilver)" stroke-width=".95" fill="none" stroke-linecap="round" opacity=".95"/>
+        <path d="M30 35 Q37 32 43 30" stroke="url(#cdSilver)" stroke-width=".95" fill="none" stroke-linecap="round" opacity=".95"/>
+        <path d="M30 28 Q24 25 19 22" stroke="url(#cdGold)" stroke-width=".75" fill="none" stroke-linecap="round" opacity=".85"/>
+        <path d="M30 28 Q36 25 41 22" stroke="url(#cdGold)" stroke-width=".75" fill="none" stroke-linecap="round" opacity=".85"/>
+        <path d="M30 22 Q26 19 22 17" stroke="url(#cdSilver)" stroke-width=".6" fill="none" stroke-linecap="round" opacity=".82"/>
+        <path d="M30 22 Q34 19 38 17" stroke="url(#cdSilver)" stroke-width=".6" fill="none" stroke-linecap="round" opacity=".82"/>
+        <path d="M30 17 Q27.5 15 25 13.5" stroke="url(#cdGold)" stroke-width=".45" fill="none" stroke-linecap="round" opacity=".7"/>
+        <path d="M30 17 Q32.5 15 35 13.5" stroke="url(#cdGold)" stroke-width=".45" fill="none" stroke-linecap="round" opacity=".7"/>
+        <circle cx="17" cy="30" r="1.5" fill="url(#cdViolet)" opacity=".95"/>
+        <circle cx="43" cy="30" r="1.5" fill="url(#cdViolet)" opacity=".95"/>
+        <circle cx="19" cy="22" r="1.2" fill="url(#cdGold)" opacity=".92"/>
+        <circle cx="41" cy="22" r="1.2" fill="url(#cdGold)" opacity=".92"/>
+        <circle cx="22" cy="17" r=".95" fill="url(#cdSilver)" opacity=".88"/>
+        <circle cx="38" cy="17" r=".95" fill="url(#cdSilver)" opacity=".88"/>
+        <circle cx="25" cy="13.5" r=".8" fill="url(#cdViolet)" opacity=".82"/>
+        <circle cx="35" cy="13.5" r=".8" fill="url(#cdViolet)" opacity=".82"/>
+        <circle cx="30" cy="11" r="1.7" fill="url(#cdGold)" opacity=".98"/>
+        <circle cx="30" cy="11" r="3.2" stroke="url(#cdGold)" stroke-width=".3" opacity=".5" fill="none"/>
+        <path d="M30 44 Q26 47 21 49" stroke="url(#cdGold)" stroke-width=".6" fill="none" stroke-linecap="round" opacity=".75"/>
+        <path d="M30 44 Q34 47 39 49" stroke="url(#cdGold)" stroke-width=".6" fill="none" stroke-linecap="round" opacity=".75"/>
+        <path d="M30 46 Q24 50 19 52" stroke="url(#cdSilver)" stroke-width=".4" fill="none" stroke-linecap="round" opacity=".55"/>
+        <path d="M30 46 Q36 50 41 52" stroke="url(#cdSilver)" stroke-width=".4" fill="none" stroke-linecap="round" opacity=".55"/>
+        <circle cx="30" cy="44" r="1.3" fill="url(#cdGold)" opacity=".8"/>
+      </svg>
+    </div>
+    <div class="brand-text">
+      <span class="brand-name">Daniele Dallavecchia</span>
+      <span class="brand-sub">Psicanálise Integrativa &amp; Hipnose Clínica</span>
+    </div>
+  </div>
+  <h1 class="topbar-title">Anatomia Metafísica das Doenças</h1>
+  <div class="zoom-bar">
+    <button class="zoom-btn" data-fz="14">A&minus;</button>
+    <button class="zoom-btn active" data-fz="16">A</button>
+    <button class="zoom-btn" data-fz="18">A+</button>
+    <button class="zoom-btn" data-fz="20">A++</button>
+  </div>
+</header>
+
+<main class="board">
+
+  <section class="selector-card">
+    <label class="field-label" for="sel-doenca">Doença / condição</label>
+    <select class="field-select" id="sel-doenca">
+      <option value="">— Seleccionar doença / condição —</option>
+    </select>
+
+    <div class="search-row">
+      <label class="field-label" for="free-input">Doença não está na lista? Escreve aqui</label>
+      <div class="search-input-wrap">
+        <input class="field-input" id="free-input" type="text" placeholder="Ex.: enxaqueca, desidrose, tendinite no supraespinhoso direito...">
+        <button class="btn-search" id="btn-gerar-prompt" title="Gerar prompt (Enter)" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quadro do prompt gerado (aparece após Enter ou clique na lupa) -->
+    <div class="prompt-box" id="prompt-preview">
+      <h3 class="prompt-box-title">✨ Prompt gerado para <span id="prompt-name">—</span></h3>
+      <textarea readonly id="prompt-preview-text" spellcheck="false"></textarea>
+
+      <div class="steps-box">
+        <p class="steps-title">⤵ Próximos passos</p>
+        <div class="steps">
+          <div class="step">
+            <span class="step-num">1</span>
+            <button class="step-btn" id="btn-copy-step" type="button">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span id="btn-copy-label">Copiar prompt para Claude</span>
+            </button>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span>
+            <a class="step-btn" id="btn-claude-step" href="https://claude.ai/project/019e64eb-6c88-7477-a367-8673818f8430" target="_blank" rel="noopener" title="Abre o projeto Anatomia Metafísica das Doenças no Claude.ai (com os 16 ficheiros anexados)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              Abrir Projeto no Claude
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <details class="import-card">
+      <summary>Importar resposta do Claude (JSON) <span style="font-weight:400;color:var(--text-2);font-size:.8125rem">— adiciona ao banco do caderno</span></summary>
+      <div class="import-body">
+
+        <p class="import-help">Cola aqui a resposta completa do Claude (narrativa <strong>+</strong> bloco JSON). O caderno extrai automaticamente o JSON e guarda a doença para sessões futuras &mdash; a narrativa fica disponível para tu leres no chat. <strong>Já tens <span id="custom-count">0</span> doenças personalizadas guardadas.</strong></p>
+        <textarea class="field-textarea" id="import-json" placeholder='{"id":"desidrose","titulo":"Desidrose",...}'></textarea>
+        <div class="import-actions">
+          <button class="btn-success" id="btn-import">+ Adicionar ao caderno</button>
+          <button class="btn-secondary" id="btn-paste-clip">&#128203; Colar do clipboard</button>
+          <button class="btn-secondary" id="btn-export-all">&#11015; Exportar todas (backup)</button>
+        </div>
+        <div class="import-status" id="import-status"></div>
+      </div>
+    </details>
+  </section>
+
+  <section class="doenca-card" id="doenca-empty">
+    <div class="empty">Seleciona uma doença em cima para ver o padrão emocional, correlatos e sugestões clínicas.</div>
+  </section>
+
+  <section class="doenca-card hidden" id="doenca-content">
+    <div class="doenca-head">
+      <h2 class="doenca-title" id="d-title">—</h2>
+      <div class="doenca-actions">
+        <button class="btn-toggle-all" id="btn-expand-all" title="Expandir todas as secções">▾ Expandir tudo</button>
+        <button class="btn-toggle-all" id="btn-collapse-all" title="Colapsar todas as secções">▸ Colapsar tudo</button>
+        <button class="btn-add" id="btn-add-ficha" title="Copia um resumo estruturado para colar na ficha do cliente">+ Adicionar à ficha</button>
+      </div>
+    </div>
+
+    <nav class="tabs-bar" role="tablist">
+      <button class="tab active" data-tab="metafisica"><span class="tab-icon">🌙</span> Metafísica <span class="tab-count">2</span></button>
+      <button class="tab" data-tab="ciencia"><span class="tab-icon">🧬</span> Ciência <span class="tab-count">2</span></button>
+      <button class="tab" data-tab="clinica"><span class="tab-icon">💔</span> Clínica <span class="tab-count">2</span></button>
+      <button class="tab" data-tab="sessao"><span class="tab-icon">❓</span> Sessão <span class="tab-count">2</span></button>
+      <button class="tab" data-tab="recursos"><span class="tab-icon">📚</span> Recursos <span class="tab-count">2</span></button>
+    </nav>
+
+    <div class="tab-panel active" data-panel="metafisica">
+      <details class="fonte-block" open data-section="evette">
+        <summary class="fonte-head"><svg class="fonte-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="fonte-titulo">📖 Padrão Emocional</span><span class="fonte-source">Evette Rose · Metaphysical Anatomy Vol. 1</span></summary>
+        <div class="fonte-body"><div class="fonte-content" id="d-evette"></div></div>
+      </details>
+      <details class="fonte-block" open data-section="gaspa">
+        <summary class="fonte-head"><svg class="fonte-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="fonte-titulo">📚 Padrão Emocional</span><span class="fonte-source">Luiz Gasparetto · Metafísica da Saúde</span></summary>
+        <div class="fonte-body"><div class="fonte-content" id="d-gaspa"></div></div>
+      </details>
+    </div>
+
+    <div class="tab-panel" data-panel="ciencia">
+      <details class="fonte-block" open data-section="psiconeuro">
+        <summary class="fonte-head"><svg class="fonte-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="fonte-titulo">🧬 Psiconeuroimunologia</span><span class="fonte-source">Eixo HPA · Imunidade</span></summary>
+        <div class="fonte-body"><div class="fonte-content" id="d-psiconeuro"></div></div>
+      </details>
+      <details class="fonte-block" open data-section="neuro">
+        <summary class="fonte-head"><svg class="fonte-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="fonte-titulo">🧠 Neurociência</span><span class="fonte-source">Mark F. Bear · Neuroscience 4.ª ed.</span></summary>
+        <div class="fonte-body"><div class="fonte-content" id="d-neuro"></div></div>
+      </details>
+    </div>
+
+    <div class="tab-panel" data-panel="clinica">
+      <details class="fonte-block" open data-section="aces">
+        <summary class="fonte-head"><svg class="fonte-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="fonte-titulo">💔 Correlato Relacional</span><span class="fonte-source">ACEs / Trauma</span></summary>
+        <div class="fonte-body"><div class="fonte-content" id="d-aces"></div></div>
+      </details>
+      <details class="fonte-block" open data-section="metafora">
+        <summary class="fonte-head"><svg class="fonte-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="fonte-titulo">🫀 Metáfora Somática</span><span class="fonte-source">Síntese clínica</span></summary>
+        <div class="fonte-body"><div class="fonte-content" id="d-metafora"></div></div>
+      </details>
+    </div>
+
+    <div class="tab-panel" data-panel="sessao">
+      <details class="fonte-block" open data-section="perguntas">
+        <summary class="fonte-head"><svg class="fonte-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="fonte-titulo">❓ Perguntas Clínicas</span><span class="fonte-source">Para usar na sessão · porque é relevante</span></summary>
+        <div class="fonte-body"><div class="fonte-content" id="d-perguntas"></div></div>
+      </details>
+      <details class="fonte-block" open data-section="sugestoes">
+        <summary class="fonte-head"><svg class="fonte-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="fonte-titulo">🌀 Sugestões clínicas / hipnóticas</span><span class="fonte-source">Biblioteca Psicologia + Hipnose · porque é indicada</span></summary>
+        <div class="fonte-body"><div class="fonte-content" id="d-sugestoes"></div></div>
+      </details>
+    </div>
+
+    <div class="tab-panel" data-panel="recursos">
+      <details class="fonte-block" open data-section="avaliacao">
+        <summary class="fonte-head"><svg class="fonte-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="fonte-titulo">🧪 Avaliação</span><span class="fonte-source">Avaliações Ativas · porque é relevante</span></summary>
+        <div class="fonte-body"><ul class="recurso-list" id="d-avaliacao"></ul></div>
+      </details>
+      <details class="fonte-block" open data-section="exercicio">
+        <summary class="fonte-head"><svg class="fonte-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="m6 4 4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><span class="fonte-titulo">🏃 Exercício</span><span class="fonte-source">Exercícios / Biblioteca de Hipnoses · porque é relevante</span></summary>
+        <div class="fonte-body"><ul class="recurso-list" id="d-exercicio"></ul></div>
+      </details>
+    </div>
+
+    <div class="nota-clinica">
+      <label for="nota">📝 Nota Clínica · a tua observação (auto-save)</label>
+      <textarea id="nota" placeholder="Ex.: cliente refere fibromialgia desde o divórcio — padrão de raiva suprimida..."></textarea>
+    </div>
+  </section>
+
+</main>
+
+<script>
+const DOENCAS_BASE = {
+  fibromialgia:{
+    titulo:"Fibromialgia", categoria:"Dor Crónica / SN",
+    evette:"Segundo Evette Rose em Metaphysical Anatomy Vol. 1, este padrão emocional descreve pessoas que reprimem cronicamente raiva, culpa e sensação de impotência. Geralmente surge após experiências prolongadas de injustiça, abuso, controlo excessivo ou ambientes emocionalmente rígidos vividos na infância, em relacionamentos adultos ou em contexto religioso. O cliente aprende a engolir emoções em vez de as expressar, acumulando ressentimento e desenvolvendo dificuldade em 'soltar' o passado — há frequentemente a sensação interna de que 'alguém tem de pagar' pelo que ficou por reparar, mesmo quando essa pessoa já não está presente.\n\nCom o tempo, instala-se uma desconexão progressiva do próprio corpo, como se este fosse uma entidade separada, um inimigo, ou apenas algo a controlar. A tensão emocional manifesta-se em rigidez física, tensão muscular generalizada e necessidade excessiva de controlo sobre o ambiente e sobre as próprias reações. Em linguagem psicológica, isto aproxima-se de quadros de trauma relacional, dissociação somática (Pierre Janet, no final do século XIX, foi o primeiro a descrever este afastamento entre mente e corpo como mecanismo defensivo do psiquismo perante o intolerável), hipervigilância autonómica e repressão emocional crónica.\n\nOs músculos, no mapa simbólico da autora, ficam carregados de emoções específicas: controlo (manter tudo no seu lugar), ego (no sentido de fronteira defensiva), culpa (responsabilidade pelo sofrimento alheio) e rigidez (impossibilidade de mudar de forma). Por trás do quadro encontra-se frequentemente trauma de infância — particularmente abuso físico, sexual ou emocional repetido —, abuso em relacionamentos adultos (violência doméstica, controlo coercivo, gaslighting) ou trauma religioso (sistemas que ensinaram a calar-se, a sofrer em silêncio como virtude, ou que demonizaram a expressão da raiva como pecado). A interpretação da autora é metafísica e simbólica, não um modelo científico comprovado, mas procura relacionar emoções acumuladas com padrões físicos e comportamentais observáveis na prática clínica.",
+    gaspa:"Segundo Luiz Gasparetto em Metafísica da Saúde, este padrão emocional descreve pessoas que vivem num estado interno de auto-castigo, como se precisassem sofrer para merecer amor, aceitação ou valor. Assumem o papel de mártir, carregando responsabilidades, dores e problemas alheios, muitas vezes esquecendo as próprias necessidades. A fibromialgia, nesta leitura, é o corpo a carregar literalmente o peso que a alma escolheu — ou foi obrigada a escolher — para si.\n\nEm vez de expressar emoções como raiva, frustração ou tristeza de forma saudável, esta pessoa reprime tudo e continua a suportar excessos relacionais, profissionais e familiares. A frase recorrente em Gasparetto, 'o corpo recebe o que a alma não consegue expressar', significa, simbolicamente, que emoções ignoradas acabam por se traduzir em cansaço, tensão crónica ou sofrimento físico difuso. A doença é apresentada como mensageira: um chamamento para parar, escutar e olhar para dentro.\n\nO autor fala também sobre o excesso de controlo característico destes quadros — viver sempre em vigilância, obrigação ou sacrifício, sem espaço para prazer, leveza ou descanso. 'Reaprender a habitar o corpo com prazer' significa voltar a sentir o corpo como um lugar seguro, permitindo descanso, prazer, emoções e autocuidado sem culpa. Trata-se de uma visão metafísica e simbólica, não de um modelo médico científico — mas dialoga com modelos modernos de psicossomática, nomeadamente a Escola Psicossomática de Paris (Pierre Marty), com a noção de paciente 'operatório' que perdeu acesso à fantasia e à elaboração emocional, ficando o corpo como única via possível de descarga.",
+    psiconeuro:"Há uma sensibilização central do Sistema Nervoso Central (SNC) — um fenómeno chamado wind-up, em que os neurónios da medula amplificam progressivamente a resposta à dor, fazendo com que estímulos mínimos sejam sentidos como muito intensos. Observa-se diminuição do cortisol matinal (a hormona do alerta e da energia, que normalmente atinge o pico ao acordar) e elevação de citocinas pró-inflamatórias, nomeadamente a Interleucina-6 (IL-6) e o Fator de Necrose Tumoral alfa (TNF-α) — proteínas que o sistema imune produz para sinalizar inflamação no organismo.\n\nEste padrão é típico de stress crónico não-resolvido, com falência adaptativa do eixo Hipotálamo-Hipófise-Adrenal (HPA), o circuito hormonal que regula a resposta ao stress envolvendo uma região cerebral (hipotálamo), uma glândula da base do cérebro (hipófise) e as glândulas suprarrenais. A literatura de psiconeuroimunologia — campo iniciado por Robert Ader nos anos 1970 — descreve a fibromialgia como o ponto final de uma carga alostática elevada, conceito de Bruce McEwen para o desgaste acumulado do organismo perante stress repetido sem recuperação adequada entre episódios.",
+    neuro:"Existe disfunção das vias descendentes inibitórias da dor — circuitos cerebrais que normalmente filtram e atenuam o sinal doloroso antes de chegar à consciência. Estes circuitos partem de núcleos do tronco cerebral ricos em serotonina e, quando falham, a dor passa amplificada. Há também hiperexcitabilidade dos neurónios do corno posterior da medula espinal (a 'porta de entrada' da informação dolorosa) e conectividade alterada entre a ínsula (estrutura cerebral que monitoriza o estado interno do corpo) e o córtex cingulado anterior (área que dá significado emocional à dor).\n\nEm conjunto, estes achados descritos por Mark F. Bear em Neurociências (4.ª ed., 2017) explicam por que motivo a fibromialgia não é 'dor inventada' — é dor real produzida por um cérebro reorganizado para amplificar o sinal. Este modelo dialoga com a Teoria Polivagal de Stephen Porges, que descreve como o sistema nervoso autónomo de pessoas com trauma fica preso em estados defensivos (mobilização simpática ou imobilização dorsovagal), perpetuando a tensão muscular, a dor e a fadiga mesmo na ausência de ameaça presente.",
+    aces:"ACEs (Adverse Childhood Experiences) referem-se a experiências adversas vividas na infância, incluindo abuso físico, sexual ou emocional, negligência, violência doméstica, separação parental, doença mental num cuidador, encarceramento de um familiar ou instabilidade emocional crónica. Estudos populacionais (Felitti & Anda, 1998, e replicações posteriores) mostram que scores ACE elevados — quatro ou mais categorias — correlacionam-se com maior incidência de fibromialgia em idade adulta, e com maior intensidade da dor quando o quadro se instala.\n\nO texto sugere que traumas prolongados — incluindo Perturbação de Stress Pós-Traumático (PTSD, sigla inglesa de Post-Traumatic Stress Disorder), abuso crónico em relacionamentos, fim de relacionamentos significativos e luto intenso não-processado — podem manter o sistema nervoso preso num estado contínuo de ameaça. Nesta condição, cérebro e corpo permanecem em hipervigilância, como se o perigo ainda existisse no presente. Isto traduz-se em aumento da tensão muscular basal, ansiedade flutuante, sensibilidade aumentada à dor (hiperalgesia) e dificuldade marcada em relaxar, mesmo em ambientes objetivamente seguros.\n\nA expressão 'dor amplificada como linguagem de um corpo que foi ignorado demasiado tempo' significa que sintomas físicos podem emergir quando emoções, limites ou necessidades ficaram reprimidos durante anos. É uma interpretação compatível com os modelos contemporâneos de trauma de Bessel van der Kolk (The Body Keeps the Score) e Stephen Porges (Teoria Polivagal), nos quais o corpo mantém respostas defensivas mesmo após o fim da ameaça original. Neste enquadramento, a fibromialgia é menos uma 'doença' e mais uma sobrevivência crónica que se cristalizou no tecido.",
+    metafora:"A metáfora 'o corpo que ficou em modo de guerra depois de a guerra ter terminado' descreve um organismo que aprendeu a sobreviver através de tensão, controlo e vigilância constantes. Após experiências traumáticas prolongadas, os músculos e o sistema nervoso podem permanecer preparados para o perigo, mesmo em ambientes objetivamente seguros — a paz exterior não chega a inscrever-se no corpo.\n\nA ideia de que 'relaxar era perigoso' significa que, em algum momento, baixar a guarda podia trazer risco emocional ou físico — um pai imprevisível, um agressor que aparecia sem aviso, uma humilhação que vinha justamente quando se relaxava. O corpo habituou-se a ficar rígido e alerta como estratégia de sobrevivência. Clinicamente, isto relaciona-se com hipervigilância autonómica, tensão muscular crónica, fadiga associada ao esforço constante de manter o alerta e dificuldade marcada em sentir segurança corporal. A imagem complementar da 'sentinela esquecida no posto' resume como o sistema nervoso de quem sofreu trauma continua a desempenhar uma função protetora que já não tem destinatário — vigia uma fronteira que deixou de existir.",
+    perguntas:"As perguntas seguintes exploram, cada uma, um eixo diferente do quadro e devem ser usadas com timing — não todas na mesma sessão, e sempre com sensibilidade ao ritmo de quem responde.\n\n'Quando foi a última vez que sentiste o corpo como um lugar seguro, em vez de um campo de batalha?' — convida o cliente a localizar no tempo o início da dissociação somática e da hipervigilância, ajudando a ancorar a narrativa clínica numa biografia. Frequentemente, a resposta aponta para a infância ou para um evento-pivot na idade adulta (separação, luto, agressão).\n\n'Que injustiça antiga ainda guardas, sem que ninguém a tenha reconhecido ou reparado?' — toca no nó central deste padrão segundo Evette Rose: o ressentimento por algo que ficou sem fechar. Permite identificar a figura ou situação que organiza inconscientemente a tensão muscular e abre espaço para trabalho de luto, reconhecimento ou perdão.\n\n'Quem precisas de proteger ou aguentar para que tudo se mantenha em pé?' — torna explícita a função relacional do sintoma. É particularmente útil em clientes com padrão de cuidador precoce, parentificação ou papel central na família — situações em que largar a fibromialgia significaria, simbolicamente, abandonar quem se cuida.\n\n'Se deixasses, por um momento, de estar em guarda, o que pensas que poderia acontecer?' — convida ao contacto com a fantasia catastrófica que justifica a hipervigilância. A resposta revela a crença nuclear que mantém o sistema nervoso em alerta e indica onde focar o trabalho de reestruturação cognitiva e somática.\n\n'Em que parte do corpo sentes que está guardado o que ainda não foi dito?' — abre a porta ao trabalho somático, dando voz às zonas onde a memória ficou cristalizada. É um excelente ponto de partida para intervenções de EMDR, Somatic Experiencing ou hipnose corporal.",
+    sugestoes:"Várias abordagens combinadas tendem a funcionar melhor do que uma técnica isolada, dada a natureza multissistémica do quadro — autonómica, muscular, emocional e relacional.\n\nA hipnose ericksoniana de relaxamento muscular progressivo, com reformulação (reframing) da dor como mensageira em vez de inimiga, é particularmente útil porque trabalha simultaneamente a sensibilização central da dor e a relação simbólica com o sintoma. O cliente aprende a escutar o corpo em vez de o silenciar — o que altera profundamente a relação com a fibromialgia ao longo de poucas sessões.\n\nA técnica EFT (Emotional Freedom Techniques, desenvolvida por Gary Craig nos anos 1990) consiste no estímulo manual de pontos dos meridianos da medicina chinesa enquanto se verbaliza o que está retido emocionalmente. Diversos estudos mostram que reduz o cortisol e ativa o sistema nervoso parassimpático, atenuando a hiperexcitabilidade central que perpetua a dor. É indicada como técnica de descarga emocional rápida entre sessões.\n\nA imagery guiada de 'depor as armas' é uma visualização lenta em que cada grupo muscular pousa simbolicamente uma arma que carregou durante anos. Funciona como ritual de despedida da função defensiva — algo que o cliente raramente faz conscientemente porque não tem licença interna para o fazer. É especialmente eficaz quando já existe alguma consciência da função protetora da tensão muscular.\n\nO trabalho com partes, segundo o modelo Internal Family Systems (IFS) de Richard Schwartz, é indicado para abordar a parte 'guardiã' hipervigilante que organiza inconscientemente a tensão muscular. Identificá-la, dar-lhe voz, agradecer-lhe e negociar com ela uma nova função desbloqueia gradualmente a rigidez — a tensão deixa de ser tratada como sintoma a eliminar e passa a ser uma estratégia que mereceu existir e que agora pode ser atualizada.\n\nQuando há trauma evidente na história do cliente, EMDR (Eye Movement Desensitization and Reprocessing, de Francine Shapiro) ou Somatic Experiencing (de Peter Levine) permitem processar memórias precoces que ficaram congeladas no corpo. Sem este trabalho de base, as intervenções corporais tendem a oferecer alívio temporário mas o quadro recidiva.",
+    avaliacao:[
+      {item:"quiz_ace.html", link:"#", porque:"Mapeia os eventos adversos da infância em dez categorias validadas (Felitti & Anda). Na fibromialgia, scores ACE iguais ou superiores a quatro correlacionam-se com maior intensidade de dor, pior resposta ao tratamento e maior comorbilidade psiquiátrica — saber o score do cliente orienta a escolha entre abordagem somática (Somatic Experiencing, EMDR) e abordagem mais cognitiva, e permite antecipar a duração provável do trabalho terapêutico."},
+      {item:"quiz_padroes.html", link:"#", porque:"Identifica o trio emocional que tanto Evette Rose como a psicossomática moderna associam à fibromialgia: hiperresponsabilidade, auto-sacrifício e ressentimento contido. Confirma a hipótese clínica formada na anamnese e direciona a intervenção para padrões específicos, evitando intervenções genéricas que neste quadro tendem a ser pouco eficazes."},
+      {item:"quiz_esquemas_young.html", link:"#", porque:"Os esquemas precoces mal-adaptativos mais comuns nesta condição são auto-sacrifício, submissão e padrões inflexíveis (Jeffrey Young). Identificá-los permite trabalhar a raiz das tensões relacionais que alimentam a sensibilização central da dor — sem isto, qualquer intervenção corporal tende a recair."}
+    ],
+    exercicio:[
+      {item:"EuSou_21dias_v2.html", link:"#", porque:"Vinte e um dias de afirmações de soberania pessoal — útil para clientes que perderam a relação com o próprio corpo, vivendo-o como adversário. Cria um ritual diário de reabitar o corpo com presença e linguagem, recuperando gradualmente a sensação de agência sobre o próprio território."},
+      {prompt:"criar exercício 'depor armas' — sequência guiada de quinze minutos combinando respiração diafragmática (quatro segundos a inspirar, seis a expirar), relaxamento muscular progressivo de Jacobson grupo a grupo, e visualização simbólica de cada músculo a pousar uma arma que carregou durante anos", porque:"Não existe ainda no acervo um exercício específico para o padrão 'corpo em modo de guerra' característico desta condição. A combinação proposta atua nos três planos simultaneamente: autonómico (a respiração a seis ciclos por minuto ativa o nervo vago), muscular (Jacobson reduz o tónus basal) e simbólico (a narrativa de pousar armas dá sentido ao gesto físico). É o tipo de intervenção que a fibromialgia exige para não se manter cíclica."}
+    ]
+  },
+  ansiedade:{
+    titulo:"Ansiedade generalizada", categoria:"Neurológicas / Mentais",
+    evette:"Segundo Evette Rose em Metaphysical Anatomy Vol. 1, este padrão emocional descreve pessoas que vivem com uma sensação constante de que algo terrível está prestes a acontecer. A hipervigilância do sistema nervoso aprende-se cedo: a criança cresce em ambientes onde o perigo era imprevisível — pais com humor instável, episódios de violência sem aviso, ausências repentinas, ou mensagens catastrofizantes ('se não tiveres cuidado vais cair', 'o mundo está cheio de pessoas más'). Aprende-se que a única forma de sobreviver é antecipar, manter-se em alerta e ter sempre um plano B.\n\nCom o tempo, essa hipervigilância torna-se um traço estável e o cliente passa a sentir-se 'ligado' mesmo quando está sozinho em segurança. O sistema nervoso interpretou que relaxar é arriscado, e qualquer pista ambígua é lida como ameaça. A ansiedade generalizada manifesta-se em pensamentos circulares ('e se?'), tensão muscular persistente, dificuldade em adormecer, sintomas somáticos vagos (palpitações, aperto no peito, tonturas) e necessidade compulsiva de controlar variáveis externas. Esta apresentação aproxima-se do que a psicologia descreve como ansiedade-traço (Charles Spielberger), distinta da ansiedade-estado pontual.\n\nPor trás do quadro encontra-se frequentemente apego inseguro do tipo ansioso-preocupado (Mary Ainsworth, John Bowlby), em que a figura cuidadora foi inconsistente — disponível por vezes, indisponível ou intrusiva noutras. A criança nunca conseguiu prever quando seria recebida e ficou organizada em torno da expectativa contínua. Trauma de abandono precoce, perdas significativas não-elaboradas, ou crescer em ambientes onde havia uma narrativa de catástrofe (guerra, doença grave, instabilidade financeira) reforçam o padrão. A interpretação da autora é metafísica e simbólica, não um modelo científico comprovado, mas dialoga com a evidência clínica de que a ansiedade generalizada raramente é apenas 'um problema de pensamento' — é, muitas vezes, uma adaptação corporal a um mundo que foi imprevisível.",
+    gaspa:"Segundo Luiz Gasparetto em Metafísica da Saúde, este padrão emocional descreve pessoas que perderam a confiança básica na vida e na própria capacidade de criar segurança. Vivem orientadas pelo medo do desconhecido, antecipando o pior cenário como forma de se protegerem de surpresas. Esta antecipação constante, no entanto, esgota a energia psíquica e impede o gozo do presente — o cliente está sempre meio passo à frente de si mesmo, no que ainda não aconteceu.\n\nO autor liga este padrão à recusa, muitas vezes inconsciente, da própria força criadora. Quem confia em si pode descansar; quem desconfia precisa de vigiar. A ansiedade, nesta leitura, é o sinal de que a pessoa não acredita que pode lidar com o que vier — e portanto tenta prevenir o que ainda não chegou. Há um paradoxo trágico no quadro: na tentativa de se proteger de um futuro imaginado, perde-se o presente real.\n\nGasparetto aproxima-se aqui de leituras humanistas (Carl Rogers, Abraham Maslow) e da própria psicanálise quando se fala de 'angústia de aniquilamento' (Donald Winnicott). A cura, nesta visão, passa por restabelecer aquilo que Winnicott chamou continuidade do ser — a sensação básica de que se pode existir sem ter de se proteger. Trata-se de uma visão metafísica e simbólica, não de um modelo médico científico, mas converge com o que a psicoterapia contemporânea identifica como necessidade nuclear nestes quadros: restaurar a confiança corporal e relacional antes (ou em paralelo) de intervir na cognição.",
+    psiconeuro:"O eixo Hipotálamo-Hipófise-Adrenal (HPA) — circuito hormonal de resposta ao stress que envolve uma região cerebral (hipotálamo), uma glândula da base do cérebro (hipófise) e as glândulas suprarrenais — encontra-se hiperativo, com cortisol cronicamente elevado durante o dia e dificuldade em descer à noite (o que explica a insónia inicial típica). A microbiota intestinal (o conjunto de bactérias residentes no intestino) está frequentemente alterada, afetando o chamado eixo intestino-cérebro, pelo qual estas bactérias comunicam com o sistema nervoso central através do nervo vago e de moléculas que produzem. Estima-se que cerca de 90 % da serotonina do organismo é produzida no intestino, o que torna a disbiose (desequilíbrio da microbiota) um fator real, não meramente metafórico, na manutenção da ansiedade.\n\nExiste também redução do GABA disponível (ácido gama-aminobutírico), o principal neurotransmissor inibitório do cérebro — aquele que 'acalma' os circuitos excitados. As benzodiazepinas, classe de fármacos ansiolíticos tradicionais, atuam justamente potenciando o GABA. Em paralelo, há uma inflamação de baixo grau crónica, com elevação de marcadores como a Proteína C-Reativa (PCR) e citocinas como a Interleucina-6 (IL-6). Esta inflamação subclínica, descrita por Bruce McEwen como parte da carga alostática (o desgaste cumulativo do organismo perante stress repetido), contribui para a sensação de mal-estar difuso e fadiga que muitos clientes com ansiedade generalizada descrevem mas raramente reconhecem como sintoma.",
+    neuro:"A amígdala (estrutura cerebral em forma de amêndoa, no lobo temporal, responsável pela deteção de ameaça e geração de medo) encontra-se hiperativa, enquanto o córtex pré-frontal ventromedial (a região 'racional' que normalmente trava esta resposta) está em hipoatividade. O resultado é uma falha na regulação top-down do medo — a parte pensante deixa de conseguir acalmar a parte instintiva, e por isso 'saber que estou em segurança' não basta para parar a ansiedade. As memórias de medo ficam consolidadas pela chamada 'via rápida' descrita por Joseph LeDoux: o estímulo viaja diretamente do tálamo (central de retransmissão sensorial) para a amígdala, sem passar pelo córtex, gerando reações antes do cliente sequer perceber o que está a sentir.\n\nEm Neurociências de Mark F. Bear (4.ª ed., 2017) descreve-se como este padrão corresponde a uma reorganização funcional do circuito do medo: quanto mais a amígdala é ativada, mais conexões cria com o hipocampo (a estrutura da memória) e mais facilmente disparará no futuro perante estímulos semelhantes. É o substrato neurobiológico daquilo que clinicamente se chama generalização ansiosa — começa-se com medo de uma situação específica e acaba-se com medo difuso de quase tudo. A boa notícia é que estes circuitos têm plasticidade: a exposição gradual, a respiração lenta diafragmática e a hipnose com criação de 'lugar seguro' interno podem reativar o córtex pré-frontal ventromedial e silenciar a amígdala hiperativa.",
+    aces:"ACEs (Adverse Childhood Experiences) referem-se a experiências adversas vividas na infância, incluindo abuso físico, sexual ou emocional, negligência, violência doméstica, separação parental, doença mental num cuidador, encarceramento de um familiar ou instabilidade emocional crónica. O estudo seminal de Vincent Felitti e Robert Anda (1998), com mais de 17 000 participantes, mostrou uma correlação dose-resposta: quantas mais categorias ACE alguém tem, maior é a probabilidade de ansiedade clínica em adulto. Scores ACE iguais ou superiores a quatro multiplicam por três a quatro vezes o risco de perturbações de ansiedade.\n\nA ansiedade generalizada está particularmente associada à negligência emocional precoce — não tanto ao que aconteceu, mas ao que nunca aconteceu: o conforto que não veio, a sintonia que faltou, a previsibilidade que nunca se instalou. Crescer com pais ansiosos ou imprevisíveis, num ambiente familiar caótico, ou com mensagens recorrentes de perigo (o mundo é hostil, 'tem cuidado', 'não confies'), instala um modelo interno de mundo como inseguro. O apego ansioso-preocupado descrito por John Bowlby e operacionalizado por Mary Main e Erik Hesse perpetua-se em relacionamentos adultos como necessidade compulsiva de proximidade alternada com medo do abandono — uma ansiedade relacional crónica.\n\nOs modelos contemporâneos de trauma de Bessel van der Kolk (The Body Keeps the Score) e Stephen Porges (Teoria Polivagal) descrevem a ansiedade generalizada como uma falha do nervo vago ventral, o ramo parassimpático que medeia a sensação de segurança social. Sem este sistema a funcionar bem, o organismo oscila entre simpático (mobilização, alerta) e dorsovagal (paralisia, desistência), nunca chegando ao estado de 'engagement seguro' que permitiria o descanso. Trabalhos como Somatic Experiencing de Peter Levine e a abordagem polivagal de Deb Dana focam precisamente em restaurar este sistema parassimpático ventral através de pequenas experiências de segurança repetidas até se inscreverem no corpo.",
+    metafora:"A metáfora 'um alarme de incêndio que ficou ligado depois de o fogo se ter apagado' descreve um sistema de defesa que perdeu a calibração — continua a disparar em resposta a sinais que já não são ameaça, porque foi treinado num período em que esses sinais coincidiam com perigo real. O corpo aprendeu a soar; agora soa sem motivo claro.\n\nA ideia de que 'o corpo continua a soar mesmo quando já não há perigo' significa que a ansiedade não é, na maioria das vezes, irracional — é histórica. O cliente não está a 'exagerar' nem a 'criar problemas onde não há'; está a responder a uma memória corporal de quando o perigo era real. Clinicamente, isto traduz-se em descargas de adrenalina aparentemente sem causa, palpitações que assustam ainda mais, tensão muscular sem razão identificável e a sensação subjetiva característica de 'estar à espera que algo aconteça'. Compreender que a ansiedade tem origem biográfica — e não é falha de carácter — é, em si, uma intervenção poderosa: alivia a vergonha que muitos clientes carregam por 'não conseguirem controlar' o próprio sistema nervoso.",
+    perguntas:"As perguntas seguintes exploram, cada uma, um eixo diferente do quadro ansioso e devem ser usadas com timing — não todas na mesma sessão, e sempre respeitando o ritmo de quem responde.\n\n'Quando começou esta sensação de estar à espera que algo aconteça?' — convida o cliente a localizar a ansiedade no tempo. Frequentemente a resposta aponta para a infância ('sempre fui assim') ou para um evento-pivot na idade adulta (separação, doença grave, perda de emprego). Saber se é traço ou estado orienta a profundidade da intervenção.\n\n'Quem na tua família vivia assim?' — torna explícita a transmissão geracional do padrão. A ansiedade generalizada raramente surge no vácuo: vem aprendida por modelo (mãe ansiosa, avó preocupada), por mensagens implícitas ('o mundo é perigoso'), ou por trauma transgeracional. Mapear isto desculpabiliza o cliente e abre o trabalho psicogenealógico.\n\n'O que sentirias se acreditasses, por um minuto, que estás em segurança?' — convida ao contacto com o que a ansiedade tem evitado. A resposta revela frequentemente a fantasia catastrófica subjacente ('se eu baixar a guarda, algo de mau acontece') ou um vazio difícil de tolerar ('não sei... não me lembro de o sentir').\n\n'O que ficou por receber em criança que ainda hoje procuras?' — toca no nó relacional do quadro. A ansiedade ansiosa-preocupada é, no fundo, uma criança ainda à espera de uma resposta que não chegou. Permite o trabalho com a 'criança vigilante' interior.\n\n'Onde no corpo sentes a ansiedade primeiro?' — abre a porta ao trabalho somático. A localização precoce (peito, garganta, estômago, mãos) é o ponto de entrada para técnicas como respiração diafragmática focada, EFT ou Somatic Experiencing — sem este mapeamento, as técnicas funcionam às cegas.",
+    sugestoes:"Várias abordagens combinadas funcionam melhor do que técnica isolada, dada a natureza multissistémica do quadro — autonómica, cognitiva, relacional e somática.\n\nA hipnose ericksoniana com criação de 'lugar seguro' interno é particularmente indicada porque instala um recurso de regulação acessível em qualquer momento. Milton Erickson notou que o estado hipnótico permite criar memórias corporais novas — uma sensação de segurança vivida em transe pode tornar-se uma 'âncora' usada depois entre sessões. É um ponto de partida essencial antes de qualquer trabalho de exposição.\n\nA 'técnica do disjuntor', também chamada interrupção de padrão, consiste em quebrar a cadeia ansiosa numa fase precoce: assim que o cliente identifica os primeiros sinais corporais, executa um gesto de ancoragem (apertar o polegar, respirar 4-7-8, nomear cinco coisas que vê). Funciona por princípios pavlovianos de descondicionamento e é especialmente útil entre sessões.\n\nA respiração 4-7-8 (Andrew Weil) — inspirar quatro segundos, suster sete, expirar oito — ativa diretamente o nervo vago e desce a frequência cardíaca em dois a três minutos. Mais ainda do que reduzir a ansiedade no momento, repetida diariamente reorganiza a variabilidade da frequência cardíaca (VFC), marcador objetivo da flexibilidade autonómica.\n\nO trabalho com a 'criança vigilante' — aplicação do modelo Internal Family Systems (IFS) de Richard Schwartz — identifica a parte interna que assumiu cedo a função de vigiar e protege a personalidade. Em vez de a tentar silenciar, agradece-se a sua função, reconhece-se o seu cansaço e oferece-se um adulto interior que pode partilhar a tarefa. Esta abordagem desbloqueia padrões que a cognição não alcança.\n\nPara memórias precoces específicas, EMDR (Eye Movement Desensitization and Reprocessing) de Francine Shapiro é altamente eficaz na dessensibilização de eventos-pivot que mantêm a ansiedade ativa. Quando o trauma é difuso (tipo II, com início precoce e prolongado), abordagens fásicas como o trabalho de Pat Ogden (Sensorimotor Psychotherapy) ou Somatic Experiencing de Peter Levine permitem reorganizar o sistema sem retraumatização.",
+    avaliacao:[
+      {item:"quiz_ansiedade_depressao.html", link:"#", porque:"Distingue ansiedade generalizada de quadros mistos com depressão, fobias específicas ou perturbação de pânico, e mede a gravidade — fundamental para decidir entre intervenção breve (3-5 sessões focadas em psicoeducação, respiração e reestruturação cognitiva) e trabalho profundo de trauma. O nível de gravidade orienta também a decisão sobre encaminhamento médico-farmacológico."},
+      {item:"quiz_apego.html", link:"#", porque:"Mapeia o estilo de apego (ansioso, evitante, desorganizado, seguro). Na ansiedade generalizada o apego ansioso-preocupado é o mais comum, mas pode coexistir com elementos evitantes — saber o estilo orienta o trabalho relacional, em particular com a 'criança vigilante' interior e com as memórias precoces de inconsistência ou abandono."},
+      {item:"quiz_ace.html", link:"#", porque:"Mapeia eventos adversos da infância. Scores ACE elevados correlacionam-se com pior resposta a intervenções cognitivas isoladas — quando o score é igual ou superior a quatro, a abordagem deve incluir trabalho somático e processamento de trauma desde o início, não apenas técnicas comportamentais."}
+    ],
+    exercicio:[
+      {item:"EuSou_21dias_v2.html", link:"#", porque:"Vinte e um dias de afirmações de segurança e autoconfiança. Reprograma a expectativa catastrófica diária através da exposição repetida a frases que ativam o córtex pré-frontal ventromedial (a área cortical que regula o medo). Útil entre sessões para criar o corredor diário de regulação."},
+      {prompt:"criar exercício de 'lugar seguro interno guiado' (15 minutos com respiração, visualização sensorial multimodal e ancoragem corporal)", porque:"Não existe ainda no acervo um exercício específico que crie e ancore o lugar seguro interno em quinze minutos, com sequência estruturada de respiração, visualização sensorial nas cinco modalidades (visão, audição, tato, olfato, propriocepção) e ancoragem corporal final. É a base sobre a qual qualquer outro trabalho ansiolítico pode assentar."}
+    ]
+  },
+  endometriose:{
+    titulo:"Endometriose", categoria:"Ginecológicas / Hormonais",
+    evette:"Segundo Evette Rose em Metaphysical Anatomy Vol. 1, este padrão emocional descreve mulheres que carregam um conflito profundo com a feminilidade, com o papel de ser mulher, ou com a linhagem feminina de origem. Frequentemente há raiva contida — contra a mãe, contra ter sido mulher num sistema que penalizou essa identidade, ou contra um pai, irmão ou companheiro que abusou da fragilidade percebida do feminino. A endometriose, em que o tecido endometrial cresce fora do útero, é lida pela autora como metáfora corporal: energia feminina que não encontrou onde habitar legitimamente e que se espalha procurando ser vista.\n\nA pessoa pode ter aprendido cedo que ser mulher é perigoso, doloroso ou inferior. Mensagens recebidas durante a infância — explícitas ('mais valia teres sido rapaz', 'mulher só dá trabalho') ou implícitas (preferência clara dada aos irmãos masculinos, silenciamento da própria voz, sexualização precoce) — moldaram a relação com o próprio corpo. A menarca, momento simbólico de passagem, pode ter sido vivida com vergonha, segredo ou pavor em vez de celebração. O útero passa a ser um órgão temido, invasor, fonte de problemas.\n\nPor trás do quadro encontram-se com frequência abuso sexual em qualquer idade, violência obstétrica (intervenções dolorosas ou desumanas durante o parto), mães que rejeitaram a gravidez ou o género da filha, ou trauma transgeracional não-falado (avós que viveram guerra, fuga, abusos). A interpretação da autora é metafísica e simbólica, não um modelo científico comprovado, mas dialoga com a clínica psicanalítica do feminino (Hélène Deutsch, Joyce McDougall) e com a tradição constelativa de Bert Hellinger sobre a importância de honrar a linhagem feminina para libertar o corpo do que veio de trás.",
+    gaspa:"Segundo Luiz Gasparetto em Metafísica da Saúde, este padrão emocional descreve pessoas que recusam o útero — concreta ou simbolicamente — como espaço sagrado para acolher a vida, o prazer ou a si próprias. A mulher invade outros territórios (excesso de trabalho, salvação do outro, controlo da família) porque não se sente segura no seu próprio centro. Há um conflito profundo entre maternidade desejada e maternidade temida, entre desejo de criar e medo de perder a autonomia.\n\nA endometriose, nesta leitura, é o sangue menstrual que procura saída fora do território natural. Simbolicamente, é a parte feminina que se recusa a ser apenas contida — invade, dói, faz-se notar. O autor sugere que o quadro frequentemente surge em mulheres profissionalmente ativas que internalizaram que o seu valor depende da produção e que silenciaram, por décadas, o pedido corporal de mais descanso, mais prazer, mais ritmo cíclico em vez de linear.\n\nGasparetto aproxima-se aqui de leituras junguianas do feminino (Marion Woodman, Clarissa Pinkola Estés) em que o corpo da mulher é interpretado como guardião de uma sabedoria não-racional que a modernidade desvalorizou. Trata-se de uma visão metafísica e simbólica, não de um modelo médico científico, mas dialoga com a evidência de que práticas de regulação cíclica (yoga hormonal, terapias somáticas, trabalho com sonhos), quando integradas com o tratamento médico, melhoram significativamente a vivência da doença mesmo quando não revertem as lesões.",
+    psiconeuro:"Há hiperestrogenismo relativo — excesso de estrogénio em relação à progesterona — com modulação imune alterada. Predominam as células T-helper tipo 2 (Th2), um subgrupo de linfócitos do sistema imune responsável por respostas alérgicas e inflamatórias, mais do que por defesa contra microorganismos. Esta polarização Th2 favorece a sobrevivência e proliferação de tecido endometrial fora do útero (endométrio ectópico), em vez de o organismo o reconhecer e eliminar como faria normalmente.\n\nO stress crónico amplifica este desequilíbrio através do eixo Hipotálamo-Hipófise-Adrenal (HPA), o circuito hormonal de resposta ao stress. O cortisol elevado interfere com a regulação hormonal e mantém um estado inflamatório pélvico crónico, com elevação de marcadores como a Proteína C-Reativa (PCR) e citocinas pró-inflamatórias. A literatura de psiconeuroimunologia descreve a endometriose como uma das condições em que mais claramente se evidencia o cruzamento entre stress psicossocial, sistema imune e expressão hormonal — não no sentido de 'causar' a doença, mas no sentido de modular a sua gravidade e a resposta ao tratamento.",
+    neuro:"Os nervos hipogástricos e pélvicos — que transportam a informação dolorosa da zona pélvica para o cérebro — ficam sensibilizados, ou seja, disparam mais facilmente e com mais intensidade perante o mesmo estímulo. Este fenómeno chama-se sensibilização periférica e é descrito em detalhe em Neurociências de Mark F. Bear (4.ª ed., 2017). Com o tempo, a dor crónica reorganiza também o córtex somatossensorial (a região cerebral que mapeia o corpo) e a ínsula (estrutura que dá significado emocional ao estado interno), instalando-se uma sensibilização central.\n\nA consequência clínica é que a dor torna-se 'aprendida' — passa a aparecer mesmo quando o estímulo nociceptivo original já é mínimo ou inexistente, e estende-se a regiões que não estão lesadas. Por isso muitas mulheres com endometriose mantêm dor pélvica mesmo após cirurgia bem-sucedida. Este padrão dialoga com a Teoria Polivagal de Stephen Porges sobre como o sistema nervoso autónomo, depois de prolongado tempo em estado defensivo, perde a capacidade de regressar a estados de segurança — e a região pélvica, em particular, é uma das primeiras a 'congelar' quando o sistema dorsovagal domina.",
+    aces:"ACEs (Adverse Childhood Experiences) referem-se a experiências adversas vividas na infância, incluindo abuso físico, sexual ou emocional, negligência, violência doméstica e instabilidade emocional crónica. Para a endometriose, alguns ACEs específicos têm peso particular: abuso sexual em qualquer idade (com correlação documentada em vários estudos epidemiológicos), violência obstétrica em partos anteriores, mães que rejeitaram a gravidez da filha ou o seu género, e mensagens precoces de que 'ser mulher é sofrer'.\n\nPara além dos ACEs clássicos, este quadro pede atenção a três áreas específicas: a relação com a mãe (a primeira mulher), a vivência da menarca (entrada no corpo cíclico), e a história sexual (consentimento, prazer, primeiras experiências). Frequentemente uma destas três zonas guarda o nó simbólico que organiza inconscientemente o quadro. O conflito com a linhagem feminina não-elaborado — avós silenciadas, abortos não-falados, mortes maternas não-lutadas — também aparece em constelações familiares relacionadas com endometriose com frequência clinicamente significativa.\n\nOs modelos contemporâneos de trauma de Bessel van der Kolk e o trabalho específico sobre trauma sexual (Janina Fisher, Pat Ogden) descrevem a região pélvica como um dos principais 'depósitos' corporais de experiências adversas que não puderam ser processadas no momento. A endometriose, neste enquadramento, não é uma 'doença psicossomática' no sentido reducionista — é uma doença com componente biológica clara que ganha sentido adicional quando lida também no plano somático e simbólico, oferecendo ao tratamento médico o aliado de uma intervenção que reconhece a história inteira do corpo.",
+    metafora:"A metáfora 'um útero que se espalha porque não foi acolhido' descreve um corpo feminino que perdeu o sentido do próprio centro e cuja energia interna não encontra contenção legítima. O sangue, em vez de cumprir o ciclo natural dentro do território uterino, procura ser visto noutros lugares — invade, instala-se, dói.\n\nA ideia de 'sangue que procura ser visto fora do território que devia ser seu' é simbolicamente potente: descreve o que muitas mulheres com endometriose relatam — uma sensação difusa de que algo dentro delas não foi reconhecido nem pelo próprio corpo, nem pelas relações, nem pela cultura em que cresceram. Clinicamente, isto relaciona-se com dificuldade em habitar o próprio espaço pélvico, baixa propriocepção visceral, dor crónica e perda de prazer associada à região. A imagem orienta o trabalho terapêutico para o reacolhimento simbólico do útero como espaço sagrado — através de visualizações, ritos de honra à linhagem feminina e práticas corporais centradas na pélvis.",
+    perguntas:"As perguntas seguintes exploram, cada uma, um eixo diferente do quadro e devem ser introduzidas com timing e sensibilidade — algumas tocam zonas que pedem várias sessões para chegar perto.\n\n'Que mensagem recebeste sobre o que significa ser mulher?' — convida o cliente a tornar consciente o conjunto de crenças sobre o feminino que organiza, em silêncio, a relação com o corpo. As respostas frequentemente apontam para mães críticas, ambientes que valorizavam apenas filhos do sexo masculino, ou mensagens religiosas sobre o corpo feminino como objeto de pecado.\n\n'Quando soubeste pela primeira vez que o teu corpo de mulher era perigoso ou indesejado?' — torna explícito o momento em que se instalou a clivagem entre identidade e corporeidade. Pode ser uma frase ouvida na infância, um episódio de assédio precoce, ou a menarca vivida sob vergonha. Datar este momento permite uma reparação simbólica.\n\n'Que parte da tua feminilidade nunca foi acolhida?' — convida a nomear o que continua à espera de reconhecimento. Frequentemente é a sensualidade, a raiva legítima, a ambição não-permitida, ou a maternidade desejada-temida. A resposta orienta o trabalho com partes (IFS) e a constelação familiar.\n\n'Como foi a tua menarca e o que recebeste como ritual de passagem?' — explora a vivência simbólica da entrada no corpo cíclico. Em culturas que não ritualizam este momento, fica frequentemente associado a vergonha, segredo e dor. Permite trabalho com regressão à puberdade e reparação ritual.\n\n'Em que parte do corpo sentes a tua relação com o feminino?' — abre a porta ao trabalho somático. A localização (útero, pélvis, peito, ventre) é o ponto de entrada para Somatic Experiencing, hipnose corporal centrada na pélvis ou práticas de yoga hormonal.",
+    sugestoes:"Várias abordagens combinadas funcionam melhor do que técnica isolada, dada a complexidade do quadro — biológica, hormonal, traumática, simbólica e relacional. Importante: nenhum trabalho somático substitui o acompanhamento médico-ginecológico; o trabalho terapêutico é complementar, nunca alternativo.\n\nA hipnose de regressão à puberdade com reformulação (reframing) da menarca é particularmente indicada porque reescreve, ao nível inconsciente, o momento simbólico de entrada no corpo cíclico. Muitas mulheres com endometriose viveram a primeira menstruação com vergonha ou pavor — em transe, é possível 'voltar' a esse momento e oferecer à adolescente um ritual de boas-vindas que nunca aconteceu.\n\nO trabalho com a linhagem feminina segundo a tradição constelativa de Bert Hellinger é especialmente potente neste quadro. Identificar avós, bisavós e mulheres da família que carregaram experiências adversas não-elaboradas (abortos não-falados, mortes maternas, gestações forçadas, sexualidade reprimida) e oferecer um ato simbólico de reconhecimento desbloqueia frequentemente uma camada emocional inacessível pelo discurso.\n\nA visualização de 'útero como templo' é uma prática diária de 10 a 15 minutos em que se imagina o útero como espaço sagrado, dourado, habitável, e se 'visita' simbolicamente. Combina elementos de imagery (Carl Jung, Roberto Assagioli) com práticas tântricas de relação com o sagrado feminino. É um dos exercícios que mais transforma a relação com o corpo em médio prazo.\n\nO diálogo com o útero como entidade — técnica gestáltica adaptada de Fritz Perls — consiste em colocar o útero numa 'cadeira vazia' e dialogar com ele em voz alta: 'útero, se pudesses falar, o que dirias?'. As respostas frequentemente surpreendem o próprio cliente e abrem caminhos terapêuticos não-antecipáveis pela cognição.\n\nQuando há trauma sexual evidente, EMDR (Eye Movement Desensitization and Reprocessing) de Francine Shapiro ou Somatic Experiencing de Peter Levine permitem processar memórias específicas sem retraumatização. Para trauma difuso de tipo II, abordagens fásicas (Janina Fisher) são preferíveis a intervenções diretas.",
+    avaliacao:[
+      {prompt:"criar avaliação de 'relação com a feminilidade' (4 eixos: corpo, ciclo menstrual, sexualidade, maternidade)", porque:"Não existe ainda no acervo uma avaliação específica para mapear ferimentos em torno da feminilidade — essencial para endometriose, miomas, SOP, candidíase recidivante e infertilidade. A escala precisa cruzar mensagens recebidas da mãe sobre o ser mulher, vivência da menarca, qualidade do prazer e dor sexual atuais, e relação consciente com o desejo ou medo de maternar."},
+      {item:"quiz_feridas_infancia.html", link:"#", porque:"Mapeia as feridas primárias (abandono, rejeição, humilhação, traição, injustiça) que organizam o psiquismo segundo Lise Bourbeau e a tradição psicogenealógica. Em endometriose, a ferida de injustiça (associada ao 'sistema patriarcal' interno) e a ferida de rejeição (associada ao género não-acolhido) aparecem com frequência alta — saber qual está mais ativa orienta o foco da intervenção."},
+      {item:"quiz_ace.html", link:"#", porque:"Mapeia eventos adversos da infância. Em endometriose, scores ACE elevados — especialmente quando incluem abuso sexual ou violência doméstica — correlacionam-se com maior gravidade dos sintomas e pior resposta ao tratamento médico isolado. Indica que o trabalho psicoterapêutico precisa ser fásico e somático, não apenas cognitivo."}
+    ],
+    exercicio:[
+      {prompt:"criar exercício de honra à linhagem feminina (carta às mulheres da família + visualização da árvore feminina + ritual de re-acolhimento do útero)", porque:"O conflito com a linhagem materna é frequentemente inconsciente nesta condição. Um exercício ritualístico em três passos — escrita dirigida, visualização guiada, ato simbólico — ativa o processamento simbólico que o discurso lógico não alcança. Recomenda-se faseado ao longo de 21 dias para integração."},
+      {item:"PROMPT_Arvore_Genealogica_Psiquica_v1.md", link:"#", porque:"Permite mapear visualmente a árvore familiar identificando as mulheres da linhagem materna e paterna. Em endometriose é especialmente útil para identificar mortes maternas, abortos não-falados, ou padrões repetidos de doença ginecológica ao longo de gerações — informação que orienta o trabalho constelativo posterior."}
+    ]
+  },
+  hipertensao:{
+    titulo:"Hipertensão arterial", categoria:"Cardiovasculares",
+    evette:"Segundo Evette Rose em Metaphysical Anatomy Vol. 1, este padrão emocional descreve pessoas que vivem sob pressão crónica para aguentar tudo, manter tudo em pé, não falhar. Conflitos emocionais antigos ficaram por resolver e foram empurrados para baixo durante anos — 'enterra-se, segue-se em frente, faz-se o que tem de ser feito'. Há frequentemente a sensação interna de estar sem saída numa situação concreta (matrimónio insustentável, cargo profissional asfixiante, papel de cuidador de um familiar doente) mas sem permissão interna para a abandonar.\n\nO cliente assume frequentemente o papel de figura forte da família — quem aguenta os outros, quem resolve as crises alheias, quem não pode chorar à frente de ninguém. Há uma desconfiança profunda de mostrar vulnerabilidade porque, em algum ponto da história, mostrá-la trouxe dor, ridicularização ou abandono. Quando se baixa a guarda, sente-se vergonha do colapso possível; quando se mantém a guarda, sente-se cansaço. O corpo, sob esta pressão contínua, vai elevando a tensão arterial como espelho fisiológico da tensão psíquica.\n\nPor trás do quadro encontra-se frequentemente parentificação precoce (a criança que assumiu cedo o papel de adulto na família por ausência ou disfunção dos pais), trauma migratório (refugiar-se, recomeçar do zero, manter a face perante a perda), ou ambientes onde 'os homens não choram' / 'as mulheres aguentam'. A interpretação da autora é metafísica e simbólica, não um modelo científico comprovado, mas dialoga com a clínica de personalidade tipo A (Meyer Friedman e Ray Rosenman) e com a noção mais contemporânea de hipercontrolo afetivo descrita por Thomas Lynch em Radically Open Dialectical Behavior Therapy.",
+    gaspa:"Segundo Luiz Gasparetto em Metafísica da Saúde, este padrão emocional descreve pessoas que carregam emoções sob pressão durante décadas — sangue sob pressão corresponde, simbolicamente, a emoções sob pressão. A recusa em baixar a guarda vem da memória, frequentemente inconsciente, de que baixá-la pareceu sempre perigoso. Talvez na infância houvesse castigo para a expressão emocional, ou um pai imprevisível, ou um sistema religioso que demonizava a raiva e a tristeza.\n\nO autor descreve estes quadros como expressão de excesso de responsabilidade carregada sem queixa. O cliente não pede ajuda, não delega, não larga — porque internalizou que isso seria desistir, falhar, expor-se. Cada batimento cardíaco em hipertensão é, simbolicamente, o esforço de empurrar para a frente o que não pôde ser elaborado. Os vasos endurecem porque foi a única forma de não rebentar.\n\nGasparetto aproxima-se aqui de leituras psicossomáticas modernas, particularmente da Escola de Paris (Pierre Marty) com a noção de paciente operatório que perdeu acesso à fantasia e elabora a tensão emocional apenas pela via somática. Trata-se de uma visão metafísica e simbólica, não de um modelo médico científico — mas dialoga com o que a medicina comportamental contemporânea (Daniel Goleman, Bessel van der Kolk) descreve como custo cardiovascular do controlo emocional crónico.",
+    psiconeuro:"Há hiperatividade crónica do sistema nervoso simpático — o ramo do sistema nervoso autónomo que prepara o corpo para 'lutar ou fugir'. Esta ativação prolongada eleva o cortisol e provoca disfunção endotelial, ou seja, perda da capacidade dos vasos sanguíneos de relaxar e contrair com flexibilidade. Estudos com biomarcadores (Bruce McEwen, Andrew Steptoe) mostram que pessoas com hipertensão essencial apresentam níveis basais de cortisol mais elevados, com pior recuperação após eventos stressantes — característica da chamada carga alostática elevada, conceito de Bruce McEwen para o desgaste cumulativo do organismo.\n\nReduz-se também a variabilidade da frequência cardíaca (VFC), que é a capacidade do coração de variar o intervalo entre batimentos consoante a situação. Uma VFC baixa é um marcador objetivo de baixa flexibilidade autonómica, ou seja, um sistema nervoso preso em modo de alerta sem capacidade de relaxar. A psiconeuroimunologia descreve adicionalmente um estado de inflamação de baixo grau crónica, com elevação de marcadores como a Proteína C-Reativa (PCR) e a Interleucina-6 (IL-6), que contribuem para a aterosclerose silenciosa que acompanha frequentemente o quadro.",
+    neuro:"O córtex insular direito — área cerebral que monitoriza o estado visceral do corpo, incluindo a perceção do batimento cardíaco e da tensão muscular — encontra-se hiperativo nestes quadros, sinalizando constantemente 'algo está em alerta' mesmo na ausência de ameaça. O bulbo rostral ventrolateral, centro cardiovascular no tronco cerebral que controla a pressão arterial, mantém também um tónus elevado em resposta a sinais corticais persistentes.\n\nFalha o reflexo barorreceptor: normalmente, recetores nas paredes da aorta e das carótidas detetam quando a pressão sobe e enviam ao cérebro um sinal para baixar, mas com a dessensibilização crónica este mecanismo de regulação automática deixa de funcionar adequadamente. O cérebro 'aceita' como normal um nível de pressão que objetivamente já é patológico. Mark F. Bear (Neurociências, 2017) descreve este fenómeno como reorganização funcional do circuito autonómico — com a boa notícia de que tem plasticidade e responde a intervenções como biofeedback de variabilidade da frequência cardíaca, respiração coerente, mindfulness e psicoterapia focada em regulação emocional.",
+    aces:"ACEs (Adverse Childhood Experiences) referem-se a experiências adversas vividas na infância, incluindo abuso físico ou emocional, negligência, violência doméstica, separação parental, doença mental num cuidador, ou instabilidade emocional crónica. Para a hipertensão essencial, alguns ACEs têm peso particular: crescer com pais explosivos ou ausentes, parentificação precoce (assumir cedo o papel de cuidador), ambiente de hipervigilância contínua, ou trauma de migração e perda forçada onde foi necessário 'manter a face' perante perda significativa.\n\nA literatura epidemiológica (Felitti e Anda, estudos de seguimento posteriores) documenta correlação dose-resposta entre scores ACE e hipertensão na idade adulta. Adultos com ACE igual ou superior a quatro apresentam risco aumentado em duas a três vezes de desenvolver hipertensão essencial, independentemente de fatores como dieta e exercício. O mecanismo envolve programação precoce do eixo Hipotálamo-Hipófise-Adrenal (HPA) e do sistema nervoso autónomo — o corpo aprende cedo que tem de manter alerta para sobreviver, e essa programação fica.\n\nStephen Porges (Teoria Polivagal) e Bessel van der Kolk descrevem este padrão como falha do nervo vago ventral, o ramo parassimpático que medeia a sensação de segurança social. Sem este sistema a funcionar, o organismo permanece em mobilização simpática crónica. A hipertensão é, neste enquadramento, uma marca biológica de uma história de hipervigilância — pode beneficiar muito de abordagens que reativem o vago ventral (respiração lenta, contacto social seguro, prosódia vocal acolhedora em sessão).",
+    metafora:"A metáfora 'um vaso que carrega água a ferver há anos' descreve um sistema cardiovascular que se adaptou a transportar tensão emocional crónica como se fosse a sua função natural. As paredes endureceram não por acaso mas como adaptação — era a única forma de aguentar a pressão sem rebentar.\n\nA ideia de que 'as paredes endureceram porque não havia outra forma de não rebentar' significa que a rigidez vascular, vista do plano simbólico, não é um defeito mas uma solução. O corpo encontrou a forma possível de continuar a funcionar perante uma carga emocional sustida que nunca foi reconhecida nem aliviada. Clinicamente, isto traduz-se em hipertensão essencial sem causa orgânica identificável, frequentemente em pessoas que se descrevem como 'fortes', 'controladas', 'que aguentam tudo'. A imagem orienta o trabalho terapêutico para descarga gradual e segura desse 'fervor' acumulado — não com confronto direto (que pode descompensar) mas com abertura paciente do espaço para sentir o que ficou por sentir.",
+    perguntas:"As perguntas seguintes exploram, cada uma, um eixo diferente do quadro e devem ser introduzidas com cuidado — clientes com este padrão tendem a defletir através de respostas rápidas e racionais; é preciso dar tempo para emergir o que está por baixo.\n\n'Quem aguenta pressão por ti?' — convida o cliente a confrontar a estrutura relacional do sintoma. Frequentemente a resposta é 'ninguém', e nesse 'ninguém' está o nó: a pessoa carrega sozinha o que devia ter sido partilhado, e nunca aprendeu a delegar nem a receber.\n\n'O que aconteceria se um dia disseses não posso mais?' — abre o espaço para a fantasia catastrófica que justifica o controlo crónico. As respostas frequentemente mostram crenças nucleares como 'tudo desmoronava', 'todos abandonavam-me', 'perdia o meu valor'. Permite trabalhar estas crenças sem confronto direto.\n\n'Quando foi a última vez que choraste com calma, sem te apressar a parar?' — explora o acesso à descarga emocional. Pessoas com hipertensão essencial frequentemente respondem 'não me lembro' ou 'há muitos anos'. A pergunta normaliza o choro como saudável e abre a porta a sessões mais corporais.\n\n'Onde no corpo sentes que está prestes a rebentar?' — abre o trabalho somático e localiza a tensão. Muitas vezes a resposta surpreende — peito, garganta, têmporas, ombros — e orienta a técnica corporal a usar (respiração, EFT, libertação miofascial).\n\n'Quem foi a primeira pessoa que te ensinou que não podias falhar?' — toca na origem geracional do padrão. Identificar a figura (pai exigente, mãe perfeccionista, professor humilhante, contexto religioso castigador) permite trabalho psicogenealógico e reparação interna.",
+    sugestoes:"Várias abordagens combinadas funcionam melhor do que técnica isolada, dada a complexidade do quadro — autonómica, emocional, relacional e cardiovascular. Importante: nenhuma intervenção psicoterapêutica substitui o tratamento médico anti-hipertensor; o trabalho é complementar.\n\nA hipnose de descarga, com a sugestão central de 'soltar o peso', é particularmente indicada porque permite trabalhar o que a parte racional não permite — em transe, o cliente acede ao que carrega sem que a defesa lógica ('eu não tenho stress nenhum') interfira. Milton Erickson usava frequentemente metáforas de soltar fardos para clientes hipercontrolados.\n\nA respiração coerente a seis ciclos por minuto (inspirar cinco segundos, expirar cinco segundos) ativa diretamente o nervo vago e reduz a frequência cardíaca em poucos minutos. Praticada dez minutos por dia, demonstrou-se em ensaios clínicos reduzir a tensão arterial sistólica em cinco a dez mmHg em pessoas com hipertensão limítrofe ou ligeira. É a técnica com mais evidência objetiva neste quadro.\n\nA visualização de 'tubos a alargar' — guiada lenta de imagery (Carl Jung, Roberto Assagioli) — convida o cliente a sentir, em transe leve, os vasos sanguíneos a expandir-se internamente. Combina simbolismo (a libertação interior) com efeito vasoativo real (vários estudos mostram que visualização vascular tem efeito mensurável na pressão arterial).\n\nO trabalho com a parte 'gerente' segundo o modelo Internal Family Systems (IFS) de Richard Schwartz é especialmente indicado: identifica a parte interna que assumiu cedo a função de manter tudo em pé, agradece-lhe o serviço prestado, e negoceia com ela permissão para descansar. Esta abordagem desbloqueia o que a vontade racional não consegue.\n\nO biofeedback de variabilidade da frequência cardíaca (VFC), com aplicações como HeartMath, é uma das ferramentas mais úteis nestes quadros — torna visível ao cliente em tempo real o efeito da sua respiração e atenção sobre o coração. A objetividade do gráfico contorna a tendência destes clientes a desvalorizar resultados subjetivos.",
+    avaliacao:[
+      {item:"quiz_disc.html", link:"#", porque:"Mede traços de personalidade ao longo de quatro eixos (Dominância, Influência, Estabilidade, Conformidade). Os tipos D (dominância) e C (conformidade rígida) correlacionam-se com hipertensão essencial — o D pela mobilização crónica para conquistar e controlar, o C pela rigidez interna em manter padrões impossíveis. Saber o perfil orienta o trabalho terapêutico: para D, libertar a necessidade de controlo externo; para C, libertar a auto-exigência interna."},
+      {prompt:"criar avaliação de 'stress crónico e carga alostática' (com proxies clínicos de sono, sobrecarga relacional e descarga emocional dos últimos 12 meses)", porque:"Não existe ainda no acervo uma avaliação subjetiva que estime a carga alostática segundo Bruce McEwen. Seria útil ter um questionário rápido de 15 a 20 itens que medisse o impacto cumulativo do stress no último ano, abrangendo qualidade do sono, sobrecarga laboral e familiar, e frequência de descarga emocional saudável. Permitiria objetivar o que os clientes hipercontrolados costumam minimizar."},
+      {item:"quiz_alexitimia.html", link:"#", porque:"Avalia a alexitimia — dificuldade em identificar e descrever emoções — descrita por Peter Sifneos. Em hipertensão essencial, scores altos de alexitimia preveem pior resposta a intervenções cognitivas isoladas e maior necessidade de trabalho somático prévio. Quem não consegue nomear o que sente não consegue regular o que não consegue nomear."}
+    ],
+    exercicio:[
+      {prompt:"criar exercício de 'descarga somática controlada' (respiração coerente 6 ciclos por minuto + visualização de vasos a alargar + verbalização de quem ou o quê pesa)", porque:"A respiração a seis ciclos por minuto ativa o nervo vago e melhora a variabilidade da frequência cardíaca; combinada com narrativa simbólica de descarga ('quem ou o quê estás a carregar agora?') e visualização vascular ('imagina os teus vasos a relaxar, a água a correr livre'), ataca os três planos simultaneamente: autonómico, psicológico e simbólico. Sessão de 20 minutos, duas vezes por semana."},
+      {item:"EuSou_21dias_v2.html", link:"#", porque:"Vinte e um dias de afirmações que trabalham permissão para descansar, para errar, para receber ajuda. Útil em paralelo com o trabalho clínico para reprogramar a expectativa interna de que 'não posso falhar'."}
+    ]
+  },
+  gastrite:{
+    titulo:"Gastrite", categoria:"Digestivas",
+    evette:"Segundo Evette Rose em Metaphysical Anatomy Vol. 1, este padrão emocional descreve pessoas que carregam algo — ou alguém — que não conseguem digerir simbolicamente. Pode ser uma traição que ficou por elaborar, uma humilhação que ainda queima, uma decisão dos outros que não pôde ser contestada. A raiva fica contida na zona do estômago, queimando por dentro porque não encontrou saída pela boca. Frequentemente o quadro instala-se ou agrava-se nos meses seguintes a uma perda, um divórcio, um conflito com figura de autoridade (chefia, progenitor, instituição), ou uma decisão fortemente imposta de fora.\n\nO cliente típico deste padrão é alguém que aprendeu cedo a engolir — engolir palavras, engolir injustiças, engolir lágrimas. Em mesas familiares onde discutir era proibido, em ambientes de bullying onde responder era pior do que aguentar, em sistemas religiosos onde a raiva era pecado, em contextos profissionais hierárquicos onde a resposta certa era 'sim, senhor'. A boca aprendeu a calar-se e o estômago herdou a tarefa — produzir o ácido que dissolva, simbolicamente, aquilo que a voz não pôde cuspir.\n\nPor trás do quadro encontram-se frequentemente histórias de submissão crónica, papéis familiares de filho ou filha que nunca contraria, relações de poder desiguais (laborais, conjugais, religiosas), ou eventos recentes em que o cliente sentiu não ter tido voz. A interpretação da autora é metafísica e simbólica, não um modelo científico comprovado, mas dialoga com a clínica de Franz Alexander (escola psicossomática de Chicago), que descreveu o estômago como órgão-alvo do conflito entre dependência infantil e independência adulta — comer e digerir como metáfora da relação ambivalente com o cuidado.",
+    gaspa:"Segundo Luiz Gasparetto em Metafísica da Saúde, este padrão emocional descreve pessoas cujo estômago recebe o que a boca não pode dizer. Há um excesso de palavras presas — frases que ficaram por ser ditas a quem precisava de as ouvir, respostas que ficaram por dar, limites que ficaram por afirmar. O ácido gástrico faz, no plano somático, o trabalho que a voz não conseguiu fazer no plano relacional.\n\nO autor associa este padrão a pessoas que internalizaram 'engolir' como virtude — engolir contrariedades, engolir desapontamentos, engolir lágrimas perante quem não as quer ver. Em vez de honrar a raiva como sinal legítimo de que algo precisa ser dito ou mudado, esta pessoa transforma-a em silêncio e o silêncio em queimadura interior. A gastrite é, simbolicamente, o pedido do corpo para que a voz volte a funcionar como deveria.\n\nGasparetto aproxima-se aqui da clínica psicanalítica clássica sobre formação de sintoma — a tensão emocional que não pôde ser elaborada psiquicamente regressa pelo corpo (Sigmund Freud, Felix Deutsch, Franz Alexander). Trata-se de uma visão metafísica e simbólica, não de um modelo médico científico, mas dialoga bem com a abordagem contemporânea da medicina psicossomática (Zbigniew Lipowski, George Engel) que reconhece o eixo intestino-cérebro como bidirecional: a emoção afeta o estômago e o estômago amplifica a emoção, num ciclo que precisa de ser cortado em algum ponto, idealmente em ambos.",
+    psiconeuro:"Sob stress crónico, o nervo vago — o longo nervo craniano que liga o tronco cerebral ao estômago e que coordena a digestão — aumenta a secreção de ácido clorídrico (HCl, o ácido natural do estômago responsável pela digestão das proteínas) e, simultaneamente, reduz a produção do muco gástrico que protege a parede do estômago contra esse mesmo ácido. O resultado é uma erosão progressiva da mucosa gástrica.\n\nA microbiota intestinal (o conjunto de bactérias residentes no tubo digestivo) fica alterada nestes quadros, facilitando a colonização por Helicobacter pylori (H. pylori), uma bactéria descoberta nos anos 1980 por Barry Marshall e Robin Warren — descoberta que lhes valeu o Prémio Nobel da Medicina em 2005. O H. pylori aloja-se na mucosa do estômago e perpetua a inflamação local através de mecanismos imunes próprios. Importante: nem todos os portadores de H. pylori desenvolvem gastrite, e a literatura mostra que o stress crónico altera a resposta imune local de forma a permitir que a bactéria cause dano em vez de ser controlada — um exemplo clássico de como psicologia e biologia interagem na expressão final da doença.",
+    neuro:"Pelo chamado eixo intestino-cérebro, o núcleo dorsal do vago — um centro no tronco cerebral que governa as vísceras — torna-se hiperativo em resposta ao stress percebido. Esta hiperatividade vagal aumenta a secreção gástrica e a motilidade visceral, contribuindo para os sintomas de queimor, refluxo e dor epigástrica característicos.\n\nExiste ainda o chamado 'cérebro entérico' ou plexo mioentérico: uma rede de neurónios espalhada por toda a parede do tubo digestivo, com mais células nervosas que a medula espinal, descrita em detalhe por Michael Gershon em The Second Brain (1998). Esta rede responde diretamente aos estados emocionais — não por metáfora, mas por conexão neural direta. As emoções traduzem-se em alterações de motilidade (movimento intestinal), secreção e dor visceral. Mark F. Bear (Neurociências, 2017) descreve o sistema nervoso entérico como semi-autónomo e bidirecionalmente conectado ao sistema nervoso central — o que explica por que motivo a 'ansiedade no estômago' não é apenas uma figura de estilo mas uma realidade neurobiológica.",
+    aces:"ACEs (Adverse Childhood Experiences) referem-se a experiências adversas vividas na infância, incluindo abuso físico ou emocional, negligência, violência doméstica, separação parental, doença mental num cuidador ou instabilidade emocional crónica. Para a gastrite, alguns elementos têm peso particular: refeições familiares tensas (em que comer era acompanhado de discussão, crítica ou medo), bullying escolar com humilhações à mesa, comer escondido por vergonha, ou ter uma mãe ansiosa que alimentava com angústia em vez de presença.\n\nOs eventos recentes precipitantes da gastrite frequentemente envolvem perdas significativas (luto, separação, despedimento), humilhações vividas como impossíveis de responder, ou conflitos com figuras de autoridade em que o cliente sentiu não poder contestar. O período de três a seis meses anterior ao início dos sintomas é geralmente revelador. Pat Ogden (Sensorimotor Psychotherapy) descreve o estômago como um dos órgãos que mais reage a humilhações relacionais não-elaboradas — talvez porque culturalmente se associa o comer à intimidade familiar, e qualquer violação dessa intimidade reverbera no órgão.\n\nBessel van der Kolk (The Body Keeps the Score) descreve como o trauma de tipo 'silenciamento crónico' — não os grandes traumas únicos mas a inumerável repetição de pequenas situações em que a voz foi calada — se instala preferencialmente em zonas do corpo associadas à expressão: garganta, mandíbula, estômago. A gastrite, neste enquadramento, é menos uma 'doença psicossomática' no sentido reducionista e mais uma assinatura corporal de uma história relacional em que dizer não foi seguro.",
+    metafora:"A metáfora 'um caldeirão de palavras não-ditas a borbulhar' descreve um estômago que cumpre função emocional para além da digestiva — recebe e processa quimicamente o que devia ter sido processado pela voz, pela conversa, pelo conflito assumido. O ácido é o substituto interior do que deveria ter sido cuspido.\n\nA imagem complementar 'o estômago a digerir aquilo que a boca recusou cuspir' resume com precisão a economia simbólica do quadro: há um trabalho que precisa de ser feito (expulsar, devolver, afirmar) e quando o órgão certo (a boca) não o faz, o trabalho passa para o órgão errado (o estômago). Clinicamente, isto relaciona-se com a história relacional do cliente — quem foram as figuras a quem 'não se podia responder', quais foram os contextos em que 'engolir era mais seguro do que falar'. A intervenção terapêutica nestes quadros raramente é apenas digestiva — é, em paralelo, um trabalho sobre a voz, sobre a afirmação, sobre o direito de discordar.",
+    perguntas:"As perguntas seguintes exploram, cada uma, um eixo diferente do quadro e devem ser introduzidas após boa aliança terapêutica — tocam zonas onde o cliente frequentemente sente vergonha por 'não ter falado quando devia'.\n\n'O que aconteceu nos últimos seis meses que ainda não digeriste?' — convida o cliente a procurar o evento-pivot recente. Quase sempre há algo identificável — uma perda, uma humilhação, uma decisão imposta — que coincide temporalmente com o início ou agravamento dos sintomas. Datar este evento ancora a hipótese clínica.\n\n'Que palavras ficaram presas que nunca chegaste a dizer?' — torna explícito o conteúdo emocional retido. Frequentemente são frases simples mas impossíveis de pronunciar no momento ('isto não é justo', 'não concordo', 'magoaste-me'). Identificá-las abre o trabalho de escrita expressiva ou diálogo simbólico.\n\n'Quem foi a primeira pessoa que te ensinou que engolir era mais seguro do que falar?' — toca na origem do padrão. Pode ser um pai autoritário, uma mãe frágil que não suportava conflito, um professor humilhante, um sistema religioso castigador, ou um par profissional hierárquico. Identificar a figura permite trabalho psicogenealógico e reparação simbólica.\n\n'A quem te apetece dizer agora aquilo que não disseste na altura?' — abre o espaço para a escrita expressiva, para a carta sem filtro, para o diálogo gestáltico. A pergunta dirige a energia da raiva contida para um destinatário concreto, dando-lhe finalmente um endereço.\n\n'Que sabor tem, neste momento, o que está no teu estômago?' — convida ao trabalho somático e simbólico simultâneo. As respostas — ácido, amargo, queimor, vazio — orientam a metáfora terapêutica a usar e abrem a porta a hipnose focada e a diálogo visceral.",
+    sugestoes:"Várias abordagens combinadas funcionam melhor do que técnica isolada, dada a natureza multissistémica do quadro — digestiva, emocional, relacional e expressiva. Importante: nenhuma intervenção psicoterapêutica substitui o tratamento médico-gastroenterológico, especialmente em casos com H. pylori positivo; o trabalho psicológico é complementar.\n\nA hipnose de digestão simbólica é particularmente indicada porque permite, em transe, visualizar a 'limpeza' do estômago e a expulsão simbólica do que está retido. Pode incluir imagens de cuspir fora, devolver ou despedir — o que estava preso encontra finalmente saída pelo plano imaginário, frequentemente com alívio sintomático mensurável.\n\nO diálogo com o estômago como personagem, técnica gestáltica de Fritz Perls, consiste em colocar o estômago numa 'cadeira vazia' e perguntar-lhe em voz alta: 'estômago, se pudesses falar, o que dirias?'. As respostas frequentemente surpreendem o próprio cliente — 'estou cansado de digerir o que não é meu', 'queimei-me por causa daquela conversa' — e abrem caminhos terapêuticos não-antecipáveis.\n\nA escrita expressiva, segundo o protocolo de James Pennebaker, é especialmente indicada nestes quadros. Pennebaker demonstrou em vários estudos que escrever vinte minutos por dia durante quatro dias consecutivos sobre eventos emocionalmente significativos não-elaborados produz melhorias clínicas mensuráveis em condições somáticas, incluindo gastrointestinais. A 'carta sem filtro' — escrita para a pessoa a quem se gostaria de ter respondido, sem censura, sem intenção de a enviar — é a aplicação prática desta abordagem.\n\nO trabalho com fronteiras alimentares e relacionais é frequentemente necessário em paralelo: identificar com o cliente onde está a comer (literalmente e figurativamente) o que não deseja, e treinar pequenas recusas afirmativas no quotidiano. Cada 'não' praticável reduz a carga que o estômago carrega.\n\nQuando há trauma específico identificável (humilhação severa, abuso, traição), EMDR (Eye Movement Desensitization and Reprocessing) de Francine Shapiro permite processar a memória sem retraumatização. Em casos onde o silenciamento foi difuso e crónico, abordagens fásicas (Janina Fisher) são preferíveis.",
+    avaliacao:[
+      {item:"quiz_padroes.html", link:"#", porque:"Identifica padrões de submissão, engolir injustiças e dificuldade de afirmação — o trio emocional que Gasparetto e a psicossomática moderna associam à gastrite crónica. Mapeia também os gatilhos relacionais atuais. O resultado orienta o trabalho para fronteiras, afirmação e voz."},
+      {item:"quiz_alexitimia.html", link:"#", porque:"Avalia a alexitimia — dificuldade em identificar e descrever emoções — descrita por Peter Sifneos. Em gastrite, scores altos de alexitimia indicam que o cliente precisa primeiro de trabalho de nomeação emocional antes que técnicas expressivas (carta, diálogo gestáltico) possam ser eficazes."},
+      {item:"quiz_feridas_infancia.html", link:"#", porque:"Mapeia as feridas primárias (abandono, rejeição, humilhação, traição, injustiça) segundo Lise Bourbeau. Em gastrite, a ferida de humilhação e a ferida de injustiça aparecem com maior frequência — saber qual está mais ativa orienta o foco da intervenção."}
+    ],
+    exercicio:[
+      {item:"PROMPT_Cartas_Sem_Filtro_v1.md", link:"#", porque:"Escrita expressiva, sem censura, dirigida à pessoa a quem se precisa de dizer mas não se disse. A metáfora do estômago a 'digerir' palavras não-ditas torna este exercício especialmente potente — atua na fonte simbólica do sintoma. Recomendado em paralelo com tratamento médico, não em substituição."},
+      {prompt:"criar exercício de diálogo visceral com o estômago (15 minutos guiados de visualização + nomeação + libertação simbólica)", porque:"Não existe ainda no acervo um exercício guiado específico de diálogo visceral com o estômago como entidade. Seria útil ter uma sequência estruturada — colocar-se em transe leve, visualizar o estômago, perguntar-lhe o que carrega, escrever ou verbalizar a resposta, e fazer um ato simbólico de libertação. Sessão de 15 a 20 minutos, idealmente entre sessões clínicas."},
+      {item:"EuSou_21dias_v2.html", link:"#", porque:"Vinte e um dias de afirmações de soberania pessoal e direito à voz. Útil em paralelo com o trabalho clínico para fortalecer gradualmente o direito interno a discordar, a afirmar, a recusar — funções que estavam delegadas ao estômago e que precisam de regressar à boca."}
+    ]
+  },
+  enxaqueca:{
+    titulo:"Enxaqueca", categoria:"Dor Crónica / SN",
+    evette:"Segundo Evette Rose em Metaphysical Anatomy Vol. 1, a enxaqueca está associada a um padrão emocional nucleado em torno da resistência ao fluxo da vida e da acumulação de pressão interna que o sujeito não consegue — ou não se permite — libertar de forma saudável. A autora relaciona esta condição com a tendência para o controlo excessivo: quem sofre de enxaquecas frequentes aprendeu, muitas vezes desde cedo, que o seu ambiente — familiar, académico, religioso ou profissional — exigia desempenho, perfeição e contenção emocional rigorosa. A raiva, a frustração e o ressentimento acumulados durante anos de injustiças percebidas, de exigências impossíveis ou de contextos nos quais não era seguro dizer não, vão-se sedimentando numa tensão que o sistema nervoso acaba por expressar através da dor. Esta dinâmica aproxima-se do que Franz Alexander, um dos fundadores da medicina psicossomática no século XX, descreveu como a expressão orgânica de conflitos emocionais que não encontram via de simbolização ou elaboração psíquica: o corpo torna-se palco do que a mente não consegue processar verbalmente.\n\nUm segundo eixo identificado por Rose é o da crítica interna severa e implacável. Trata-se de uma voz interior herdada de figuras parentais exigentes ou de sistemas de valores excessivamente rígidos, que transforma cada erro, cada desvio do padrão esperado, numa razão de autopunição. Esta dinâmica é clinicamente próxima do que Jeffrey Young, criador da Terapia dos Esquemas, descreveria como o modo 'Crítico Punitivo' — uma estrutura cognitivo-emocional profunda que estabelece padrões impossíveis de satisfazer e castiga internamente qualquer falha. Do ponto de vista somático, esta autocrítica crónica cria tensão contínua na região craniana, cervical e nos músculos que sustentam a cabeça — literalmente o peso que se carrega nos ombros e no crânio, como expressão corporal de um pensamento que nunca descansa. Rose aponta ainda a dificuldade em delegar e em confiar que as coisas podem acontecer sem a presença controladora do próprio self: a pessoa sente que, se largar o controlo, tudo irá colapsar.\n\nRose associa adicionalmente a enxaqueca a conflitos não resolvidos em torno de sexualidade, culpa e prazer — dimensões em que a pessoa sente tensão entre o que deseja e o que internalizou como 'permitido'. Esta componente conecta-se com a repressão do impulso e com a dificuldade de habitar o próprio corpo sem julgamento constante. Na linguagem da psicanálise, este mecanismo remete para o que Sigmund Freud descreveu como a conversão — o processo pelo qual conflitos psíquicos não elaborados encontram expressão num sintoma somático. Vale sublinhar que a leitura de Rose é de natureza simbólica e metafísica, não um modelo de causalidade biológica empiricamente verificada, mas constitui um instrumento valioso de exploração clínica, especialmente quando permite ao cliente reconhecer-se num padrão que nunca tinha nomeado.",
+    gaspa:"Luiz Gasparetto, ao longo dos volumes da série Metafísica da Saúde, aborda as dores de cabeça e a enxaqueca a partir de uma leitura que coloca em evidência o conflito entre a mente racional — simbolizada pela cabeça — e o mundo emocional que o sujeito tende a subordinar, ignorar ou reprimir. Para Gasparetto, a cabeça dói quando se lhe exige demasiado: quando o pensamento é instrumentalizado como forma de controlar a realidade, de antecipar todos os cenários possíveis, de se recusar à incerteza, ao erro ou à vulnerabilidade. O excesso de racionalização funciona, nesta perspetiva, como uma estratégia de desligamento do corpo e das emoções — e a enxaqueca seria a pressão daquilo que ficou fora da consciência racional a tentar entrar. Clinicamente, esta leitura encontra eco no conceito de 'funcionamento operatório' descrito por Pierre Marty, fundador da corrente psicossomática parisiense no século XX: um modo de existência orientado para a eficiência externa e a ação, com pouco espaço para a vida fantástica, onírica e emocional, e no qual o corpo se torna o repositório do que a mente recusa processar.\n\nO autor liga também este padrão a uma hiperresponsabilidade que se manifesta tanto no plano profissional como no relacional: a sensação de que tudo depende de si, de que não é possível pedir ajuda, de que mostrar cansaço equivale a fracassar. Gasparetto descreve este perfil como alguém que carrega os problemas dos outros, que se torna indispensável em todos os contextos e que, ao mesmo tempo, ressente secretamente o peso desse papel — sem jamais o exprimir diretamente. Esta tensão entre a hiperresponsabilidade autoposta e o ressentimento que lhe é inerente é clinicamente semelhante ao que Donald Winnicott descreveu como o 'falso self' — uma estrutura psíquica construída para responder às expectativas do ambiente, à custa da autenticidade e da espontaneidade do self verdadeiro. A pressão que não se transforma em palavras ou em imagens oníricas acumula-se no organismo, e a enxaqueca surge como um 'sinal de paragem forçada': o corpo que impõe o repouso que o sujeito não se concede voluntariamente.\n\nGasparetto aponta ainda para dinâmicas de não aceitação, de resistência à imperfeição própria, às limitações do outro e às circunstâncias que escapam ao controlo. Esta não aceitação está frequentemente ligada a padrões familiares transmitidos — famílias nas quais a exigência era a forma principal de amor, nas quais ser suficientemente bom nunca chegava, e nas quais o erro era respondido com rejeição, punição ou humilhação. Na perspetiva das constelações familiares de Bert Hellinger, a enxaqueca pode representar, em certos casos, a lealdade inconsciente a um sistema familiar marcado pela tensão, pelo sacrifício ou pela supressão da expressão individual. As interpretações de Gasparetto têm natureza simbólica e devem ser usadas como instrumentos de exploração e não como causalidade linear ou diagnóstico.",
+    psiconeuro:"A enxaqueca é atualmente compreendida como uma condição neurovascular com uma componente neuroinflamatória significativa, e a psiconeuroimunologia — o campo científico que estuda as interações bidirecionais entre o sistema nervoso central (SNC — o conjunto formado pelo encéfalo e pela medula espinal), o sistema endócrino e o sistema imunitário — oferece uma leitura integrativa sobre como estados psicológicos crónicos podem influenciar tanto o limiar de desencadeamento como a frequência e a intensidade das crises. Um dos mediadores mais estudados neste contexto é o péptido relacionado com o gene da calcitonina, habitualmente designado pela sigla CGRP (Calcitonin Gene-Related Peptide — uma proteína neuropeptídica libertada pelas fibras do nervo trigémeo durante a crise de enxaqueca, que provoca vasodilatação e inflamação das meninges). Estudos recentes demonstraram que o stress psicológico crónico, mediado pelo eixo hipotálamo-hipófise-adrenal (HPA — o circuito hormonal que envolve o hipotálamo, uma região cerebral reguladora, a hipófise, na base do crânio, e as glândulas suprarrenais, no topo dos rins), aumenta a sensibilidade do sistema trigeminovascular ao CGRP, reduzindo progressivamente o limiar a partir do qual uma crise se instala.\n\nO papel das citocinas — moléculas de sinalização imunitária que coordenam as respostas inflamatórias — na enxaqueca tem sido extensamente investigado. Elevações de Interleucina-6 (IL-6 — uma citocina pró-inflamatória produzida por células imunitárias e neuronais que sinaliza inflamação sistémica) e do Fator de Necrose Tumoral alfa (TNF-α — outra proteína inflamatória que amplifica as cascatas de resposta imunitária) foram documentadas tanto durante os episódios agudos como nos períodos intercríticos em pessoas com enxaqueca crónica. O stress crónico associado a padrões de hipercontrolo, perfeccionismo e repressão emocional mantém o eixo HPA em ativação persistente, com secreção prolongada de cortisol — a principal hormona de resposta ao stress. A exposição crónica ao cortisol altera a permeabilidade da barreira hematoencefálica, sensibiliza os neurónios nociceptivos (as células nervosas que transmitem sinais de dor) e compromete a regulação do sistema nervoso autónomo (SNA — a divisão do sistema nervoso responsável pelas funções automáticas como frequência cardíaca, digestão e respiração). Esta desregulação autonómica, medida pela variabilidade da frequência cardíaca (VFC — um indicador da capacidade do sistema nervoso de alternar fluidamente entre estados de ativação e repouso), está consistentemente reduzida em pessoas com enxaqueca crónica e com histórias de trauma precoce, reforçando o elo entre história emocional e vulnerabilidade neurológica à crise.",
+    neuro:"Do ponto de vista neurocientífico, tal como descrito em Neurociências: Desvendando o Sistema Nervoso de Mark F. Bear, Matthew A. Connors e Michael A. Paradiso (4.ª ed., 2017), a enxaqueca é precipitada por um fenómeno denominado depressão alastrante cortical (DAC) — uma onda de despolarização neuronal intensa e transitória que se propaga lentamente pelo córtex cerebral a uma velocidade de dois a cinco milímetros por minuto. Durante esta onda, os neurónios disparam de forma intensa e depois entram num período de silêncio elétrico que se alastra pelas regiões adjacentes. Esta sequência explica a aura visual, sensitiva ou motora que precede a cefaleia em cerca de 30% dos casos — sintomas transitórios que correspondem à passagem da onda pelo córtex visual, sensitivo ou motor. A DAC ativa simultaneamente as terminações do nervo trigémeo nas meninges, desencadeando a libertação de neuropeptídeos vasoativos — incluindo o CGRP e a substância P — que produzem vasodilatação e inflamação neurogénica responsáveis pela dor pulsátil característica da enxaqueca. Bear e colaboradores sublinham que a sensibilização central — o processo pelo qual os neurónios da via de transmissão da dor ficam progressivamente mais reativos após episódios repetidos — é um mecanismo central na cronificação: cada crise não tratada contribui para baixar ainda mais o limiar da próxima.\n\nA importância do sistema límbico — o conjunto de estruturas cerebrais envolvidas no processamento emocional, incluindo a amígdala, o hipocampo e o córtex cingulado anterior — na modulação da dor na enxaqueca é sublinhada pelo facto de que estados emocionais intensos, stress, perturbações do sono e variações hormonais figuram entre os desencadeadores mais comuns da crise. Joseph LeDoux demonstrou como a amígdala — estrutura bilateral em forma de amêndoa que atua como central de processamento do medo e da ameaça — pode permanecer em estado de hiperativação em pessoas com histórias de trauma precoce, mantendo o sistema nervoso num nível crónico de alerta que reduz o limiar para a DAC. O sistema noradrenérgico (o circuito que utiliza a noradrenalina como neurotransmissor, fundamental na regulação da vigilância e da resposta ao stress) e o sistema serotoninérgico (que utiliza a serotonina, ou 5-hidroxitriptamina — molécula essencial na modulação da dor, do humor e do sono) apresentam ambos desregulações documentadas na enxaqueca, o que explica em parte a eficácia terapêutica dos triptanos. Antonio Damásio, com a sua teoria dos marcadores somáticos, demonstrou que o córtex insular e o córtex somato-sensorial secundário — onde estados emocionais e sensações corporais se integram em representações do estado interno — estão implicados tanto no processamento da dor como nos estados que precipitam a crise, estabelecendo um elo direto entre como o sujeito processa emocionalmente a sua experiência e a vulnerabilidade neurológica ao episódio.",
+    aces:"As Experiências Adversas na Infância (ACEs, do inglês Adverse Childhood Experiences — um conjunto de situações traumáticas ou de adversidade crónica ocorridas antes dos 18 anos, incluindo abuso físico, emocional e sexual, negligência, exposição a violência doméstica, presença de doença mental ou abuso de substâncias no ambiente familiar, e instabilidade parental) constituem um dos preditores mais sólidos de enxaqueca crónica na vida adulta. Estudos publicados no Journal of Headache and Pain e em Cephalalgia demonstraram que cada ACE adicional aumenta significativamente a probabilidade de desenvolver enxaqueca, independentemente de outros fatores de risco. Esta associação reflete a forma como experiências relacionais precoces moldam permanentemente o funcionamento do sistema nervoso, o eixo HPA e os circuitos de processamento da dor. Bruce McEwen, com o seu modelo de carga alostática (allostatic load — o custo cumulativo que o corpo suporta quando obrigado a adaptar-se a stress crónico ou repetido ao longo do tempo), oferece a estrutura conceptual que melhor explica como uma infância marcada por imprevisibilidade, ameaça ou ausência de reparação emocional configura um sistema nervoso permanentemente próximo do limiar de ativação patológica — um terreno fértil para a DAC e para a sensibilização central da dor.\n\nJohn Bowlby e Mary Ainsworth, nos seus trabalhos fundadores sobre teoria da vinculação, demonstraram que a qualidade do vínculo precoce com as figuras cuidadoras é determinante no desenvolvimento dos sistemas de regulação do stress. Quando o vínculo é inseguro — ansioso, evitante ou desorganizado, tipicamente em contextos de inconsistência emocional, abuso ou negligência —, a criança desenvolve estratégias de sobrevivência psíquica que incluem hipervigilância, compulsão de controlo e inibição emocional. Na vida adulta, estas estratégias traduzem-se em padrões de ativação autonómica elevada e dificuldade de retorno ao repouso. Bessel van der Kolk descreve como o trauma não elaborado se inscreve literalmente no tónus muscular, na regulação respiratória e na neurobiologia autonómica — criando um substrato somático ideal para a expressão de condições como a enxaqueca crónica. A teoria polivagal de Stephen Porges acrescenta que o sistema nervoso autónomo, quando cronicamente ativado em modo de defesa, perde a flexibilidade de resposta que é a base da saúde: a enxaqueca pode ser lida como uma expressão desta rigidez autonómica — a incapacidade do sistema de descer do alerta de forma fluida sem precisar de ser derrubado por uma crise.\n\nNum nível mais proximal, as figuras de vinculação insegura ou abusiva tendem a instalar padrões que Jeffrey Young identificaria como Esquemas Iniciais Inadaptativos — como Padrões Rígidos/Hipercriticismo, Subjugação, Inibição Emocional ou Privação Emocional — que funcionam como filtros pelos quais o sujeito organiza toda a sua experiência. A presença destes esquemas mantém o sistema nervoso em tensão crónica, pois a pessoa vive permanentemente a tentar cumprir padrões impossíveis, a conter o que não pode ser dito, ou a controlar o que não é controlável. Pierre Janet, ao final do século XIX, foi o primeiro a descrever o afastamento entre mente e corpo como mecanismo defensivo do psiquismo perante o intolerável — o que designou como dissociação — e este mecanismo é hoje reconhecido como um dos elos entre trauma precoce e sintomatologia somática crónica. Peter Levine acrescentaria que o trauma não processado se mantém como energia de ativação aprisionada no sistema nervoso, e que a crise de enxaqueca pode representar paradoxalmente uma tentativa do organismo de descarregar esse excesso de tensão acumulada que o sistema nunca aprendeu a processar de forma gradual.",
+    metafora:"A metáfora que emerge com mais consistência no trabalho clínico com enxaqueca é 'a cabeça que explode quando o que está dentro já não cabe no que é permitido dizer'. Esta imagem descreve um organismo que aprendeu a reter, organizar e controlar tudo através do pensamento, utilizando a mente racional como um contentor que se vai enchendo progressivamente de pressão emocional não expressa — raiva não verbalizada, necessidades negadas, conflitos não resolvidos, exigências impossíveis que se acumulam em camadas. A explosão dolorosa da crise não é, nesta leitura, um evento aleatório nem uma simples falha neurológica: é o momento em que o contentor atinge o seu limite de capacidade e o sistema, incapaz de continuar a reter, força uma paragem abrupta. Clinicamente, esta imagem relaciona-se com o conceito de alexitimia descrito por Peter Sifneos nos anos 1970 — a dificuldade em identificar e nomear estados emocionais internos — e com o funcionamento operatório de Pierre Marty: quando as emoções não encontram via de elaboração psíquica, encontram via de expressão somática.\n\nA segunda camada desta metáfora é 'a cabeça que tem de estar sempre acima, sempre à frente, sempre sem falhar'. Clinicamente, esta imagem corresponde ao padrão de hipercontrolo e perfeccionismo que tanto Evette Rose como Gasparetto identificam como núcleo emocional da condição, e que na neurobiologia se traduz em hiperativação crónica do sistema nervoso simpático — a divisão do sistema nervoso autónomo responsável pela resposta de mobilização e alerta. Quando a pessoa nunca se permite baixar a cabeça — nunca pode descansar, errar, pedir ajuda ou mostrar vulnerabilidade sem o risco de perder o controlo ou de falhar —, o sistema nervoso não encontra a janela de regulação descendente de que necessita para se restabelecer. A crise de enxaqueca força precisamente o que o padrão recusa: a pessoa fica na cama, no escuro, imóvel, sem poder fazer absolutamente nada. O corpo impõe o descanso que o sujeito jamais se concedeu. Paradoxalmente, o sintoma cumpre uma função que a consciência bloqueou — sendo esta a chave terapêutica mais poderosa desta condição.",
+    perguntas:"As perguntas que se seguem foram selecionadas para explorar os eixos centrais da enxaqueca segundo as perspetivas integradas nesta entrada: o padrão de controlo e perfeccionismo, a repressão emocional, a história relacional precoce, a função secundária do sintoma e a relação com o próprio corpo. Devem ser introduzidas com cuidado e com timing clínico adequado — nunca em sequência rígida, mas como convites à reflexão em diferentes momentos do processo terapêutico. O terapeuta deve observar não apenas o conteúdo das respostas, mas também a reação somática que pode surgir ao formular certas questões: tensão no pescoço ou na mandíbula, alteração da respiração, desvio do olhar ou aumento da agitação motora são informação clínica de primeira ordem.\n\n'Quando foi a última vez que sentiste o teu corpo como um lugar de descanso, e não como algo que tens de controlar ou que te impede de funcionar?' — Esta pergunta explora a relação do cliente com o próprio corpo e convida-o a localizar no tempo o início da dissociação somática. A ausência de uma resposta clara, ou a dificuldade em evocar sequer um momento de segurança corporal, sugere desregulação autonómica significativa e frequentemente tem raízes em padrões de vinculação inseguros ou em histórias de trauma precoce.\n\n'O que é que não consegues — ou nunca conseguiste — dizer em voz alta, num contexto importante da tua vida?' — Esta pergunta toca no núcleo da metáfora somática: a pressão do que não pode ser expresso. Permite identificar contextos específicos — familiar, profissional, relacional, de crença — nos quais a inibição emocional é mais intensa e que podem estar a alimentar cronicamente a tensão do sistema nervoso.\n\n'Como era, na família em que cresceste, a experiência de errar, de não cumprir o que era esperado? O que acontecia — ou o que receavas que pudesse acontecer?' — Esta pergunta convida à exploração dos Esquemas de Padrões Rígidos e de Inibição Emocional na sua raiz desenvolvimental. As respostas contextualizam a história relacional que sustenta o perfeccionismo e a autocrítica do presente, e permitem introduzir trabalho com partes internas ou com a origem dos esquemas.\n\n'Repara no que acontece no teu corpo quando pensas numa situação em que sentes que as coisas estão fora do teu controlo. Onde é que notas isso, e o que é que essa sensação te diz?' — Esta pergunta de orientação somática, inspirada na abordagem de Somatic Experiencing de Peter Levine, convida o cliente a perceber onde o padrão de controlo se ancora corporalmente. A resposta mais frequente — tensão no pescoço, ombros, mandíbula ou crânio — é clinicamente informativa e pode servir de ponto de entrada para trabalho somático, hipnótico ou de biofeedback.\n\n'Já alguma vez a enxaqueca chegou num momento em que acabou por te dar permissão para parar, para não ir, para não ser o que os outros esperavam de ti?' — Esta pergunta, a usar apenas com aliança terapêutica sólida, abre a porta ao reconhecimento de que a crise pode estar a cumprir uma necessidade legítima que não encontra outro canal de expressão. A resposta pode iniciar um trabalho profundo sobre assertividade, permissão interna e reconhecimento das próprias necessidades.",
+    sugestoes:"A abordagem terapêutica da enxaqueca crónica beneficia de uma perspetiva integrativa que combine o trabalho com o sistema nervoso — através de técnicas somáticas de regulação autonómica — com a elaboração psíquica dos padrões de controlo, inibição emocional e hiperresponsabilidade que sustentam a condição. Nenhuma técnica isolada tende a ser suficiente, pois a enxaqueca é uma expressão multissistémica que envolve história relacional, padrões cognitivo-emocionais profundos, regulação autonómica e sensibilização central da dor. As sugestões que se seguem são complementares entre si e devem ser adaptadas ao momento do processo terapêutico de cada cliente.\n\nA hipnose ericksoniana com trabalho de metáfora somática, construída a partir dos princípios de Milton Erickson, é particularmente indicada pela sua capacidade de aceder a estados de consciência em que a mente crítica — o mesmo mecanismo de controlo e autoexigência que perpetua o padrão — se abranda. Uma indução de relaxamento progressivo dirigida à região cefálica e cervical, combinada com sugestões que reencadrem a dor como mensageira em vez de inimiga — convidando o cliente a perguntar ao sintoma o que está a tentar proteger, ou a imaginar a pressão como algo que pode ser libertado pela respiração —, cria uma experiência corretiva somática e simbólica. A sugestão de que o descanso e a vulnerabilidade são formas de força pode ser ancorada neste estado para ser mobilizada nos momentos pré-crise.\n\nO EMDR (Eye Movement Desensitization and Reprocessing — Dessensibilização e Reprocessamento por Movimentos Oculares, técnica desenvolvida por Francine Shapiro no final dos anos 1980 e reconhecida pela Organização Mundial de Saúde como tratamento de primeira linha para a Perturbação de Stress Pós-Traumático), é relevante quando a enxaqueca se associa a uma história de trauma precoce identificável — abuso, negligência emocional, parentificação, ambientes de exigência punitiva. O protocolo EMDR facilita o reprocessamento do material retido nas redes de memória implícita, e o reprocessamento das experiências nas quais o erro era punido ou a expressão emocional era perigosa pode reduzir significativamente a carga alostática que alimenta a vulnerabilidade neurológica à DAC.\n\nA Somatic Experiencing (SE), desenvolvida por Peter Levine, parte do princípio de que o trauma não processado se manifesta como energia de ativação aprisionada no sistema nervoso que precisa de ser completada e descarregada através do corpo. Na enxaqueca, a SE trabalha a perceção da tensão crónica nas regiões do pescoço, ombros e crânio, guiando o cliente em pequenos ciclos de ativação e descarga — denominados pendulação — que permitem ao sistema nervoso reaprender que pode ativar-se e depois descansar. Esta alternância é precisamente o que o sistema nervoso de quem sofre de enxaqueca crónica perdeu.\n\nA abordagem de Sistemas de Família Interna (IFS, Internal Family Systems, desenvolvida por Richard Schwartz nos anos 1990), é especialmente útil para trabalhar a parte do cliente que sente que tem de controlar tudo — o que Schwartz designaria como um 'gestor' hiperativo cuja função protetora é manter tudo sob controlo para evitar dor emocional. O trabalho IFS convida o cliente a estabelecer um diálogo interno com esta parte, a reconhecer a sua função protetora e, gradualmente, a oferecer-lhe novas formas de cumprir esse papel sem manter o corpo em tensão crónica.\n\nAs técnicas de EFT (Emotional Freedom Techniques — Técnicas de Libertação Emocional, desenvolvidas por Gary Craig nos anos 1990), que consistem no estímulo rítmico manual de pontos de acupressão enquanto se verbaliza o conteúdo emocional presente, mostram eficácia documentada na redução de cortisol salival e na ativação do sistema nervoso parassimpático. Para a enxaqueca, o EFT pode ser utilizado tanto como técnica preventiva — trabalhando com as emoções que antecedem a crise, como ansiedade de desempenho ou raiva contida — como nos pródromos, para tentar modular a escalada da ativação neurológica antes da instalação da cefaleia completa.\n\nO trabalho de escrita expressiva, baseado nas investigações de James Pennebaker sobre os efeitos terapêuticos da escrita estruturada sobre eventos emocionalmente carregados, tem evidência específica na redução de marcadores inflamatórios e na melhoria da regulação autonómica. Propor ao cliente que escreva regularmente e sem filtro sobre o que não pode dizer em voz alta — as raivas, os ressentimentos, as injustiças não reconhecidas — cria um canal de elaboração para o conteúdo que de outro modo se acumula em tensão somática.",
+    avaliacao:[
+      {item:"quiz_ace.html", link:"#", porque:"O Questionário de Experiências Adversas na Infância avalia a presença e frequência de experiências traumáticas precoces em dez categorias estandardizadas. A sua aplicação é fundamental na enxaqueca porque a investigação demonstra uma associação robusta entre pontuação de ACEs e prevalência de enxaqueca crónica, mediada por desregulação do eixo HPA e sensibilização central da dor; a pontuação permite calibrar a intensidade e o foco do trabalho terapêutico e indicar a necessidade de abordagem específica ao trauma."},
+      {item:"quiz_esquemas_young.html", link:"#", porque:"O questionário de Esquemas de Jeffrey Young avalia a presença de Esquemas Iniciais Inadaptativos formados em resposta a necessidades não satisfeitas na infância. Na enxaqueca, os esquemas de Padrões Rígidos/Hipercriticismo, Inibição Emocional e Subjugação são particularmente relevantes porque correspondem diretamente ao padrão de autoexigência, contenção emocional e dificuldade em afirmar necessidades próprias identificado como núcleo desta condição."},
+      {item:"quiz_alexitimia.html", link:"#", porque:"A alexitimia — a dificuldade em identificar, diferenciar e descrever estados emocionais internos, descrita por Peter Sifneos nos anos 1970 — é um fator de vulnerabilidade para doenças psicossomáticas. A sua avaliação é relevante na enxaqueca porque a incapacidade de processar e simbolizar emoções aumenta a probabilidade de estas se expressarem através de tensão somática; níveis elevados indicam que o trabalho deve incluir componentes específicas de educação emocional e de ligação entre sensação corporal e estado interno."},
+      {prompt:"criar avaliação de perfeccionismo clínico, hiperresponsabilidade e dificuldade em delegar — questionário breve (10-15 itens) que avalie estas dimensões em contexto relacional e profissional, permitindo cruzar o padrão de controlo com a frequência e a intensidade das crises e medir a evolução ao longo do processo terapêutico", porque:"Não existe atualmente nos recursos disponíveis um instrumento específico que avalie o perfeccionismo clínico e a hiperresponsabilidade nas suas dimensões relacionais e somáticas. Este instrumento seria relevante para quantificar o padrão nuclear da enxaqueca segundo as fontes metafísicas e a literatura psicossomática, e para monitorizar a sua evolução em resposta ao trabalho terapêutico."}
+    ],
+    exercicio:[
+      {item:"PROMPT_Cartas_Sem_Filtro_v1.md", link:"#", porque:"Este exercício de escrita expressiva, próximo da metodologia de James Pennebaker, convida o cliente a redigir cartas que nunca serão enviadas, dirigidas a figuras ou situações que geraram raiva, ressentimento ou injustiças não reconhecidas. Na enxaqueca, cria um canal de expressão para o conteúdo emocional cronicamente reprimido que alimenta a tensão do sistema nervoso; a investigação de Pennebaker demonstra que este tipo de escrita reduz cortisol, melhora marcadores imunitários e diminui a frequência de queixas somáticas."},
+      {item:"PROMPT_Arvore_Genealogica_Psiquica_v1.md", link:"#", porque:"O mapeamento das dinâmicas relacionais intergeracionais é especialmente pertinente quando os padrões de exigência, perfeccionismo e inibição emocional têm raízes familiares profundas. Este exercício convida o cliente a explorar os padrões emocionais e os contextos históricos das gerações anteriores, permitindo identificar lealdades inconscientes e heranças psíquicas que podem estar a organizar o padrão somático atual; a tomada de consciência narrativa sobre a origem dos padrões pode reduzir a ativação do sistema nervoso simpático ao transformar ameaça indefinida em compreensão contextualizada."},
+      {item:"EuSou_21dias_v2.html", link:"#", porque:"Este programa de 21 dias propõe práticas diárias de integração identitária que constroem gradualmente uma relação mais segura com o self. Na enxaqueca, o seu valor reside na dimensão de reprogramação da narrativa de autoexigência: ao trabalhar diariamente afirmações e reflexões que sustentam o valor intrínseco da pessoa para além do seu desempenho, o programa desafia progressivamente o Esquema de Padrões Rígidos que mantém o sistema nervoso em tensão crónica."},
+      {prompt:"criar exercício de reconhecimento e regulação nos pródromos da enxaqueca — guião que combine o registo dos sinais pré-crise (bocejos, alterações de humor, fotossensibilidade, tensão cervical) com uma sequência de técnicas de regulação descendente do sistema nervoso: respiração diafragmática lenta, relaxamento muscular progressivo da região cervical e da mandíbula, orientação sensorial ao ambiente presente", porque:"Os pródromos da enxaqueca representam uma janela de oportunidade terapêutica ainda pouco explorada no trabalho clínico. Um exercício específico que combine o reconhecimento dos sinais pré-crise com técnicas de downregulation autonómica poderia ajudar o cliente a interromper ou atenuar a escalada neurológica antes da instalação da crise completa, aumentando o sentido de agência sobre a condição e reduzindo progressivamente a frequência dos episódios."}
+    ]
+  }
+};
+
+const CATEGORIAS = ["Autoimunes","Ginecológicas / Hormonais","Dor Crónica / SN","Respiratórias / ORL","Digestivas","Cardiovasculares","Pele","Metabólicas / Endócrinas","Oncológicas","Musculoesqueléticas","Neurológicas / Mentais","Urinárias","Sentidos","Infantis","Outras"];
+
+const LS_CUSTOM = 'dd_anatomia_custom_doencas_v1';
+function loadCustom(){ try{ return JSON.parse(localStorage.getItem(LS_CUSTOM) || '{}'); }catch(e){ return {}; } }
+function saveCustom(d){ localStorage.setItem(LS_CUSTOM, JSON.stringify(d)); }
+function getAllDoencas(){
+  // BASE (doenças catalogadas no código) tem prioridade sobre CUSTOM (importadas via JSON).
+  // Se a mesma id existe nos dois, fica a versão catalogada — a personalizada é ignorada.
+  return Object.assign({}, loadCustom(), DOENCAS_BASE);
+}
+
+function buildDropdown(){
+  const sel = document.getElementById('sel-doenca');
+  const previousValue = sel.value;
+  const all = getAllDoencas();
+  const custom = loadCustom();
+  const byCat = {};
+  Object.entries(all).forEach(([k,v]) => {
+    const c = v.categoria || 'Outras';
+    if(!byCat[c]) byCat[c] = [];
+    byCat[c].push({key:k, titulo:v.titulo, isCustom: (k in custom) && !(k in DOENCAS_BASE)});
+  });
+  let html = '<option value="">— Seleccionar doença / condição —</option>';
+  CATEGORIAS.forEach(c => {
+    if(!byCat[c]) return;
+    html += `<optgroup label="${c}">`;
+    byCat[c].sort((a,b) => a.titulo.localeCompare(b.titulo,'pt'));
+    byCat[c].forEach(o => html += `<option value="${o.key}">${o.isCustom?'👤 ':''}${o.titulo}</option>`);
+    html += '</optgroup>';
+  });
+  sel.innerHTML = html;
+  if(previousValue && all[previousValue]) sel.value = previousValue;
+  document.getElementById('custom-count').textContent = Object.keys(custom).length;
+}
+
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function formatNarrative(text){
+  if(!text) return '';
+  return text.split(/\n\n+/).map(p => '<p>' + escapeHtml(p).replace(/\n/g,'<br>') + '</p>').join('');
+}
+
+function resolveResourcePath(item){
+  if(!item) return '#';
+  // Quizzes ficam em ../Avaliações Ativas/
+  if(/^quiz_.+\.html$/i.test(item)) return '../Avaliações Ativas/' + item;
+  // Exercícios e PROMPTs ficam em ../Exercícios/
+  if(/^(EuSou_|PROMPT_).+\.(html|md)$/i.test(item)) return '../Exercícios/' + item;
+  return '#';
+}
+
+function renderRecurso(arr){
+  if(!arr || !arr.length) return '<li style="color:var(--text-2);font-size:.875rem">— sem recursos atribuídos —</li>';
+  return arr.map(r => {
+    const isPrompt = 'prompt' in r;
+    const resolvedPath = !isPrompt ? resolveResourcePath(r.item) : '#';
+    const isMissing = !isPrompt && resolvedPath === '#';
+    const nome = isPrompt
+      ? `<span class="recurso-prompt">prompt</span>`
+      : `<a class="recurso-nome${isMissing?' is-missing':''}" href="${resolvedPath}" target="_blank" title="${isMissing?'⚠ ficheiro não-mapeado':r.item}">${r.item}</a>`;
+    const titulo = isPrompt ? `<strong>Pedir ao Claude:</strong> ${r.prompt}<br>` : '';
+    return `<li class="recurso-item ${isPrompt?'is-prompt':''}">${nome}<div class="recurso-porque">${titulo}${r.porque}</div></li>`;
+  }).join('');
+}
+
+function loadDoenca(key){
+  const empty = document.getElementById('doenca-empty');
+  const content = document.getElementById('doenca-content');
+  const nota = document.getElementById('nota');
+  if(!key){ empty.classList.remove('hidden'); content.classList.add('hidden'); return; }
+  const all = getAllDoencas();
+  const d = all[key]; if(!d) return;
+  const isCustom = (key in loadCustom()) && !(key in DOENCAS_BASE);
+  empty.classList.add('hidden'); content.classList.remove('hidden');
+  document.getElementById('d-title').innerHTML = d.titulo + (isCustom ? ' <span class="tag-custom">personalizada</span>' : '');
+  document.getElementById('d-evette').innerHTML = formatNarrative(d.evette);
+  document.getElementById('d-gaspa').innerHTML = formatNarrative(d.gaspa);
+  document.getElementById('d-psiconeuro').innerHTML = formatNarrative(d.psiconeuro);
+  document.getElementById('d-neuro').innerHTML = formatNarrative(d.neuro);
+  document.getElementById('d-aces').innerHTML = formatNarrative(d.aces);
+  const mParts = (d.metafora || '').split(/\n\n+/);
+  document.getElementById('d-metafora').innerHTML =
+    (mParts[0] ? '<div class="metafora-text">' + escapeHtml(mParts[0]) + '</div>' : '') +
+    (mParts.length > 1 ? formatNarrative(mParts.slice(1).join('\n\n')) : '');
+  document.getElementById('d-perguntas').innerHTML = formatNarrative(d.perguntas);
+  document.getElementById('d-sugestoes').innerHTML = formatNarrative(d.sugestoes);
+  document.getElementById('d-avaliacao').innerHTML = renderRecurso(d.avaliacao);
+  document.getElementById('d-exercicio').innerHTML = renderRecurso(d.exercicio);
+  nota.value = localStorage.getItem('dd_anatomia_' + key + '_nota') || '';
+  nota.dataset.key = key;
+}
+
+document.getElementById('sel-doenca').addEventListener('change', e => loadDoenca(e.target.value));
+document.getElementById('nota').addEventListener('input', () => {
+  const k = document.getElementById('nota').dataset.key;
+  if(k) localStorage.setItem('dd_anatomia_' + k + '_nota', document.getElementById('nota').value);
+});
+
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  document.querySelector(`[data-panel="${t.dataset.tab}"]`).classList.add('active');
+}));
+
+document.querySelectorAll('.zoom-btn').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.zoom-btn').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  document.documentElement.style.setProperty('--base-fz', b.dataset.fz + 'px');
+  localStorage.setItem('dd_anatomia_zoom', b.dataset.fz);
+}));
+const sz = localStorage.getItem('dd_anatomia_zoom');
+if(sz){ document.documentElement.style.setProperty('--base-fz', sz + 'px'); document.querySelectorAll('.zoom-btn').forEach(x => x.classList.toggle('active', x.dataset.fz === sz)); }
+
+function showStatus(msg, kind, persistent){
+  const s = document.getElementById('import-status');
+  s.textContent = msg;
+  s.className = 'import-status show ' + kind;
+  if(!persistent) setTimeout(() => s.classList.remove('show'), 8000);
+}
+
+// Cópia robusta com fallback para contextos file://
+async function copyTextToClipboard(text){
+  try{
+    await navigator.clipboard.writeText(text);
+    return true;
+  }catch(e){
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    }catch(e2){ return false; }
+  }
+}
+
+document.getElementById('btn-gerar-prompt').addEventListener('click', () => {
+  const v = document.getElementById('free-input').value.trim();
+  if(!v){ showStatus('Escreve primeiro o nome da doença/condição.', 'err'); document.querySelector('.import-card').open = true; return; }
+  const slug = v.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+  const prompt = `Procura em Evette-Rose-Metaphysical-Anatomy-Volume-1, em Luiz Gasparetto Metafísica da Saúde vols 1-5, e em Psiconeuroimunologia (eixo HPA, imunidade) + Neurociências de Mark F. Bear (4.ª ed., 2017) a condição: "${v}".\n\nA resposta destina-se a uma psicanalista e psicoterapeuta clínica. Os textos têm de ser PROFUNDOS, EXPLICATIVOS e NARRATIVOS — não resumos com bullet points, não citações soltas entre aspas. Tudo o que se afirma deve ser explicado em frases completas, com conexões a autores e modelos clínicos relevantes (Pierre Janet, Sigmund Freud, Bessel van der Kolk, Stephen Porges, Bruce McEwen, Joseph LeDoux, Pierre Marty, Jeffrey Young, Peter Levine, Richard Schwartz, Antonio Damásio, conforme apropriado ao tema).\n\n══════════ REGRAS OBRIGATÓRIAS ══════════\n\n[A] PROFUNDIDADE MÍNIMA POR CAMPO:\n- evette, gaspa, aces: mínimo TRÊS parágrafos, total mínimo 10 linhas cada. Se o livro não tem informação suficiente, indica claramente quais frases são extrapolação/aproximação. Nunca um resumo seco.\n- psiconeuro, neuro: mínimo DOIS parágrafos com TODAS as abreviaturas explicadas por extenso no primeiro uso.\n- metafora: mínimo DOIS parágrafos. NÃO deve ser uma frase poética isolada — a metáfora deve ser citada entre aspas no texto e DEPOIS explicada quanto ao seu significado clínico (a que se refere, o que descreve, com que conceitos clínicos se relaciona). Ver exemplo MAU vs. BOM em [F].\n- perguntas: parágrafo introdutório + 3-5 perguntas neutras. CADA pergunta seguida de uma frase a explicar o que essa pergunta explora ou revela clinicamente — nunca uma lista crua de perguntas. Ver [F].\n- sugestoes: parágrafo introdutório + cada técnica num parágrafo próprio, explicando o que é, quem a desenvolveu (Erickson, Levine, Schwartz, Shapiro, Craig, etc.) e PORQUE é indicada para esta condição específica. Ver [F].\n- avaliacao, exercicio: cada item com "porque" de 2-3 frases que diga concretamente O QUE a avaliação mede e PORQUE é relevante para esta condição.\n\n[B] FORMATO NARRATIVO PROFISSIONAL — exemplo do que se espera para o campo "evette":\n   "Segundo Evette Rose em Metaphysical Anatomy Vol. 1, este padrão emocional descreve pessoas que reprimem cronicamente raiva, culpa e sensação de impotência. Geralmente surge após experiências prolongadas de injustiça, abuso, controlo excessivo ou ambientes emocionalmente rígidos vividos na infância, em relacionamentos adultos ou em contexto religioso. O cliente aprende a engolir emoções em vez de as expressar, acumulando ressentimento e desenvolvendo dificuldade em 'soltar' o passado.\\n\\nCom o tempo, instala-se uma desconexão progressiva do próprio corpo, como se este fosse uma entidade separada [...]. Em linguagem psicológica, isto aproxima-se de quadros de trauma relacional, dissociação somática (Pierre Janet, no final do século XIX, foi o primeiro a descrever este afastamento entre mente e corpo como mecanismo defensivo do psiquismo perante o intolerável), hipervigilância autonómica e repressão emocional crónica.\\n\\nA interpretação da autora é metafísica e simbólica, não um modelo científico comprovado, mas procura relacionar emoções acumuladas com padrões físicos e comportamentais observáveis na prática clínica."\n\n[C] ABREVIATURAS — nunca isoladas. Primeira menção: nome por extenso, abreviatura entre parênteses, breve explicação acessível.\n   ❌ "elevação de IL-6 e TNF-α no eixo HPA"\n   ✅ "elevação de citocinas pró-inflamatórias, como a Interleucina-6 (IL-6) e o Fator de Necrose Tumoral alfa (TNF-α) — proteínas que o sistema imune produz para sinalizar inflamação — afetando o eixo Hipotálamo-Hipófise-Adrenal (HPA), o circuito hormonal de resposta ao stress envolvendo uma região cerebral, uma glândula e as suprarrenais"\n   Aplica-se a: SNC, SNA, HPA, VFC, GABA, IL-6, TNF-α, Th1/Th2, HCl, PTSD, EMDR, EFT, IFS, etc.\n\n[D] SEM CITAÇÕES SOLTAS ENTRE ASPAS — explicar o conceito em vez de citar. Não escrever 'PTSD, abuso crónico, fim de relacionamentos e luto intenso associados.' Em vez disso, explicar o que é PTSD, exemplificar os tipos de abuso, descrever o que significa cada associação. Quando se introduz um conceito (dissociação, gaslighting, mártir, hipervigilância, parentificação, etc.), explicar brevemente o que significa para um leitor sem essa formação específica.\n\n[E] LINGUAGEM GRAMATICALMENTE NEUTRA EM PORTUGUÊS DE PORTUGAL — o cliente pode ser de qualquer género. Não usar formas que pressuponham género feminino ou masculino específico:\n   ❌ "tornar-se a mártir" / "completamente segura" / "presa numa situação" (femininos pressupostos)\n   ❌ "o doente fraco" (masculino marcado)\n   ✅ "assumir o papel de mártir" / "sentir-se em segurança" / "ficar presa(o) numa situação" → ou reformular: "sentir que não há saída"\n   ✅ Usar "o cliente", "a pessoa" (pessoa é género comum em PT), "quem sofre deste padrão", "a parte de si que..."\n   ✅ Nas perguntas, evitar adjetivos com marca de género: em vez de "sentiste segura", usar "sentiste segurança" ou "sentiste o corpo em paz"\n   Acordo Ortográfico de 1990. Léxico português europeu (ficheiro, ecrã, utilizador — não arquivo, tela, usuário).\n\n[F] EXEMPLOS MAU vs. BOM (regra crítica — segue à risca):\n\n   ▸ METÁFORA SOMÁTICA\n   ❌ MAU: "O corpo que ficou em modo de guerra depois de a guerra ter terminado. A dor é a sentinela esquecida no posto." (frase poética isolada, sem explicação do significado).\n   ✅ BOM: "A metáfora 'o corpo que ficou em modo de guerra depois de a guerra ter terminado' descreve um organismo que aprendeu a sobreviver através de tensão, controlo e vigilância constantes. Após experiências traumáticas, os músculos e o sistema nervoso podem permanecer preparados para o perigo mesmo em ambientes seguros.\\\\n\\\\nA ideia de que 'relaxar era perigoso' significa que, em algum momento, baixar a guarda podia trazer risco emocional ou físico — um pai imprevisível, um agressor que aparecia sem aviso. Clinicamente, isto relaciona-se com hipervigilância autonómica, tensão muscular crónica e dificuldade em sentir segurança corporal."\n\n   ▸ PERGUNTAS CLÍNICAS\n   ❌ MAU: "Quando foi a última vez que te sentiste completamente segura no teu corpo? Que injustiça ainda guardas que ninguém reconheceu? O que aconteceria se deixasses de lutar?" (lista crua de perguntas, sem explicação, com 'segura' a pressupor género feminino).\n   ✅ BOM: "As perguntas seguintes exploram, cada uma, um eixo diferente do quadro e devem ser usadas com timing.\\\\n\\\\n'Quando foi a última vez que sentiste o corpo como um lugar seguro?' — convida o cliente a localizar no tempo o início da dissociação somática, ajudando a ancorar a narrativa clínica numa biografia.\\\\n\\\\n'Que injustiça antiga ainda guardas, sem que ninguém a tenha reconhecido ou reparado?' — toca no nó central deste padrão segundo Evette Rose: o ressentimento por algo que ficou sem fechar. Permite identificar a figura ou situação que organiza inconscientemente a tensão muscular."\n\n   ▸ SUGESTÕES CLÍNICAS / HIPNÓTICAS\n   ❌ MAU: "Hipnose ericksoniana de relaxamento muscular + reframing da dor como mensagem. EFT em pontos de tensão. Imagery 'depor as armas'. Trabalho com a parte 'guardiã' (IFS)." (lista de técnicas sem origem nem justificação).\n   ✅ BOM: "Várias abordagens combinadas tendem a funcionar melhor do que uma técnica isolada, dada a natureza multissistémica do quadro.\\\\n\\\\nA hipnose ericksoniana de relaxamento muscular progressivo, com reformulação (reframing) da dor como mensageira em vez de inimiga, é particularmente útil porque trabalha simultaneamente a sensibilização central da dor e a relação simbólica com o sintoma. O cliente aprende a escutar o corpo em vez de o silenciar.\\\\n\\\\nA técnica EFT (Emotional Freedom Techniques, desenvolvida por Gary Craig nos anos 1990) consiste no estímulo manual de pontos dos meridianos da medicina chinesa enquanto se verbaliza o que está retido emocionalmente. Diversos estudos mostram que reduz cortisol e ativa o sistema nervoso parassimpático, atenuando a hiperexcitabilidade central que perpetua a dor."\n\n══════════ ESTRUTURA DA RESPOSTA ══════════\n\nResponde em DUAS PARTES bem separadas:\n\n──────── PARTE A · Resposta narrativa (para ler agora no chat) ────────\n\n📖 **Padrão Emocional · Evette Rose** (mínimo 3 parágrafos)\n📚 **Padrão Emocional · Luiz Gasparetto** (mínimo 3 parágrafos)\n🧬 **Nota Psiconeuroimunologia** (mínimo 2 parágrafos, abreviaturas todas explicadas)\n🧠 **Nota Neurociência · Mark F. Bear** (mínimo 2 parágrafos, abreviaturas todas explicadas)\n💔 **Correlato Relacional · ACEs / Trauma** (mínimo 3 parágrafos)\n🫀 **Metáfora Somática** (mínimo 2 parágrafos — a metáfora citada e explicada, conforme [F])\n❓ **Perguntas Clínicas** (parágrafo intro + cada pergunta com a sua justificação clínica, conforme [F])\n🌀 **Sugestões clínicas / hipnóticas** (parágrafo intro + cada técnica num parágrafo com origem e razão, conforme [F])\n🧪 **Avaliação** — para cada item: nome + 2-3 frases explicando porque é relevante\n🏃 **Exercício** — mesmo formato\n\n──────── PARTE B · JSON para importar no caderno ────────\n\nBloco JSON válido dentro de \`\`\`json ... \`\`\` — a Daniele cola a resposta inteira no caderno e o sistema extrai automaticamente o JSON. Usa \\\\n\\\\n para separar parágrafos dentro de cada campo string.\n\n\`\`\`json\n{\n  "id": "${slug}",\n  "titulo": "${v.charAt(0).toUpperCase()+v.slice(1)}",\n  "categoria": "<uma de: ${CATEGORIAS.join(' | ')}>",\n  "evette": "<texto idêntico ao da Parte A, com \\\\n\\\\n entre parágrafos>",\n  "gaspa": "<idem>",\n  "psiconeuro": "<idem>",\n  "neuro": "<idem>",\n  "aces": "<idem>",\n  "metafora": "<texto>",\n  "perguntas": "<texto>",\n  "sugestoes": "<idem>",\n  "avaliacao": [\n    {"item":"nome.html","link":"#","porque":"2-3 frases explicativas"},\n    {"prompt":"criar avaliação de X (especificação)","porque":"o que falta avaliar e porquê"}\n  ],\n  "exercicio": [\n    {"item":"nome.html","link":"#","porque":"2-3 frases explicativas"},\n    {"prompt":"criar exercício Y (especificação)","porque":"porque seria relevante"}\n  ]\n}\n\`\`\`\n\n══════════ RECURSOS DISPONÍVEIS ══════════\n\nUsa APENAS estes nomes existentes nas avaliações/exercícios (não inventes outros):\n- Quizzes: quiz_ace.html, quiz_padroes.html, quiz_apego.html, quiz_ansiedade_depressao.html, quiz_disc.html, quiz_mbti.html, quiz_enneagrama.html, quiz_esquemas_young.html, quiz_feridas_infancia.html, quiz_alexitimia.html, quiz_bigfive.html, quiz_amor.html.\n- Exercícios: EuSou_21dias_v2.html, PROMPT_Cartas_Sem_Filtro_v1.md, PROMPT_Cordao_Nos_v1.md, PROMPT_Arvore_Genealogica_Psiquica_v1.md.\n- Se nenhum se aplica, usar item do tipo "prompt" com a especificação do que se deveria criar.`;
+  // Mostra o prompt no quadro amarelo (não copia automaticamente — utilizador faz no passo 1)
+  const preview = document.getElementById('prompt-preview');
+  const previewText = document.getElementById('prompt-preview-text');
+  previewText.value = prompt;
+  document.getElementById('prompt-name').textContent = `"${v.charAt(0).toUpperCase()+v.slice(1)}"`;
+  preview.classList.add('show');
+  // Reset visual do passo 1 (caso já tivesse sido usado antes)
+  const copyBtn = document.getElementById('btn-copy-step');
+  copyBtn.classList.remove('is-done');
+  document.getElementById('btn-copy-label').textContent = 'Copiar prompt para Claude';
+  preview.scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+// Enter no campo livre executa a mesma acção que clicar na lupa
+document.getElementById('free-input').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter'){ e.preventDefault(); document.getElementById('btn-gerar-prompt').click(); }
+});
+
+// Passo 1 — Copiar prompt para Claude (com feedback visual)
+document.getElementById('btn-copy-step').addEventListener('click', async () => {
+  const txt = document.getElementById('prompt-preview-text').value;
+  if(!txt) return;
+  const ok = await copyTextToClipboard(txt);
+  const btn = document.getElementById('btn-copy-step');
+  const lbl = document.getElementById('btn-copy-label');
+  if(ok){
+    btn.classList.add('is-done');
+    lbl.textContent = '✓ Copiado! Agora abre Claude.ai →';
+  }else{
+    lbl.textContent = '⚠ Falhou — seleciona e copia manualmente (Ctrl+A · Ctrl+C)';
+  }
+});
+
+function extractJSON(text){
+  // 1. Tenta apanhar bloco ```json ... ```
+  const fenced = text.match(/```json\s*([\s\S]*?)```/i);
+  if(fenced) return fenced[1].trim();
+  // 2. Tenta apanhar bloco ``` ... ``` (sem 'json')
+  const fencedAlt = text.match(/```\s*(\{[\s\S]*?\})\s*```/);
+  if(fencedAlt) return fencedAlt[1].trim();
+  // 3. Encontra o primeiro { equilibrado no texto
+  const start = text.indexOf('{');
+  if(start === -1) return null;
+  let depth = 0, inStr = false, esc = false;
+  for(let i = start; i < text.length; i++){
+    const c = text[i];
+    if(esc){ esc = false; continue; }
+    if(c === '\\'){ esc = true; continue; }
+    if(c === '"'){ inStr = !inStr; continue; }
+    if(inStr) continue;
+    if(c === '{') depth++;
+    else if(c === '}'){ depth--; if(depth === 0) return text.substring(start, i + 1); }
+  }
+  return null;
+}
+
+document.getElementById('btn-import').addEventListener('click', () => {
+  const raw = document.getElementById('import-json').value.trim();
+  if(!raw){ showStatus('Cola primeiro a resposta do Claude (narrativa + JSON).', 'err'); return; }
+  const cleaned = extractJSON(raw);
+  if(!cleaned){ showStatus('Não encontrei nenhum bloco JSON válido na resposta. Procura por um bloco entre ```json ... ```.', 'err'); return; }
+  let obj;
+  try{ obj = JSON.parse(cleaned); }
+  catch(e){ showStatus('JSON inválido: ' + e.message, 'err'); return; }
+  const required = ['id','titulo','categoria','evette','gaspa','psiconeuro','neuro','aces','metafora','perguntas','sugestoes','avaliacao','exercicio'];
+  const missing = required.filter(k => !(k in obj));
+  if(missing.length){ showStatus('Faltam campos: ' + missing.join(', '), 'err'); return; }
+  const custom = loadCustom();
+  custom[obj.id] = obj;
+  saveCustom(custom);
+  document.getElementById('import-json').value = '';
+  buildDropdown();
+  document.getElementById('sel-doenca').value = obj.id;
+  loadDoenca(obj.id);
+  showStatus(`✓ "${obj.titulo}" adicionada ao caderno. Já aparece no menu para sessões futuras.`, 'ok');
+});
+
+document.getElementById('btn-paste-clip').addEventListener('click', async () => {
+  try{
+    const t = await navigator.clipboard.readText();
+    document.getElementById('import-json').value = t;
+    showStatus('Colado do clipboard. Revê e clica em "Adicionar ao caderno".', 'ok');
+  }catch(e){
+    showStatus('Não consegui ler do clipboard — cola manualmente (Ctrl+V).', 'err');
+  }
+});
+
+document.getElementById('btn-export-all').addEventListener('click', () => {
+  const custom = loadCustom();
+  const blob = new Blob([JSON.stringify(custom, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'anatomia_metafisica_personalizadas.json';
+  a.click(); URL.revokeObjectURL(url);
+});
+
+// ─── Collapsibles: persistência + expandir/colapsar tudo ──────────────
+const LS_COLLAPSE = 'dd_anatomia_collapse_v1';
+function loadCollapseState(){ try{ return JSON.parse(localStorage.getItem(LS_COLLAPSE) || '{}'); }catch(e){ return {}; } }
+function applyCollapseState(){
+  const state = loadCollapseState();
+  document.querySelectorAll('details.fonte-block[data-section]').forEach(d => {
+    const k = d.dataset.section;
+    if(k in state) d.open = state[k];
+  });
+}
+document.querySelectorAll('details.fonte-block[data-section]').forEach(d => {
+  d.addEventListener('toggle', () => {
+    const state = loadCollapseState();
+    state[d.dataset.section] = d.open;
+    localStorage.setItem(LS_COLLAPSE, JSON.stringify(state));
+  });
+});
+document.getElementById('btn-expand-all').addEventListener('click', () => {
+  document.querySelectorAll('details.fonte-block[data-section]').forEach(d => d.open = true);
+});
+document.getElementById('btn-collapse-all').addEventListener('click', () => {
+  document.querySelectorAll('details.fonte-block[data-section]').forEach(d => d.open = false);
+});
+
+// ─── Adicionar à ficha — copia resumo formatado ──────────────────────
+document.getElementById('btn-add-ficha').addEventListener('click', () => {
+  const key = document.getElementById('sel-doenca').value;
+  if(!key){ showStatus('Seleciona primeiro uma doença.', 'err'); return; }
+  const d = getAllDoencas()[key]; if(!d) return;
+  const nota = document.getElementById('nota').value.trim();
+  const hoje = new Date().toLocaleDateString('pt-PT');
+  const recursoToText = (arr) => (arr||[]).map(r => {
+    if('prompt' in r) return `  • prompt: ${r.prompt}\n    Porquê: ${r.porque}`;
+    return `  • ${r.item}\n    Porquê: ${r.porque}`;
+  }).join('\n');
+  const txt = `═══════════════════════════════════════════════════════════
+ANATOMIA METAFÍSICA — ${d.titulo}
+Categoria: ${d.categoria}  ·  Data: ${hoje}
+═══════════════════════════════════════════════════════════
+
+📖 PADRÃO EMOCIONAL · EVETTE ROSE
+${d.evette}
+
+📚 PADRÃO EMOCIONAL · LUIZ GASPARETTO
+${d.gaspa}
+
+🧬 NOTA PSICONEUROIMUNOLOGIA
+${d.psiconeuro}
+
+🧠 NOTA NEUROCIÊNCIA · MARK F. BEAR
+${d.neuro}
+
+💔 CORRELATO RELACIONAL · ACEs / TRAUMA
+${d.aces}
+
+🫀 METÁFORA SOMÁTICA
+${d.metafora}
+
+❓ PERGUNTAS CLÍNICAS
+${d.perguntas}
+
+🌀 SUGESTÕES CLÍNICAS / HIPNÓTICAS
+${d.sugestoes}
+
+🧪 AVALIAÇÃO
+${recursoToText(d.avaliacao)}
+
+🏃 EXERCÍCIO
+${recursoToText(d.exercicio)}
+
+═══════════════════════════════════════════════════════════
+📝 NOTA CLÍNICA (observação da terapeuta)
+${nota || '(sem nota)'}
+═══════════════════════════════════════════════════════════
+`;
+  navigator.clipboard.writeText(txt).then(() => {
+    showStatus(`✓ Resumo de "${d.titulo}" copiado. Cola na ficha do cliente.`, 'ok');
+  }).catch(() => {
+    showStatus('Não foi possível copiar automaticamente. Texto preparado no clipboard manualmente.', 'err');
+  });
+});
+
+buildDropdown();
+applyCollapseState();
+// Caderno inicia sempre limpo — sem doença pré-selecionada.
+// As Notas Clínicas continuam guardadas por doença em localStorage:
+// quando o terapeuta voltar a uma doença, a sua nota anterior reaparece.
+</script>
+</body>
+</html>
