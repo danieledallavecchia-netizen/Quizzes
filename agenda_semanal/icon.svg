@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-8 -8 76 76" fill="none"><rect x="-8" y="-8" width="76" height="76" fill="#060114"/>
+          <defs>
+            <radialGradient id="tbBg" cx="50%" cy="48%" r="55%">
+              <stop offset="0%"   stop-color="#2d0a5a" stop-opacity=".95"/>
+              <stop offset="100%" stop-color="#060114" stop-opacity="1"/>
+            </radialGradient>
+            <linearGradient id="tbGold" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stop-color="#b8922c"/>
+              <stop offset="50%"  stop-color="#f5e090"/>
+              <stop offset="100%" stop-color="#c9a84c"/>
+            </linearGradient>
+            <linearGradient id="tbSilver" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stop-color="#a098c8"/>
+              <stop offset="100%" stop-color="#e8e0ff"/>
+            </linearGradient>
+            <linearGradient id="tbViolet" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%"   stop-color="#6020b0"/>
+              <stop offset="100%" stop-color="#9040e0"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Fundo cosmos dentro do círculo (cor oficial do logo) -->
+          <circle cx="30" cy="30" r="27.5" fill="url(#tbBg)"/>
+          <!-- Aro dourado fino -->
+          <circle cx="30" cy="30" r="27.5" fill="none" stroke="url(#tbGold)" stroke-width=".6" opacity=".8"/>
+
+          <!-- 12 ticks horários no aro -->
+          <g stroke="#c9a84c" stroke-width=".5" opacity=".5">
+            <line x1="30" y1="3.5" x2="30" y2="6.5"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(30 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(60 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(90 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(120 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(150 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(180 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(210 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(240 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(270 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(300 30 30)"/>
+            <line x1="30" y1="3.5" x2="30" y2="6.5" transform="rotate(330 30 30)"/>
+          </g>
+          <!-- Anel interior dourado tracejado -->
+          <circle cx="30" cy="30" r="22" fill="none" stroke="url(#tbGold)" stroke-width=".25" stroke-dasharray="1 2" opacity=".35"/>
+
+          <!-- Tronco (PRATA luminoso — não dourado) -->
+          <line x1="30" y1="44" x2="30" y2="13" stroke="url(#tbSilver)" stroke-width="1" stroke-linecap="round" opacity=".95"/>
+
+          <!-- Ramos principais — alternam prata + dourado -->
+          <path d="M30 35 Q23 32 17 30"  stroke="url(#tbSilver)" stroke-width=".95" fill="none" stroke-linecap="round" opacity=".95"/>
+          <path d="M30 35 Q37 32 43 30"  stroke="url(#tbSilver)" stroke-width=".95" fill="none" stroke-linecap="round" opacity=".95"/>
+          <path d="M30 28 Q24 25 19 22"  stroke="url(#tbGold)"   stroke-width=".75" fill="none" stroke-linecap="round" opacity=".85"/>
+          <path d="M30 28 Q36 25 41 22"  stroke="url(#tbGold)"   stroke-width=".75" fill="none" stroke-linecap="round" opacity=".85"/>
+          <path d="M30 22 Q26 19 22 17"  stroke="url(#tbSilver)" stroke-width=".6"  fill="none" stroke-linecap="round" opacity=".82"/>
+          <path d="M30 22 Q34 19 38 17"  stroke="url(#tbSilver)" stroke-width=".6"  fill="none" stroke-linecap="round" opacity=".82"/>
+          <path d="M30 17 Q27.5 15 25 13.5" stroke="url(#tbGold)" stroke-width=".45" fill="none" stroke-linecap="round" opacity=".7"/>
+          <path d="M30 17 Q32.5 15 35 13.5" stroke="url(#tbGold)" stroke-width=".45" fill="none" stroke-linecap="round" opacity=".7"/>
+
+          <!-- Folhas — 3 cores alternadas (gold + silver + violet) como no logo oficial -->
+          <circle cx="17" cy="30"   r="1.5" fill="url(#tbViolet)" opacity=".95"/>
+          <circle cx="43" cy="30"   r="1.5" fill="url(#tbViolet)" opacity=".95"/>
+          <circle cx="19" cy="22"   r="1.2" fill="url(#tbGold)"   opacity=".92"/>
+          <circle cx="41" cy="22"   r="1.2" fill="url(#tbGold)"   opacity=".92"/>
+          <circle cx="22" cy="17"   r=".95" fill="url(#tbSilver)" opacity=".88"/>
+          <circle cx="38" cy="17"   r=".95" fill="url(#tbSilver)" opacity=".88"/>
+          <circle cx="25" cy="13.5" r=".8"  fill="url(#tbViolet)" opacity=".82"/>
+          <circle cx="35" cy="13.5" r=".8"  fill="url(#tbViolet)" opacity=".82"/>
+
+          <!-- Coroa dourada -->
+          <circle cx="30" cy="11" r="1.7" fill="url(#tbGold)" opacity=".98"
+                  />
+          <circle cx="30" cy="11" r="3.2" stroke="url(#tbGold)" stroke-width=".3" opacity=".5" fill="none"
+                  />
+
+          <!-- Raízes (dourado + prata, como o logo oficial) -->
+          <path d="M30 44 Q26 47 21 49" stroke="url(#tbGold)"   stroke-width=".6"  fill="none" stroke-linecap="round" opacity=".75"/>
+          <path d="M30 44 Q34 47 39 49" stroke="url(#tbGold)"   stroke-width=".6"  fill="none" stroke-linecap="round" opacity=".75"/>
+          <path d="M30 46 Q24 50 19 52" stroke="url(#tbSilver)" stroke-width=".4"  fill="none" stroke-linecap="round" opacity=".55"/>
+          <path d="M30 46 Q36 50 41 52" stroke="url(#tbSilver)" stroke-width=".4"  fill="none" stroke-linecap="round" opacity=".55"/>
+
+          <!-- Orb da junção raiz/tronco -->
+          <circle cx="30" cy="44" r="1.3" fill="url(#tbGold)" opacity=".8"/>
+        </svg>
